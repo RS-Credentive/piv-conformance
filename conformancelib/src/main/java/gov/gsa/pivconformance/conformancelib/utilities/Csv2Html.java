@@ -106,7 +106,7 @@ public class Csv2Html {
 		try {
 			CSVParser csvParser = new CSVParser(br, CSVFormat.DEFAULT);
 			for(CSVRecord r : csvParser) {
-				String[] columns = { escapeChars(r.get(0)), escapeChars(r.get(1)), escapeChars(r.get(2)),
+				String[] columns = {escapeChars(r.get(0)), escapeChars(r.get(1)), escapeChars(r.get(2)),
 						escapeChars(r.get(3)), escapeChars(r.get(4)), escapeChars(r.get(5))};
 				if (withTableHeader == true && firstLine == true) {
 					tableHeader(destination, columns);

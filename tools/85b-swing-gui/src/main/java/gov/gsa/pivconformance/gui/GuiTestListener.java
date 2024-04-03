@@ -1,9 +1,12 @@
 package gov.gsa.pivconformance.gui;
 
 import java.lang.reflect.InvocationTargetException;
+import java.security.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
@@ -19,6 +22,10 @@ import org.slf4j.LoggerFactory;
 
 import gov.gsa.pivconformance.conformancelib.configuration.TestCaseModel;
 import gov.gsa.pivconformance.conformancelib.configuration.TestStatus;
+import gov.gsa.pivconformance.conformancelib.configuration.TestStepModel;
+import gov.gsa.pivconformance.conformancelib.tests.BER_TLVTests;
+import gov.gsa.pivconformance.conformancelib.tools.TestCaseRunner;
+import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 
 
 public class GuiTestListener implements TestExecutionListener {
@@ -65,8 +72,7 @@ public class GuiTestListener implements TestExecutionListener {
 		TestExecutionListener.super.testPlanExecutionFinished(testPlan);
 		s_testProgressLogger.info("Test plan finished for conformance test {}", m_testCaseIdentifier);
 
-		s_testResultLogger.info("{},\"{}\",{},{},{}", m_testCaseIdentifier, m_testCaseDescription.replaceAll("\"", "'"), m_testCaseExpectedResult.getTextValue(),
-				m_testCaseExpectedResult ? "Pass" : "Fail",
+		s_testResultLogger.info("{},\"{}\",{},{},{}", m_testCaseIdentifier, m_testCaseDescription.replaceAll("\"", "'"), "","",
 				(m_atomAborted || m_atomFailed) ? "Fail" : "Pass"); 
 		GuiTestCaseTreeNode tcNode = GuiRunnerAppController.getInstance().getApp().getTreePanel().getNodeByName(m_testCaseIdentifier);
 		if(tcNode != null) {
