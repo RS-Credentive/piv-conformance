@@ -38,7 +38,7 @@ public class BER_TLVTests {
         	
         byte[] bertlv = o.getBytes();
         assertNotNull(bertlv);
-        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual byte length NOT NULL","NOT NULL",(bertlv != null),"");
+        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual byte length NOT NULL","True",(bertlv != null),"");
        
         BerTlvParser tp = new BerTlvParser(new CCTTlvLogger(BER_TLVTests.class));
         
@@ -145,7 +145,7 @@ public class BER_TLVTests {
         // pivGetData retrieves each data container using the 3 byte tag checking for a successful return code and returned bytes should satisfy this test
         // TODO: Confirm that this assumption is correct
         assertNotNull(bertlv);
-        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value byte length NOT NULL","NOT NULL",(bertlv != null),"");
+        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value byte length NOT NULL","True",(bertlv != null),"");
     }
     
     //Each data object returned with 2 byte status word (90 00)
@@ -159,7 +159,7 @@ public class BER_TLVTests {
 		
         byte[] bertlv = o.getBytes();           
         assertNotNull(bertlv);
-        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value byte length NOT NULL","NOT NULL",(bertlv != null),"");
+        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value byte length NOT NULL","True",(bertlv != null),"");
     }
     
     //If a variable length field has length of 0, tag length is followed immediately by next tag if applicable
@@ -173,7 +173,7 @@ public class BER_TLVTests {
 
         byte[] bertlv = o.getBytes();
         assertNotNull(bertlv);
-        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value byte length NOT NULL","NOT NULL",(bertlv != null),"");
+        a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value byte length NOT NULL","True",(bertlv != null),"");
         // Our TLV parser would have thrown if a variable length field had a 0 length but was followed by something other than
         // a next tag. non-null getBytes() should pass this atom.
     }
