@@ -475,7 +475,7 @@ public class CMSTests {
 		while (it.hasNext()) {
 			SignerInformation signer = (SignerInformation) it.next();
 			assertTrue(Algorithm.digAlgOidToNameMap.containsKey(signer.getDigestAlgOID()), "Digest algorithm list does not contain" + signer.getDigestAlgOID());
-			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Contains Signer Information","TRUE",(Algorithm.digAlgOidToNameMap.containsKey(signer.getDigestAlgOID()),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Contains Signer Information","TRUE",Algorithm.digAlgOidToNameMap.containsKey(signer.getDigestAlgOID(),"");
 			if (it.hasNext()) {
 				s_logger.warn("More than one signer");
 			}
