@@ -78,11 +78,12 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected expected Signature NOT NULL for " + oid,"NOT NULL",asymmetricSignature,"");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","A Asymetric Signature NOT NULL","TRUE",(asymmetricSignature != null),""); 
+
 
 		// Confirm that no encapsulated content present
 		assertTrue(asymmetricSignature.isDetachedSignature(), "Signature is not detached as specified");
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected Signature is detached","TRUE",asymmetricSignature.isDetachedSignature(),"");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Actual encapsulated content present","TRUE",asymmetricSignature.isDetachedSignature(),""); 
 	}
 
 	// Verify that version is set to 3
@@ -98,12 +99,12 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected Signature data NOT NULL","NOT NULL",asymmetricSignature,"");
-
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Asymetric Signature NOT NULL","TRUE",(asymmetricSignature != null),"");
 
 		// Confirm version is 3
 		assertTrue(asymmetricSignature.getVersion() == 3, "Version was " + asymmetricSignature.getVersion());
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected retuned value equals expected value","3",asymmetricSignature.getVersion(),"");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature version","3",asymmetricSignature.getVersion(),"");
+
 	}
 
 	// The digestAlgorithms field value of the SignedData is in accordance with Table 3-2 of SP 800-78.
@@ -119,7 +120,8 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned Signature object NOT NULL","NOT NULL",asymmetricSignature,"");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
+		
 
 		// CMS digest algorithm must be in Table 3-2, period.
 		
@@ -128,7 +130,7 @@ public class CMSTests {
 			AlgorithmIdentifier ai = ih.next();
 			String digAlgOid = ai.getAlgorithm().getId();
 			assertTrue(Algorithm.digAlgOidToNameMap.containsKey(digAlgOid), digAlgOid + " is not in Table 3-2 of SP 800-78-4");
-			//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected return value contains " + digAlgOid,"TRUE",Algorithm.digAlgOidToNameMap.containsKey(digAlgOid),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value for Table 3-2 of SP 800-78-4","TRUE",(Algorithm.digAlgOidToNameMap.containsKey(digAlgOid)),"");
 		}		
 	}
 
@@ -145,13 +147,13 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned Signature object NOT NULL","NOT NULL",asymmetricSignature,"");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",asymmetricSignature,"");
 
 		// Decode for CardHolderUniqueIdentifier reads in Issuer Asymmetric Signature
 		// field and creates CMSSignedData object
 
 		assertNotNull(asymmetricSignature.getDigestAlgorithmIDs(), "Digest algorithms are not present in CMS");
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned object NOT NULL","NOT NULL",asymmetricSignature.getDigestAlgorithmIDs(),"");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Digest algorithms is present in CMS","TRUE",asymmetricSignature.getDigestAlgorithmIDs(),"");
 	}
 
 	// Ensure Security Object's encapsulated content is absent
@@ -166,7 +168,7 @@ public class CMSTests {
 		try {
 			Map<String, List<String>> mp = ParameterUtils.MapFromString(params);
 			assertNotNull(mp);
-			//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned object NOT NULL","NOT NULL",mp.size(),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value is NOT NULL","TRUE",(mp != null),"");
 
 			Iterator<Map.Entry<String,List<String>>> it = mp.entrySet().iterator();
 			boolean foundContainer = false;
@@ -182,18 +184,20 @@ public class CMSTests {
 					o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 					asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 					assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-					//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned object NOT NULL","NOT NULL",asymmetricSignature,"");
+					a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
+					
+
 
 					// Confirm encapsulated content is absent
 		
 					assertTrue(asymmetricSignature.getSignedContent() == null, "encapsulated content is NOT absent");
-					//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned to NULL","NULL",asymmetricSignature,"");
+					a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value of Signed Content NOT NULL","TRUE",(asymmetricSignature.getSignedContent() == null),"");
 		
 					String contentType = asymmetricSignature.getSignedContentTypeOID();
 					// Confirm that content type is id-PIV-CHUIDSecurityObject
-					assertTrue(contentType.compareTo(pivContentTypeOid.get(0)) == 0,
-					"eContentType is NOT " + pivContentTypeOid.get(0));
-					//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected return value equal to expected value","0",pivContentTypeOid.get(0),"");
+					assertTrue(contentType.compareTo(pivContentTypeOid.get(0)) == 0,"eContentType is NOT " + pivContentTypeOid.get(0));
+					a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value content type","--",contentType.compareTo(pivContentTypeOid.get(0)),"");
+					a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual value of content type is id-PIV-CHUIDSecurityObject","TRUE",(contentType.compareTo(pivContentTypeOid.get(0)) == 0),"");
 					break;
 		        }
 		    }
@@ -219,18 +223,19 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned object NOT NULL","NOT NULL",asymmetricSignature,"");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
 
 		// Confirm encapsulated content is absent
 		assertTrue(asymmetricSignature.isDetachedSignature());
-		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned object is present","True",asymmetricSignature.isDetachedSignature(),"");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature is not encaplulated","TRUE",asymmetricSignature.isDetachedSignature(),"");
+
 
 		Store<?> crlStore = asymmetricSignature.getCRLs();
 
 		Collection<?> crlColl = crlStore.getMatches(null);
 
 		assertTrue(crlColl.size() == 0, "CRL file is present");
-		//a_actualValueLogger.info("{},{},{},{},{}"," -- ","Expected returned value equal to extected value","0",crlColl.size(),"");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","CRL file size is expect value","0",(crlColl.size() == 0),"");
 	}
 
 	// Verify SignerInfos contains only a single signerInfo
@@ -246,13 +251,17 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
 
 		SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 
 		assertNotNull(signers);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signer Information Store NOT NULL","TRUE",(signers != null),"");
 
 		// Confirm only one signer is present
 		assertTrue(signers.size() == 1, "Number of signers is not 1 (one)");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Only one Sigher is present","TRUE",(signers.size() == 1),"");
+
 	}
 
 	// Ensure that the signerId uses ths IssuerAndSerialNumber choice
@@ -268,10 +277,12 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
 
 		SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 
 		assertNotNull(signers);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signer Information Store NOT NULL","TRUE",(signers != null),"");
 
 		Iterator<?> it = signers.getSigners().iterator();
 		while (it.hasNext()) {
@@ -281,10 +292,13 @@ public class CMSTests {
 
 			// Confirm issuer and serial number are present
 			assertNotNull(signerId.getIssuer());
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual Issuer value NOT NULL","TRUE",(signerId.getIssuer() != null),"");
 			assertNotNull(signerId.getSerialNumber());
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual Serial Number value NOT NULL","TRUE",(signerId.getSerialNumber() != null),"");
 
 			// Confirm SKID is absent
 			assertTrue(signerId.getSubjectKeyIdentifier() == null, "SKID is present");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Actual Subject Key Identifier is not present","TRUE",(signerId.getSubjectKeyIdentifier() == null),"");
 		}
 	}
 
@@ -303,11 +317,14 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
+
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signing Cert value NOT NULL","TRUE",(signingCert != null),"");
 
 			SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 			if (signers == null) {
@@ -331,6 +348,7 @@ public class CMSTests {
 				// Confirm issuer from the cert matcher issuer from the signer info
 				assertTrue(style.areEqual(tmp1, tmp2),
 					"Issuer is not the same as issuer on signing cert");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","Issuer is the same as issuer on signing cert","TRUE",style.areEqual(tmp1, tmp2),"");
 			}
 		} catch (Exception e) {
 			fail(e);
@@ -350,6 +368,7 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
 	}
 
 	// Message digest from signed attributes bag matches the digest over the signed content
@@ -366,10 +385,12 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Asymmetric Signature for " + oid + " NOT NULL","TRUE",(asymmetricSignature != null),"");
 
 			byte[] signedAttrsDigest = o.getSignedAttrsDigest();
 			byte[] computedDigest = o.getComputedDigest();
 			assertTrue(Arrays.equals(signedAttrsDigest, computedDigest), "Digests don't match");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature Attribute and Computed Digest match","TRUE",(Arrays.equals(signedAttrsDigest, computedDigest)),"");
 
 		} catch (Exception e) {
 			fail(e);
@@ -390,11 +411,13 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature not NULL for " + oid,"TRUE",asymmetricSignature.getContentInfo(),"");
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature not NULL for " + oid,"TRUE",asymmetricSignature.getContentInfo(),"");
 
 			SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 			if (signers == null) {
@@ -420,6 +443,7 @@ public class CMSTests {
 				ASN1ObjectIdentifier pivSigner_DN = new ASN1ObjectIdentifier("2.16.840.1.101.3.6.5");
 				Attribute attr = attributeTable.get(pivSigner_DN);
 				assertNotNull(attr, "Missing pivSigner-DN");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","pivSigner-DN NOT NULL","TRUE",attr,"");
 			}
 		} catch (Exception e) {
 			fail(e);
