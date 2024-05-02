@@ -411,13 +411,13 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature not NULL for " + oid,"TRUE",asymmetricSignature.getContentInfo(),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature NOT NULL for " + oid,"TRUE",(asymmetricSignature != null),"");
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
-			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature not NULL for " + oid,"TRUE",asymmetricSignature.getContentInfo(),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature NOT NULL for " + oid,"TRUE",(asymmetricSignature != null),"");
 
 			SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 			if (signers == null) {
@@ -443,7 +443,7 @@ public class CMSTests {
 				ASN1ObjectIdentifier pivSigner_DN = new ASN1ObjectIdentifier("2.16.840.1.101.3.6.5");
 				Attribute attr = attributeTable.get(pivSigner_DN);
 				assertNotNull(attr, "Missing pivSigner-DN");
-				a_actualValueLogger.info("{},{},{},{},{}"," -- ","pivSigner-DN NOT NULL","TRUE",attr,"");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","pivSigner-DN NOT NULL","TRUE",(attr != null),"");
 			}
 		} catch (Exception e) {
 			fail(e);
@@ -464,16 +464,18 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature NOT NULL for " + oid,"TRUE",(asymmetricSignature != null),"");
 
 		SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 
 		assertNotNull(signers);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signers Information Store NOT NULL","TRUE",(signers != null),"");
 
 		Iterator<?> it = signers.getSigners().iterator();
 		while (it.hasNext()) {
 			SignerInformation signer = (SignerInformation) it.next();
-			assertTrue(Algorithm.digAlgOidToNameMap.containsKey(
-				signer.getDigestAlgOID()), "Digest algorithm list does not contain" + signer.getDigestAlgOID());
+			assertTrue(Algorithm.digAlgOidToNameMap.containsKey(signer.getDigestAlgOID()), "Digest algorithm list does not contain" + signer.getDigestAlgOID());
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Contains Signer Information","TRUE",(Algorithm.digAlgOidToNameMap.containsKey(signer.getDigestAlgOID()),"");
 			if (it.hasNext()) {
 				s_logger.warn("More than one signer");
 			}
