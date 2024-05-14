@@ -78,7 +78,7 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","A Asymetric Signature NOT NULL","TRUE",(asymmetricSignature != null),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Asymetric Signature NOT NULL","TRUE",(asymmetricSignature != null),""); 
 
 
 		// Confirm that no encapsulated content present
@@ -769,7 +769,9 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
 		assertTrue(Algorithm.isDigestAlgInTable32(asymmetricSignature), "Unsupported digest algorithm");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Digest Algorithm in Table 32","TRUE",Algorithm.isDigestAlgInTable32(asymmetricSignature),"");
 
 		X509Certificate cert = AtomHelper.getCertificateForContainer(AtomHelper.getDataObject(oid));
 
@@ -779,10 +781,14 @@ public class CMSTests {
 			BCRSAPublicKey rsaPk = (BCRSAPublicKey) pk;
 			keylen = rsaPk.getModulus().bitLength();
 			assertTrue((keylen == 2048 || keylen == 3072), keylen + " is an invalid key length");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Key length equals 2048 or 3072","TRUE",(keylen == 2048 || keylen == 3072),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Key length actual value","--",keylen,"");
 		} else if (pk.getClass().toString().contains("EC")) {
 			ECPublicKey ec = (ECPublicKey) pk;
 			keylen = ec.getParams().getCurve().getField().getFieldSize();
 			assertTrue((keylen == 256 || keylen == 384), keylen + " is an invalid key length");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Key length equals 256 or 384","TRUE",(keylen == 256 || keylen == 384),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Key length actual value","--",keylen,"");
 		}
 		s_logger.debug("Public key length: {}", keylen);
 		
@@ -801,12 +807,14 @@ public class CMSTests {
 
 		signers = asymmetricSignature.getSignerInfos();
 		assertTrue((signers != null), "Signers is null");
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signer is NOT NULL","TRUE",(signers != null),"");
 		
 		Iterator<?> it = signers.getSigners().iterator();
 		while (it.hasNext()) {
 			SignerInformation signer = (SignerInformation) it.next();
 			String digAlgOid = signer.getDigestAlgorithmID().getAlgorithm().getId();
 			assertTrue(dalgList.contains(digAlgOid), digAlgOid + " is not a supported digest algorithm");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ",digAlgOid + " is a support digest algorithm","TRUE",dalgList.contains(digAlgOid),"");
 		}
 	}	
 
@@ -825,11 +833,13 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signing Certificate found for " + oid,"TRUE",(signingCert != null),"");
 
 			Set<AlgorithmIdentifier> digestAlgSet = asymmetricSignature.getDigestAlgorithmIDs();
 			if (digestAlgSet == null) {
@@ -838,6 +848,8 @@ public class CMSTests {
 			}
 			// Confirm that digestAlgorithms attribute is present and algorithm is present
 			assertTrue(digestAlgSet.size() > 0);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Digest Algorithms attribute is present and Algorithm is present for " + oid,"TRUE",(digestAlgSet.size() > 0),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Digest Algorithms Set actual value","--",digestAlgSet.size(),"");
 		} catch (Exception e) {
 			fail(e);
 		}
@@ -863,6 +875,7 @@ public class CMSTests {
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signing Certificate found for " + oid,"TRUE",(signingCert != null),"");
 
 			Set<AlgorithmIdentifier> digestAlgSet = asymmetricSignature.getDigestAlgorithmIDs();
 			if (digestAlgSet == null) {
@@ -879,6 +892,7 @@ public class CMSTests {
 				SignerInformation signer = (SignerInformation) it.next();
 				AlgorithmIdentifier algID = signer.getDigestAlgorithmID();
 				assertTrue(digestAlgSet.contains(algID), "Digest algorithm " + algID.toString() + " is unspported in PIV");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","Digest algorithm is supported in PIV","TRUE",digestAlgSet.contains(algID),"");
 			}
 		} catch (Exception e) {
 			fail(e);
@@ -901,11 +915,15 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
+
+
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signing Certificate found for " + oid,"TRUE",(signingCert != null),"");
 
 			// Confirm encapsulated content is absent
 			if (asymmetricSignature.isDetachedSignature() == false) {
@@ -921,6 +939,8 @@ public class CMSTests {
 			}
 			ASN1ObjectIdentifier ct = contentInfo.getContentType();
 			assertTrue(ct.getId().compareTo("2.16.840.1.101.3.6.1") == 0, "Couldn't find OID for id-piv-CHUIDSecurityContent");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","ASN1 Object Identifier equals 0 " + oid,"TRUE",(ct.getId().compareTo("2.16.840.1.101.3.6.1") == 0),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","ASN1 Object Identifier actual value " + oid,"0",ct.getId(),"");
 		} catch (Exception e) {
 			fail(e);
 		}
@@ -942,11 +962,14 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signing Certificate found for " + oid,"TRUE",(signingCert != null),"");
+
 			SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 			if (signers == null) {
 				Exception e = new Exception("signers is null");
@@ -986,11 +1009,13 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
 			X509Certificate signingCert = AtomHelper.getCertificateForContainer(o);
 			assertNotNull(signingCert, "No signing cert found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signing Certificate found for " + oid,"TRUE",(signingCert != null),"");
 
 			SignerInformationStore signers = asymmetricSignature.getSignerInfos();
 			if (signers == null) {
@@ -1053,6 +1078,7 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
 
 		CardHolderUniqueIdentifier o2 = 
 				(CardHolderUniqueIdentifier) AtomHelper.getDataObject(APDUConstants.CARD_HOLDER_UNIQUE_IDENTIFIER_OID);
@@ -1076,25 +1102,36 @@ public class CMSTests {
 
 			SignerId signerId = signer.getSID();
 			assertTrue(signerId != null, "SignerId is null");
-
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","SignerId is NOT NULL","TRUE",(signerId != null),"");
+			
 			AttributeTable attributeTable = signer.getSignedAttributes();
 			assertTrue (attributeTable != null, "AttributeTable is null");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Attribute Table is NOT NULL","TRUE",(attributeTable != null),"");
 
 			ASN1ObjectIdentifier pivFASCN_OID = new ASN1ObjectIdentifier(fascnOID);
 			Attribute attr = attributeTable.get(pivFASCN_OID);
 
 			assertTrue(attr != null, String.format("Attribute %s not found in signed attributes", fascnOID));
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Attribute " +  fascnOID  + " found in signed attributes","TRUE",(attr != null),"");
 
 			ASN1Set fascnAttr = attr.getAttrValues();
 			assertTrue(fascnAttr != null, String.format("No value for %s attribute", fascnOID));
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ",fascnOID + " Attribute NOT NULL","TRUE",(fascnAttr != null),"");
+
 			assertTrue(fascnAttr.size() == 1, "FASC-N attribute has multiple values");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","FASC-N attribute value equals 1","TRUE",(fascnAttr.size() == 1),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","FASC-N attribute actual value","1",fascnAttr.size(),"");
 
 			try {
 				DEROctetString fascnOctetString = (DEROctetString) fascnAttr.getObjectAt(0).toASN1Primitive();
 				assertTrue(fascnOctetString != null, "FASC-N in attribute set is null");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","FASC-N in attribute set NOT NULL","TRUE",(fascnOctetString != null),"");
+				
 				// Confirm that signed attribute pivFASC-N matches FASC-N read from CHUID
 				byte[] fe = fascnOctetString.getEncoded();
 				assertTrue(Arrays.equals(fascn, Arrays.copyOfRange(fe, 2, fe.length)), "FASC-N mismatch with CHUID");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","FASC-N matches CHUID","TRUE",(Arrays.equals(fascn, Arrays.copyOfRange(fe, 2, fe.length))),"");
+
 			} catch (IOException e) {
 				fail(e);
 			}
@@ -1116,6 +1153,7 @@ public class CMSTests {
 		o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 		asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 		assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+		a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
 
 		CardHolderUniqueIdentifier o2 = 
 				(CardHolderUniqueIdentifier) AtomHelper.getDataObject(APDUConstants.CARD_HOLDER_UNIQUE_IDENTIFIER_OID);
@@ -1139,25 +1177,36 @@ public class CMSTests {
 
 			SignerId signerId = signer.getSID();
 			assertTrue(signerId != null, "SignerId is null");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","SignerId is NOT NULL","TRUE",(signerId != null),"");
 
 			AttributeTable attributeTable = signer.getSignedAttributes();
 			assertTrue (attributeTable != null, "AttributeTable is null");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Attribute Table NOT NULL","TRUE",(attributeTable != null),"");
 
 			ASN1ObjectIdentifier entryUUID_OID = new ASN1ObjectIdentifier(uuidOID);
 			Attribute attr = attributeTable.get(entryUUID_OID);
 
 			assertTrue(attr != null, String.format("Attribute %s not found in signed attributes", uuidOID));
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Attribute " + uuidOID + " found in signed attributes","TRUE",(attr != null),"");
 
 			ASN1Set uuidAttr = attr.getAttrValues();
 			assertTrue(uuidAttr != null, String.format("No value for %s attribute", uuidOID));
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ",uuidOID + " attribute value NOT NULL","TRUE",(uuidAttr != null),"");
+
 			assertTrue(uuidAttr.size() == 1, "UUID attribute has multiple values");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ",uuidOID + " attribute size equal 1","TRUE",(uuidAttr.size() == 1),"");
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ",uuidOID + " attribute actual size","1",uuidAttr.size(),"");
 
 			try {
 				DEROctetString uuidOctetString = (DEROctetString) uuidAttr.getObjectAt(0).toASN1Primitive();
 				assertTrue(uuidOctetString != null, "UUID in attribute set is null");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","UUID in attribute set is NOT NULL","TRUE",(uuidOctetString != null),"");
+
 				// Confirm that signed attribute pivFASC-N matches FASC-N read from CHUID
 				byte[] ue = uuidOctetString.getEncoded();
 				assertTrue(Arrays.equals(uuid, Arrays.copyOfRange(ue, 2, ue.length)), "FASC-N mismatch with CHUID");
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","FASC-N matches CHUID","TRUE",(Arrays.equals(uuid, Arrays.copyOfRange(ue, 2, ue.length))),"");
+
 			} catch (IOException e) {
 				fail(e);
 			}
