@@ -909,7 +909,7 @@ public class PKIX_X509DataObjectTests {
 			ConformanceTestException e  = new ConformanceTestException("No AIA is present.");
 		}
 		assertTrue (rv, "An accessMethod containing " +  X509ObjectIdentifiers.crlAccessMethod.toString() + " is not present");
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","An accessMethod containing " +  X509ObjectIdentifiers.crlAccessMethod.toString() + "is present","TRUE",rv,"");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","An accessMethod containing " +  X509ObjectIdentifiers.crlAccessMethod.toString() + " is present","TRUE",rv,"");
 	}
 
 	//Check CRL DP for ".crl"

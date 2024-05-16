@@ -81,27 +81,27 @@ public class SP800_73_4CCCTests {
 		assertTrue(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG));
 		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_IDENTIFIER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(1).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_CONTAINER_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_CONTAINER_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(1).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(2).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(2).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(3).bytes,TagConstants.APPLICATIONS_CARDURL_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and APPLICATIONS_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.APPLICATIONS_CARDURL_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and APPLICATIONS_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(3).bytes,TagConstants.APPLICATIONS_CARDURL_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(4).bytes,TagConstants.PKCS15_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and PKCS15_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.PKCS15_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and PKCS15_TAG are equal","TRUE",(Arrays.equals(tagList.get(4).bytes,TagConstants.PKCS15_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(5).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and are REGISTERED_DATA_MODEL_NUMBER_TAG equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REGISTERED_DATA_MODEL_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(5).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(6).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and ACCESS_CONTROL_RULE_TABLE_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and ACCESS_CONTROL_RULE_TABLE_TAG are equal","TRUE",(Arrays.equals(tagList.get(6).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(7).bytes,TagConstants.CARD_APDUS_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_APDUS_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_APDUS_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_APDUS_TAG are equal","TRUE",(Arrays.equals(tagList.get(7).bytes,TagConstants.CARD_APDUS_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(8).bytes,TagConstants.REDIRECTION_TAG_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REDIRECTION_TAG_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.REDIRECTION_TAG_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REDIRECTION_TAG_TAG are equal","TRUE",(Arrays.equals(tagList.get(8).bytes,TagConstants.REDIRECTION_TAG_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(9).bytes,TagConstants.CAPABILITY_TUPLES_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_TUPLES_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(9).bytes,TagConstants.CAPABILITY_TUPLES_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(10).bytes,TagConstants.STATUS_TUPLES_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and STATUS_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.STATUS_TUPLES_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and STATUS_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(10).bytes,TagConstants.STATUS_TUPLES_TAG)),""); 
 		assertTrue(Arrays.equals(tagList.get(11).bytes,TagConstants.NEXT_CCC_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and NEXT_CCC_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.NEXT_CCC_TAG)),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and NEXT_CCC_TAG are equal","TRUE",(Arrays.equals(tagList.get(11).bytes,TagConstants.NEXT_CCC_TAG)),""); 
 	}
 	
 	//CCC Optional Tags 0xE3 and 0xB4 may be present or absent; if present are after tags listed in 73-4.3and are in that order
@@ -125,29 +125,29 @@ public class SP800_73_4CCCTests {
 			assertTrue(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG));
 			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_IDENTIFIER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(1).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_CONTAINER_VERSION_NUMBER_TAG) are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_CONTAINER_VERSION_NUMBER_TAG) are equal","TRUE",(Arrays.equals(tagList.get(1).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(2).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(2).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(3).bytes,TagConstants.APPLICATIONS_CARDURL_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and APPLICATIONS_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.APPLICATIONS_CARDURL_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and APPLICATIONS_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(3).bytes,TagConstants.APPLICATIONS_CARDURL_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(4).bytes,TagConstants.PKCS15_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and PKCS15_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.PKCS15_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and PKCS15_TAG are equal","TRUE",(Arrays.equals(tagList.get(4).bytes,TagConstants.PKCS15_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(5).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REGISTERED_DATA_MODEL_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REGISTERED_DATA_MODEL_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(5).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(6).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and ACCESS_CONTROL_RULE_TABLE_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and ACCESS_CONTROL_RULE_TABLE_TAG are equal","TRUE",(Arrays.equals(tagList.get(6).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(7).bytes,TagConstants.CARD_APDUS_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_APDUS_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_APDUS_TAG are equal","TRUE",(Arrays.equals(tagList.get(7).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(8).bytes,TagConstants.REDIRECTION_TAG_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REDIRECTION_TAG_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.REDIRECTION_TAG_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REDIRECTION_TAG_TAG are equal","TRUE",(Arrays.equals(tagList.get(8).bytes,TagConstants.REDIRECTION_TAG_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(9).bytes,TagConstants.CAPABILITY_TUPLES_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(9).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(10).bytes,TagConstants.STATUS_TUPLES_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and STATUS_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and STATUS_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(10).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(11).bytes,TagConstants.NEXT_CCC_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and NEXT_CCC_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.NEXT_CCC_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and NEXT_CCC_TAG are equal","TRUE",(Arrays.equals(tagList.get(11).bytes,TagConstants.NEXT_CCC_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(12).bytes,TagConstants.EXTENDED_APPLICATION_CARDURL_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CEXTENDED_APPLICATION_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.EXTENDED_APPLICATION_CARDURL_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CEXTENDED_APPLICATION_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(12).bytes,TagConstants.EXTENDED_APPLICATION_CARDURL_TAG)),""); 
 		}
 		
 		if(tagList.contains(berSecurityObjectBufferTag))
@@ -157,31 +157,31 @@ public class SP800_73_4CCCTests {
 			assertTrue(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG));
 			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_IDENTIFIER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_IDENTIFIER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(1).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_CONTAINER_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_CONTAINER_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(1).bytes,TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(2).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(2).bytes,TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(3).bytes,TagConstants.APPLICATIONS_CARDURL_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and APPLICATIONS_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.APPLICATIONS_CARDURL_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and APPLICATIONS_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(3).bytes,TagConstants.APPLICATIONS_CARDURL_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(4).bytes,TagConstants.PKCS15_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and PKCS15_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.PKCS15_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and PKCS15_TAG are equal","TRUE",(Arrays.equals(tagList.get(4).bytes,TagConstants.PKCS15_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(5).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REGISTERED_DATA_MODEL_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REGISTERED_DATA_MODEL_NUMBER_TAG are equal","TRUE",(Arrays.equals(tagList.get(5).bytes,TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(6).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and ACCESS_CONTROL_RULE_TABLE_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and ACCESS_CONTROL_RULE_TABLE_TAG are equal","TRUE",(Arrays.equals(tagList.get(6).bytes,TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(7).bytes,TagConstants.CARD_APDUS_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_APDUS_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CARD_APDUS_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CARD_APDUS_TAG are equal","TRUE",(Arrays.equals(tagList.get(7).bytes,TagConstants.CARD_APDUS_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(8).bytes,TagConstants.REDIRECTION_TAG_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REDIRECTION_TAG_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.REDIRECTION_TAG_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and REDIRECTION_TAG_TAG are equal","TRUE",(Arrays.equals(tagList.get(8).bytes,TagConstants.REDIRECTION_TAG_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(9).bytes,TagConstants.CAPABILITY_TUPLES_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.CAPABILITY_TUPLES_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and CAPABILITY_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(9).bytes,TagConstants.CAPABILITY_TUPLES_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(10).bytes,TagConstants.STATUS_TUPLES_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and STATUS_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.STATUS_TUPLES_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and STATUS_TUPLES_TAG are equal","TRUE",(Arrays.equals(tagList.get(10).bytes,TagConstants.STATUS_TUPLES_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(11).bytes,TagConstants.NEXT_CCC_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and NEXT_CCC_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.NEXT_CCC_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and NEXT_CCC_TAG are equal","TRUE",(Arrays.equals(tagList.get(11).bytes,TagConstants.NEXT_CCC_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(12).bytes,TagConstants.EXTENDED_APPLICATION_CARDURL_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and EXTENDED_APPLICATION_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.EXTENDED_APPLICATION_CARDURL_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and EXTENDED_APPLICATION_CARDURL_TAG are equal","TRUE",(Arrays.equals(tagList.get(12).bytes,TagConstants.EXTENDED_APPLICATION_CARDURL_TAG)),""); 
 			assertTrue(Arrays.equals(tagList.get(13).bytes,TagConstants.SECURITY_OBJECT_BUFFER_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and SECURITY_OBJECT_BUFFER_TAG are equal","TRUE",(Arrays.equals(tagList.get(0).bytes,TagConstants.SECURITY_OBJECT_BUFFER_TAG)),""); 
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Bytes and SECURITY_OBJECT_BUFFER_TAG are equal","TRUE",(Arrays.equals(tagList.get(13).bytes,TagConstants.SECURITY_OBJECT_BUFFER_TAG)),""); 
 		}
 	}
 	
