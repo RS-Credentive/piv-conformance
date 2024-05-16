@@ -64,10 +64,10 @@ public class SP800_73_4FingerprintsTests {
 		
 		//Confirm (0xBC, 0xFE) are present 
 		assertTrue(tagList.contains(berFingerprintTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","(0xBC, 0xFE) are present","TRUE",tagList.contains(berFingerprintTag),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","FINGERPRINT_I_AND_II_TAG is present","TRUE",tagList.contains(berFingerprintTag),""); 
 
 		assertTrue(tagList.contains(berECTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Ber Error Code Tag is present","TRUE",tagList.contains(berECTag),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","ERROR_DETECTION_CODE_TAG is present","TRUE",tagList.contains(berECTag),""); 
 
 		int tagIndex = tagList.indexOf(berFingerprintTag);
 		

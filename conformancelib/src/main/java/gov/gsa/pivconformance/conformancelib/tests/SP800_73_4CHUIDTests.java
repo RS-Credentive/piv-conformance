@@ -162,13 +162,13 @@ public class SP800_73_4CHUIDTests {
 		}
 		s_logger.debug("Cooked FASC-N: {}", cookedFascn);
 		assertTrue(Integer.parseInt(cookedFascn.substring(0, 4)) != 0, "Agency code is zero");
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Agency Code IS NOT equal to 0","TRUE",Integer.parseInt(cookedFascn.substring(0, 4)) != 0,""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Agency Code IS NOT equal to 0","TRUE",(Integer.parseInt(cookedFascn.substring(0, 4)) != 0),""); 
 
 		assertTrue(Integer.parseInt(cookedFascn.substring(4, 8)) != 0, "System code is zero");
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","System code IS NOT equal to 0","TRUE",Arrays.equals(tagList.get(orgIDTagIndex + 1).bytes, TagConstants.DUNS_TAG),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","System code IS NOT equal to 0","TRUE",(Integer.parseInt(cookedFascn.substring(4, 8)) != 0),""); 
 
 		assertTrue(Integer.parseInt(cookedFascn.substring(8, 14)) != 0, "Credential number is zero");
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Credential number IS NOT equal to 0","TRUE",Arrays.equals(tagList.get(orgIDTagIndex + 1).bytes, TagConstants.DUNS_TAG),""); 
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Credential number IS NOT equal to 0","TRUE",(Integer.parseInt(cookedFascn.substring(8, 14)) != 0),""); 
 	}
 
 	// Tag 0x36 is optionally present and follows tags from 73-4.10, 73-4.11,
@@ -301,6 +301,7 @@ public class SP800_73_4CHUIDTests {
 		BerTag berErrorDetectionCodeTag = new BerTag(TagConstants.ERROR_DETECTION_CODE_TAG);
 
 		assertTrue(tagList.contains(berIssuerAssymSigTag) && tagList.contains(berErrorDetectionCodeTag));
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","ISSUER_ASYMMETRIC_SIGNATURE_TAG and ERROR_DETECTION_CODE_TAG present","TRUE",(tagList.contains(berIssuerAssymSigTag) && tagList.contains(berErrorDetectionCodeTag)),"");
 	}
 
 	// Expiration Date is formatted YYYYMMDD
@@ -317,7 +318,7 @@ public class SP800_73_4CHUIDTests {
 		// Decode for CardHolderUniqueIdentifier class parses the date in YYYYMMDD
 		// format.
 		assertNotNull(expirationDate);
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Expiration Date NOT NULL: " + expirationDate,"TRUE",expirationDate,"");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Expiration Date NOT NULL: " + expirationDate,"TRUE",(expirationDate != null),"");
 
 	}
 
@@ -351,12 +352,10 @@ public class SP800_73_4CHUIDTests {
 		Date todayPlus6Years = cal.getTime();
 
 		assertTrue(expirationDate.compareTo(today) >= 0);
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Card has been valid for " + expirationDate.compareTo(today) + " days.","TRUE",(expirationDate.compareTo(today) >= 0),"");
-		
-
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Expiration date: " + expirationDate,"TRUE",(expirationDate.compareTo(today) >= 0),"");
 
 		assertTrue(expirationDate.compareTo(todayPlus6Years) <= 0);
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Card expires in " + expirationDate.compareTo(todayPlus6Years) + " days.","TRUE",(expirationDate.compareTo(todayPlus6Years) <= 0),"");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Expiration date: " + todayPlus6Years,"TRUE",(expirationDate.compareTo(todayPlus6Years) <= 0),"");
 	}
 
 	// No tags other than (0xEE, 0x30, 0x32, 0x33, 0x34, 0x35, 0x36, 0x3E, 0xFE) are
@@ -591,7 +590,7 @@ public class SP800_73_4CHUIDTests {
 				throw e;
 			}
 			assertTrue(Arrays.equals(tagList.get(orgGuidTagIndex + 1).bytes, TagConstants.CHUID_EXPIRATION_DATE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","The orgFASCNTagIndex + 1 and CHUID_EXPIRATION_DATE_TAG are equal.","TRUE",Arrays.equals(tagList.get(orgFASCNTagIndex + 1).bytes, TagConstants.CHUID_EXPIRATION_DATE_TAG),"");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","The orgFASCNTagIndex + 1 and CHUID_EXPIRATION_DATE_TAG are equal.","TRUE",Arrays.equals(tagList.get(orgGuidTagIndex + 1).bytes, TagConstants.CHUID_EXPIRATION_DATE_TAG),"");
 
 		} catch (Exception e) {
 			fail(e);
