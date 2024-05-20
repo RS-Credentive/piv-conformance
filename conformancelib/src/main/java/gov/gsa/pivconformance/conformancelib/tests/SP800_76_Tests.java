@@ -35,7 +35,10 @@ import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 
 public class SP800_76_Tests {
 	static Logger s_logger = org.slf4j.LoggerFactory.getLogger(SP800_76_Tests.class);
-	
+
+	// Create a logger to write content to .cvs file used to generate the result .html file.
+	private static Logger a_actualValueLogger = LoggerFactory.getLogger("gov.gsa.pivconformance.conformancelib.testResult");
+
 	//BDB length field is non-zero
 	@DisplayName("SP800-76.1 test")
 	@ParameterizedTest(name = "{index} => oid = {0}")
@@ -57,6 +60,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),""); 
 		
 		 if (biometricData != null && biometricData.length > 8) {
 
@@ -65,12 +69,14 @@ public class SP800_76_Tests {
              
 
      		assertNotNull(biometricDataBlockLengthBytes, "Biometric data block length bytes is absent in CardHolderBiometricData object");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present and NOT NULL in CardHolderBiometricData object","TRUE",(biometricDataBlockLengthBytes != null),"");
      		
      		//Convert Biometric data block (BDB) Length byte[] value to int
             ByteBuffer wrapped = ByteBuffer.wrap(biometricDataBlockLengthBytes);
             int biometricDataBlockLength = wrapped.getInt();
             
             assertTrue(biometricDataBlockLength > 0, "Biometric data block length is not greater than 0");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than 0","TRUE",(biometricDataBlockLength > 0),"");
 		 }
 	}
 
@@ -96,7 +102,10 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
+
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",(biometricDataBlock != null),""); 
 		
 		 if (biometricData != null && biometricData.length > 8) {
 
@@ -105,14 +114,17 @@ public class SP800_76_Tests {
              
 
      		assertNotNull(biometricData, "Biometric data block length is absent in CardHolderBiometricData object");
-     		
+     		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",(biometricDataBlock != null),"");
+
      		//Convert Biometric data block (BDB) Length byte[] value to int
             ByteBuffer wrapped = ByteBuffer.wrap(biometricDataBlockLengthBytes);
             int biometricDataBlockLength = wrapped.getInt();
             
             assertTrue(biometricDataBlockLength > 0);
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is greater than 0","TRUE",(biometricDataBlockLength > 0),"");
             
             assertTrue(biometricDataBlock.length == biometricDataBlockLength,  "Biometric data block length does not matche actual length");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length matches actual length","TRUE",(biometricDataBlock.length == biometricDataBlockLength),"");
             
 		 }
 	}
@@ -137,6 +149,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		 if (biometricData != null && biometricData.length > 8) {
 			 
@@ -145,12 +158,14 @@ public class SP800_76_Tests {
              
 
      		assertNotNull(signatureDataBlockLengthBytes, "Signature data block length is absent in CardHolderBiometricData object");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Signature data block length is present in CardHolderBiometricData object","TRUE",signatureDataBlockLengthBytes,"");
      		
      		 //Convert Signature block (SB) Length byte[] value to int
      		ByteBuffer wrapped = ByteBuffer.wrap(signatureDataBlockLengthBytes);
             int signatureDataBlockLength = wrapped.getShort();
             
             assertTrue(signatureDataBlockLength > 0, "Signature data block length is not greater than 0");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Signature data block length is greater than 0","TRUE",(signatureDataBlockLength > 0),"");
 		 }
 	}
 	
@@ -174,13 +189,15 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		 if (biometricData != null && biometricData.length > 8) {
 			 
 			//Get Biometric data block (BDB) Length
 			byte[] biometricDataBlockLengthBytes = Arrays.copyOfRange(biometricData, 2, 6);
 			
-			assertNotNull(biometricData, "Biometric data block length  is absent in CardHolderBiometricData object");
+			assertNotNull(biometricData, "Biometric data block length is absent in CardHolderBiometricData object");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 			
 			//Convert Biometric data block (BDB) Length byte[] value to int
 			ByteBuffer wrapped = ByteBuffer.wrap(biometricDataBlockLengthBytes);
@@ -189,12 +206,14 @@ public class SP800_76_Tests {
 			//Get Signature block (SB) Length
 			byte[] signatureDataBlockLengthBytes = Arrays.copyOfRange(biometricData, 6, 8);	
 			assertNotNull(signatureDataBlockLengthBytes, "Signature data block length is absent in CardHolderBiometricData object");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Signature data block length is present in CardHolderBiometricData object","TRUE",signatureDataBlockLengthBytes,"");
 			
 			//Convert Signature block (SB) Length byte[] value to int
 			wrapped = ByteBuffer.wrap(signatureDataBlockLengthBytes);
 			int signatureDataBlockLength = wrapped.getShort();
 			
 			assertTrue(biometricData.length == (88 + biometricDataBlockLength + signatureDataBlockLength),  "Signature data block length does not matche actual length");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Signature data block length matches actual length","TRUE",(biometricData.length == (88 + biometricDataBlockLength + signatureDataBlockLength),"");
 
 		 }
 	}
@@ -219,11 +238,14 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length > 1);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric Data length is greater than 1","TRUE",(biometricData.length > 1),"");
 		
 		//Check the first byte of biometric data to confirm its is 0x03
 		assertTrue(Byte.compare(biometricData[0], (byte)0x03) == 0, "First byte of biometrict data is not 0x03");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","first byte of biometric data is 0x03","TRUE",(Byte.compare(biometricData[0], (byte)0x03) == 0),"");
 	}
 	
 	//SBH security options field has value b00001101 (0x0D)
@@ -246,6 +268,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length > 2);
 		
@@ -273,12 +296,17 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length >= 10);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data length is greater than or equal to 10","TRUE",(biometricData.length >= 10),"");
 		
 		//Check the 8th and 9th bytes of biometric data to confirm BDB Format Owner field has a value of 0x001B
 		assertTrue(Byte.compare(biometricData[8], (byte)0x00) == 0, "BDB Format Owner field has a value is not 0x001B");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Confirm 8th and 9th bytes of biometric data to  BDB Format Owner field has a value of 0x001B","TRUE",(Byte.compare(biometricData[8], (byte)0x00) == 0),"");
+
 		assertTrue(Byte.compare(biometricData[9], (byte)0x1B) == 0, "BDB Format Owner field has a value is not 0x001B");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","BDB Format Owner field has a value is 0x001B","TRUE",(Byte.compare(biometricData[9], (byte)0x1B) == 0),"");
 	}
 	
 	//Card Holder Facial Image object length equals sum of CBEFF header length + BDB length + SB length
@@ -301,6 +329,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		 if (biometricData != null && biometricData.length > 8) {
 			 
@@ -308,6 +337,7 @@ public class SP800_76_Tests {
 			byte[] biometricDataBlockLengthBytes = Arrays.copyOfRange(biometricData, 2, 6);
 			
 			assertNotNull(biometricData, "Biometric data block length  is absent in CardHolderBiometricData object");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length  is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 			
 			//Convert Biometric data block (BDB) Length byte[] value to int
 			ByteBuffer wrapped = ByteBuffer.wrap(biometricDataBlockLengthBytes);
@@ -316,6 +346,7 @@ public class SP800_76_Tests {
 			//Get Signature block (SB) Length
 			byte[] signatureDataBlockLengthBytes = Arrays.copyOfRange(biometricData, 6, 8);	
 			assertNotNull(signatureDataBlockLengthBytes, "Biometric data block length  is absent in CardHolderBiometricData object");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length  is present in CardHolderBiometricData object","TRUE",(signatureDataBlockLengthBytes != null),"");
 			
 			//Convert Signature block (SB) Length byte[] value to int
 			wrapped = ByteBuffer.wrap(signatureDataBlockLengthBytes);
@@ -324,6 +355,7 @@ public class SP800_76_Tests {
 			
 			//Confirm Card Holder Facial Image object length equals sum of CBEFF header length + BDB length + SB length
 			assertTrue(biometricData.length == (88 + biometricDataBlockLength + signatureDataBlockLength), "Facial Image object length does Not equal sum of CBEFF header length + BDB length + SB length");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Facial Image object length is equal to the sum of CBEFF header length + BDB length + SB length","TRUE",(biometricData.length == (88 + biometricDataBlockLength + signatureDataBlockLength)),"");
 
 		 }
 	}
@@ -348,8 +380,10 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data block is present
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",(biometricDataBlock != null),"");
 		
 		assertTrue(biometricDataBlock.length >= 4);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric Data Block length is greater than or equal to 4","TRUE",(biometricDataBlock.length >= 4),"");
 		
 		//Get first 4 bytes of biometric data block to get format identifier.
 		byte [] formatIdentifier = Arrays.copyOfRange(biometricDataBlock, 0, 4);
@@ -357,6 +391,7 @@ public class SP800_76_Tests {
 		
 		//Check  format identifier value of 0x464D5200
 		assertTrue(Arrays.equals(formatIdentifier, formatIdentifierValueToCheck), "Fingerprint format identifier value is not 0x464D5200");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Fingerprint format identifier value is 0x464D5200","TRUE",Arrays.equals(formatIdentifier, formatIdentifierValueToCheck),"");
 	}
 	
 	//Extract contents of version identifier, confirm value 0x20323030
@@ -379,14 +414,17 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data block is present
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",(biometricDataBlock != null),"");
 		
 		assertTrue(biometricDataBlock.length >= 8);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than or equal to 8","TRUE",(biometricDataBlock.length >= 8),"");
 		
 		//Get bytes 4 through 8 of biometric data block to get version identifier.
 		byte [] versionIdentifier = Arrays.copyOfRange(biometricDataBlock, 4, 8);
 		byte [] versionIdentifierValueToCheck = { 0x20, 0x32, 0x30, 0x00 };
 		
-		assertTrue(Arrays.equals(versionIdentifier, versionIdentifierValueToCheck), "Fingerprint version identifie value is not 0x20323030");
+		assertTrue(Arrays.equals(versionIdentifier, versionIdentifierValueToCheck), "Fingerprint version identifier value is not 0x20323030");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Fingerprint version identifier value is 0x20323030","TRUE",Arrays.equals(versionIdentifier, versionIdentifierValueToCheck),"");
 	}
 	
 	//Extract record length, verify 26 <= L <= 1574
@@ -409,8 +447,10 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data block is present
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",(biometricDataBlock != null),"");
 		
 		assertTrue(biometricDataBlock.length >= 10);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than or equal to 10","TRUE",(biometricDataBlock.length >= 10),"");
 		
 		//Get bytes 9 and 10 of biometric data block to get record length.
 		byte [] recordLength = Arrays.copyOfRange(biometricDataBlock, 8, 10);
@@ -419,8 +459,11 @@ public class SP800_76_Tests {
 		
 		//BDB length must be between 26 and 1574
         assertTrue(biometricDataBlockLength >= 26 && biometricDataBlockLength <= 1574, "Fingerprint record length is not 26 <= L <= 1574");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric Data Block Length is between 26 and 1574","TRUE",(biometricDataBlockLength >= 26 && biometricDataBlockLength <= 1574),"");
+
         //Confirm that the record length value is the same as the length of the leftover buffer
         assertTrue(biometricDataBlockLength == biometricDataBlock.length, "Fingerprint record length does not match leftover buffer length");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Record length value is the same as the length of the leftover buffer","TRUE",(biometricDataBlockLength == biometricDataBlock.length),"");
 	}
 	
 	
@@ -444,17 +487,22 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data block is present
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",biometricDataBlock,"");
 		
 		assertTrue(biometricDataBlock.length >= 14);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than or equal to 14","TRUE",(biometricDataBlock.length >= 14),"");
 		
 		byte [] cBEFFProductIdentifierOwner  = Arrays.copyOfRange(biometricDataBlock, 10, 12);
 		byte [] cBEFFProductIdentifierBype  = Arrays.copyOfRange(biometricDataBlock, 12,14);
 		
 		
 		byte [] zeroBlock = { 0x00, 0x00 };
-		
+		// Owner
 		assertTrue(!Arrays.equals(cBEFFProductIdentifierOwner, zeroBlock), "Fingerprint product identifier owner and product identifier type are zero");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Fingerprint product identifier owner and product identifier type are not zero (Qwner)","TRUE",(!Arrays.equals(cBEFFProductIdentifierOwner, zeroBlock)),"");
+		// Bype
 		assertTrue(!Arrays.equals(cBEFFProductIdentifierBype, zeroBlock), "Fingerprint product identifier owner and product identifier type are zero");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than or equal to 14 (Bype)","TRUE",(!Arrays.equals(cBEFFProductIdentifierBype, zeroBlock)),"");
 	}
 	
 	//Confirm that capture equipment compliance has a value of 1000b
@@ -486,10 +534,14 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data block is present
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",biometricDataBlock,"");
+
 		assertTrue(biometricDataBlock.length >= 15);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than or equal to 15","TRUE",(biometricDataBlock.length >= 15),"");
 		
 		//Check the second byte of biometric data to confirm its high order bit is set 1000b (0x80)
 		assertTrue((biometricDataBlock[14] & 0xF0) == 0x80, "Fingerprint capture equipment compliance value is not 1000b (0x80)");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Fingerprint capture equipment compliance value is 1000b (0x80)","TRUE",((biometricDataBlock[14] & 0xF0) == 0x80),"");
 	}
 	
 	
@@ -520,8 +572,10 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data block is present
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",(biometricDataBlock != null),"");
 							
 		assertTrue(biometricDataBlock.length >= 16);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than or equal to 16","TRUE",(biometricDataBlock.length >= 16),"");
 
 		//Confirm that the first 12 bits are not null
 		byte[] ceiBytes = Arrays.copyOfRange(biometricDataBlock, 14, 16);
@@ -530,6 +584,7 @@ public class SP800_76_Tests {
 		cei &= 0x0FFF;
 		
 		assertTrue(cei > 0, "Fingerprint capture equipment id is NULL");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Fingerprint capture equipment id IS NOT NULL","TRUE",(cei > 0),"");
 	}
 	
 	//Confirm that scanned image in X are non-zero (and obtained from enrollment records??)
@@ -552,9 +607,11 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data block is present
 		assertNotNull(biometricDataBlock, "Biometric data block is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block is present in CardHolderBiometricData object","TRUE",(biometricDataBlock != null),"");
 							
 		//Is it located on the 20th byte?
 		assertTrue(biometricDataBlock.length >= 21);
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data block length is greater than or equal to 21","TRUE",(biometricDataBlock.length >= 21),"");
 
 		byte [] scannedIimageInX  = Arrays.copyOfRange(biometricDataBlock, 16, 18);
 		// moved due to atom splitting
@@ -564,7 +621,7 @@ public class SP800_76_Tests {
 		
 		//Check the values are not zero
 		assertTrue(!Arrays.equals(scannedIimageInX, zeroBlock), "Fingerprint scanned image in X is zero");
-		
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Fingerprint scanned image in X is not equal to zero","TRUE",!Arrays.equals(scannedIimageInX, zeroBlock),"");
 		
 	}
 	
@@ -1531,6 +1588,7 @@ public class SP800_76_Tests {
 				
 				//Make sure biometric data is present
 				assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+				a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 				
 				assertTrue(biometricData.length >= 12, "Biometric data must be at least 12 bytes long");
 				
@@ -1567,6 +1625,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length >= 21);
 		
@@ -1617,6 +1676,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length >= 37);
 		
@@ -1714,6 +1774,7 @@ public class SP800_76_Tests {
 					
 					//Make sure biometric data is present
 					assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+					a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 					
 					assertTrue(biometricData.length >= 40);
 					
@@ -1777,6 +1838,7 @@ public class SP800_76_Tests {
 					
 					//Make sure biometric data is present
 					assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+					a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 					
 					assertTrue(biometricData.length >= 41);
 					
@@ -1813,6 +1875,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length >= 42);
 		
@@ -1848,6 +1911,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length >= 61);
 		
@@ -1883,6 +1947,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length >= 85);
 		
@@ -1916,6 +1981,7 @@ public class SP800_76_Tests {
 		
 		//Make sure biometric data is present
 		assertNotNull(biometricData, "Biometric data is absent in CardHolderBiometricData object");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Biometric data is present in CardHolderBiometricData object","TRUE",(biometricData != null),"");
 		
 		assertTrue(biometricData.length >= 89);
 		
