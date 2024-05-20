@@ -870,6 +870,8 @@ public class CMSTests {
 			o = (SignedPIVDataObject) AtomHelper.getDataObject(oid);
 			asymmetricSignature = AtomHelper.getSignedDataForObject(o);
 			assertNotNull(asymmetricSignature, "No signature found for OID " + oid);
+			a_actualValueLogger.info("{},{},{},{},{}"," -- ","Signature found for " + oid,"TRUE",(asymmetricSignature != null),"");
+			
 			// Underlying decoder for OID identified containers with embedded content
 			// signing certs
 			// Now, select the appropriate signature cert for the object
@@ -987,6 +989,7 @@ public class CMSTests {
 				}
 				// Confirm serial from the cert matched serial from signer info
 				assertTrue(signingCert.getSerialNumber().compareTo(signerId.getSerialNumber()) == 0);
+				a_actualValueLogger.info("{},{},{},{},{}"," -- ","Serial number from the cert matches serial number from signer info ","TRUE",(signingCert.getSerialNumber().compareTo(signerId.getSerialNumber()) == 0),"");
 			}
 		} catch (Exception e) {
 			fail(e);

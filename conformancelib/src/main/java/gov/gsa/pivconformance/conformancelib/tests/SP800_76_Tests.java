@@ -24,6 +24,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gov.gsa.pivconformance.cardlib.card.client.APDUConstants;
 import gov.gsa.pivconformance.cardlib.card.client.CardHolderUniqueIdentifier;
@@ -213,7 +214,7 @@ public class SP800_76_Tests {
 			int signatureDataBlockLength = wrapped.getShort();
 			
 			assertTrue(biometricData.length == (88 + biometricDataBlockLength + signatureDataBlockLength),  "Signature data block length does not matche actual length");
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Signature data block length matches actual length","TRUE",(biometricData.length == (88 + biometricDataBlockLength + signatureDataBlockLength),"");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Signature data block length matches actual length","TRUE",(biometricData.length == (88 + biometricDataBlockLength + signatureDataBlockLength)),"");
 
 		 }
 	}

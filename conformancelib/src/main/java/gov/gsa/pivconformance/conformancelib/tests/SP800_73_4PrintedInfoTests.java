@@ -118,7 +118,7 @@ public class SP800_73_4PrintedInfoTests {
 			}
 		} else {
 			assertFalse(tagList.contains(berOrgAffiliationL2Tag));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Tag 0x08 follows tag 0x07 if present","TRUE",(orgAffiliationTagL2Index == orgAffiliationTagIndex + 1),"");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Tag 0x08 follows tag 0x07 if present","FALSE",tagList.contains(berOrgAffiliationL2Tag),"");
 		}
 	}
 	
@@ -192,13 +192,13 @@ public class SP800_73_4PrintedInfoTests {
 			int serialNumberTagIndex = tagList.indexOf(berAgencyCardSerialTag);
 			int issuerIdTagIndex = tagList.indexOf(berIssuerIDTag);
 			assertTrue(nameTagIndex < employeeAffiliationTagIndex, "Tag 0x02 must follow tag 0x01");
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","No tags other than (0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0xFE) are present","TRUE",present,"");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","No tags other than (0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0xFE) are present","TRUE",(nameTagIndex < employeeAffiliationTagIndex),"");
 
 			assertTrue(employeeAffiliationTagIndex < serialNumberTagIndex , "Tag 0x05 must follow tag 0x02");
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","No tags other than (0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0xFE) are present","TRUE",present,"");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","No tags other than (0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0xFE) are present","TRUE",(employeeAffiliationTagIndex < serialNumberTagIndex),"");
 
 			assertTrue(serialNumberTagIndex < issuerIdTagIndex, "Tag 0x06 must follow tag 0x05");
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","No tags other than (0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0xFE) are present","TRUE",present,"");
+			a_actualValueLogger.info("{},{},{},{},{}","  --  ","No tags other than (0x01, 0x02, 0x05, 0x06, 0x07, 0x08, 0xFE) are present","TRUE",(serialNumberTagIndex < issuerIdTagIndex),"");
 		}
 		catch (Exception e) {
 			fail(e);
