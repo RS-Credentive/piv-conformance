@@ -121,7 +121,7 @@ public class X509DataObjectTests {
 		BerTag berEDCTag = new BerTag(TagConstants.ERROR_DETECTION_CODE_TAG);
 		
 		assertTrue(tagList.contains(berEDCTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Tag List contains Ber Error Detection Code Tag","TRUE",(tagList.contains(berEDCTag),"");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Tag List contains Ber Error Detection Code Tag","TRUE",tagList.contains(berEDCTag),"");
 
 		int tagIndex = tagList.indexOf(berCertTag);
 		
@@ -199,7 +199,7 @@ public class X509DataObjectTests {
 		BerTag berEDCTag = new BerTag(TagConstants.ERROR_DETECTION_CODE_TAG);
 		
 		assertTrue(tagList.contains(berEDCTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Check that the tag is present in the all CCC tags list","TRUE",present,"");
+		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Check that the tag is present in the all CCC tags list","TRUE",tagList.contains(berEDCTag),"");
 		
 
 		boolean ecHasData =  o.getErrorDetectionCodeHasData();
