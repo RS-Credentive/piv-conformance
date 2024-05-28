@@ -1055,7 +1055,7 @@ public class CMSTests {
 
 					// Confirm issuer from the cert matcher issuer from the signer info
 					assertTrue(subjectFromCert.equals(dnFromAttribute), "Issuer from signer info doens't match issuer on signing cert");
-
+					a_actualValueLogger.info("{},{},{},{},{}"," -- ","Issuer from signer info matches issuer on signing cert","TRUE",subjectFromCert.equals(dnFromAttribute),"");
 				} catch (IOException e) {
 					fail(e);
 				}

@@ -182,6 +182,7 @@ public class PKIX_X509DataObjectTests {
         } else if(oid.compareTo(APDUConstants.X509_CERTIFICATE_FOR_KEY_MANAGEMENT_OID) == 0) {
 			a_actualValueLogger.info("{},{},{},{},{}","  --  ","(OID compared to X509_CERTIFICATE_FOR_KEY_MANAGEMENT_OID is equal to 0","TRUE",(oid.compareTo(APDUConstants.X509_CERTIFICATE_FOR_KEY_MANAGEMENT_OID) ),"");
 			if (cert.getPublicKey() instanceof RSAPublicKey) {
+				a_actualValueLogger.info("{},{},{},{},{}","  --  ","(Certificate Public Key is instance of RSA Public Key","TRUE",(cert.getPublicKey() instanceof RSAPublicKey),"");
 				assertFalse(foundUsage.hasUsages(KeyUsage.digitalSignature), "digitialSignature is set");
 				assertFalse(foundUsage.hasUsages(KeyUsage.nonRepudiation), "nonRepudiation is set");
 				assertFalse(foundUsage.hasUsages(KeyUsage.keyAgreement), "keyAgreement is set");
@@ -192,6 +193,7 @@ public class PKIX_X509DataObjectTests {
 				assertFalse(foundUsage.hasUsages(KeyUsage.encipherOnly), "encipherOnly is set");
 				assertFalse(foundUsage.hasUsages(KeyUsage.decipherOnly), "decipherOnly is set");
 			} else if (cert.getPublicKey() instanceof ECPublicKey) {
+				a_actualValueLogger.info("{},{},{},{},{}","  --  ","(Certificate Public Key is instance of EC Public Key","TRUE",(cert.getPublicKey() instanceof ECPublicKey),"");
 				assertFalse(foundUsage.hasUsages(KeyUsage.digitalSignature), "digitialSignature is set");
 				assertFalse(foundUsage.hasUsages(KeyUsage.nonRepudiation), "nonRepudiation is set");
 				assertTrue(foundUsage.hasUsages(KeyUsage.keyAgreement), "keyAgreement is not set");
