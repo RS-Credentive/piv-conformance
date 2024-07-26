@@ -2,7 +2,7 @@ package gov.gsa.pivconformance.cardlib.tools;
 
 import gov.gsa.pivconformance.cardlib.utils.PCSCUtils;
 import gov.gsa.pivconformance.cardlib.utils.VersionUtils;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
