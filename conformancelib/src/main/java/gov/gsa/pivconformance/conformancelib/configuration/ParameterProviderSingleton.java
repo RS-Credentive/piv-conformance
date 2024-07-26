@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParameterProviderSingleton {
+public final class ParameterProviderSingleton {
     List<List<String>> m_parameterStack;
     Map<String, List<String>> m_parametersDict;
     Map<String, String> m_containerMap;

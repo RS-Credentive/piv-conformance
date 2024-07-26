@@ -20,7 +20,7 @@ import gov.gsa.pivconformance.cardlib.tlv.BerTlvs;
  * Encapsulates a connection description data object (tag 0x7F21) as defined by
  * SP800-73-4 table 2
  */
-public class ConnectionDescription {
+public final class ConnectionDescription {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(ConnectionDescription.class);
 

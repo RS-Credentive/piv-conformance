@@ -265,8 +265,11 @@ public class TagBoundaryManager {
         TagLengthRule tlr = tlRules.get(tag);
         int hi = tlr.getHighVal();
         int lo = tlr.getLowVal();
-        CONSTRAINT rule;
-        if ((rule = tlr.getRule()) != null) {
+        // ROB changed this
+        // CONSTRAINT rule;
+        // if ((rule = tlr.getRule()) != null) {
+        CONSTRAINT rule = tlr.getRule();
+        if (rule != null) {
             switch (rule) {
             case VARIABLE:
                 // When there's a range, negative indicates below floor,

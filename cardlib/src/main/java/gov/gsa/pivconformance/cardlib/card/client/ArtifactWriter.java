@@ -1,6 +1,7 @@
 /**
  *
  */
+
 package gov.gsa.pivconformance.cardlib.card.client;
 
 import java.io.File;
@@ -109,7 +110,7 @@ public class ArtifactWriter {
                 File g = new File(m_artifactDir + File.separator + mapElement.getKey() + File.separator + newBaseName);
                 try {
                     result = f.renameTo(g);
-                } catch (Exception e) {
+                } catch (SecurityException e) {
                     e.printStackTrace();
                 }
             }

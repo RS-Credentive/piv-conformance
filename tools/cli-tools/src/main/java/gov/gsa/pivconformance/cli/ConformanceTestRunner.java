@@ -1,4 +1,4 @@
-package gov.gsa.pivconformancetools;
+package gov.gsa.pivconformance.cli;
 
 import gov.gsa.conformancelib.configuration.CardSettingsSingleton;
 import gov.gsa.conformancelib.tests.SignedObjectVerificationTests;
@@ -40,6 +40,7 @@ public class ConformanceTestRunner {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(ConformanceTestRunner.class);
     private static final Options s_options = new Options();
+
     static {
         s_options.addOption("h", "help", false, "Print this help and exit");
         s_options.addOption("c", "config", true, "path to config file");
@@ -65,12 +66,12 @@ public class ConformanceTestRunner {
             PrintHelpAndExit(1);
         }
 
-        if(cmd.hasOption("help")) {
+        if (cmd.hasOption("help")) {
             PrintHelpAndExit(0);
         }
 
         Connection conn = null;
-        if(cmd.hasOption("config")) {
+        if (cmd.hasOption("config")) {
             String dbParam = cmd.getOptionValue("config");
             File f = new File(dbParam);
             if (!f.exists()) {
@@ -110,29 +111,30 @@ public class ConformanceTestRunner {
             ResultSet rs = configStatement.executeQuery(FIRST_CONFIG);
             rs.next();
             String readerName = rs.getString("ReaderName");
-            if(readerName == null || readerName.isEmpty()) {
+            if (readerName == null || readerName.isEmpty()) {
                 s_logger.info("No reader was specified. Using the first available reader.");
                 css.setReaderIndex(0);
             } else {
                 int curr = -1;
                 int found = curr;
                 List<String> readers = PCSCUtils.GetConnectedReaders();
-                for(String reader : readers) {
+                for (String reader : readers) {
                     curr++;
-                    if(reader.toUpperCase().startsWith(readerName.toUpperCase())) {
+                    if (reader.toUpperCase().startsWith(readerName.toUpperCase())) {
                         s_logger.info("Found reader matching {} from configuration", curr);
                         found = curr;
                         break;
                     }
                 }
-                if(found == -1) {
-                    s_logger.warn("No reader matching {} is connected to the system. Using the first reader available.", readerName);
+                if (found == -1) {
+                    s_logger.warn("No reader matching {} is connected to the system. Using the first reader available.",
+                            readerName);
                     css.setReaderIndex(0);
                 } else {
                     css.setReaderIndex(found);
                 }
                 String pinFromConfig = rs.getString("ApplicationPIN");
-                if(pinFromConfig != null && !pinFromConfig.isEmpty()) {
+                if (pinFromConfig != null && !pinFromConfig.isEmpty()) {
                     css.setApplicationPin(pinFromConfig);
                 } else {
                     css.setApplicationPin("123456");
@@ -143,26 +145,29 @@ public class ConformanceTestRunner {
         }
 
         LauncherDiscoveryRequestBuilder suiteBuilder = LauncherDiscoveryRequestBuilder.request();
+
         List<DiscoverySelector> discoverySelectors = new ArrayList<>();
-        try (Statement testStatement = conn.createStatement()) {
+
+        try (Statement testStatement = conn.createStatement();) {
+
             ResultSet rs = testStatement.executeQuery(TEST_SET);
-            while(rs.next()) {
+
+            while (rs.next()) {
                 int disabled = rs.getInt("Disabled");
                 String groupName = rs.getString("GroupName");
-                if(groupName == null || groupName.isEmpty()) {
+                if (groupName == null || groupName.isEmpty()) {
                     s_logger.error("Record {} from configuration file {} contains no valid group name. This is a bug.",
                             rs.getInt("Id"), cmd.getOptionValue("config"));
                     System.exit(1);
                 }
-                if(disabled != 0)
-                {
+                if (disabled != 0) {
                     s_logger.info("Test {} was disabled in configuration", groupName);
                     continue;
                 }
                 Class<?> testClass = null;
                 try {
                     testClass = Class.forName("gov.gsa.pivconformance.conformanclib.tests." + groupName);
-                    or(Method m : testClass.getMethods()) {
+                    for (Method m : testClass.getMethods()) {
                         s_logger.debug("method: {}", m.getName());
                     }
                 } catch (ClassNotFoundException e) {
@@ -170,11 +175,12 @@ public class ConformanceTestRunner {
                     break;
                 }
                 String testNameFromConfig = rs.getString("TestName");
-                if(testNameFromConfig != null && !testNameFromConfig.isEmpty()) {
+                if (testNameFromConfig != null && !testNameFromConfig.isEmpty()) {
                     String testName = testNameFromConfig;
                     if (!testNameFromConfig.startsWith("test"))
                         testName = "test" + testNameFromConfig;
-                    discoverySelectors.add(selectMethod("gov.gsa.pivconformance.conformancelib.tests." + groupName + "#" + testName + "(org.junit.jupiter.api.TestReporter)"));
+                    discoverySelectors.add(selectMethod("gov.gsa.pivconformance.conformancelib.tests." + groupName + "#"
+                            + testName + "(org.junit.jupiter.api.TestReporter)"));
                     s_logger.debug("Adding {}.{} from config", groupName, testName);
                 } else {
                     discoverySelectors.add(selectClass(testClass));
@@ -187,7 +193,7 @@ public class ConformanceTestRunner {
         suiteBuilder.selectors(discoverySelectors);
         LauncherDiscoveryRequest ldr = suiteBuilder.build();
         Launcher l = LauncherFactory.create();
-        //TestPlan tp = l.discover(ldr);
+        // TestPlan tp = l.discover(ldr);
         PrintWriter out = new PrintWriter(System.out);
         SummaryGeneratingListener summaryListener = registerListeners(out, l);
         l.registerTestExecutionListeners(summaryListener);
@@ -195,7 +201,7 @@ public class ConformanceTestRunner {
         System.out.println("--------------------------------------------------------------");
         TestExecutionSummary summary = summaryListener.getSummary();
         List<TestExecutionSummary.Failure> failures = summary.getFailures();
-        for(TestExecutionSummary.Failure f : failures) {
+        for (TestExecutionSummary.Failure f : failures) {
             TestIdentifier ti = f.getTestIdentifier();
             System.out.println(String.format("Test failure: %s", ti.getDisplayName()));
         }
@@ -211,8 +217,8 @@ public class ConformanceTestRunner {
     }
 
     private static TestExecutionListener createDetailsPrintingListener(PrintWriter out) {
-        boolean disableAnsiColors = false;// options.isAnsiColorOutputDisabled();
-        Theme theme = Theme.valueOf(Charset.defaultCharset());// options.getTheme();
+        boolean disableAnsiColors = false; // options.isAnsiColorOutputDisabled();
+        Theme theme = Theme.valueOf(Charset.defaultCharset()); // options.getTheme();
         return new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme);
     }
 }

@@ -1,6 +1,7 @@
 /**
  *
  */
+
 package gov.gsa.pivconformance.cardlib.card.client;
 
 import java.security.cert.X509Certificate;
@@ -17,7 +18,7 @@ import gov.gsa.pivconformance.cardlib.tlv.*;
  *
  */
 
-public class DataModelSingleton {
+public final class DataModelSingleton {
     private static final Logger s_logger = LoggerFactory.getLogger(DataModelSingleton.class);
 
     TagBoundaryManager m_tagLengthRules;

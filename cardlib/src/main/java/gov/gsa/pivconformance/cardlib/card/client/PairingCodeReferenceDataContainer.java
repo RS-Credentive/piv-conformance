@@ -85,69 +85,61 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
     @Override
     public boolean decode() {
 
-        try {
-            byte[] rawBytes = this.getBytes();
+        byte[] rawBytes = this.getBytes();
 
-            if (rawBytes == null) {
-                s_logger.error("No buffer to decode for {}.", APDUConstants.oidNameMap.get(super.getOID()));
-                return false;
-            }
+        if (rawBytes == null) {
+            s_logger.error("No buffer to decode for {}.", APDUConstants.oidNameMap.get(super.getOID()));
+            return false;
+        }
 
-            BerTlvParser tlvp = new BerTlvParser(new CCTTlvLogger(this.getClass()));
-            BerTlvs outer = tlvp.parse(rawBytes);
+        BerTlvParser tlvp = new BerTlvParser(new CCTTlvLogger(this.getClass()));
+        BerTlvs outer = tlvp.parse(rawBytes);
 
-            if (outer == null) {
-                s_logger.error("Error parsing {}, unable to parse TLV value.",
-                        APDUConstants.oidNameMap.get(super.getOID()));
-                return false;
-            }
+        if (outer == null) {
+            s_logger.error("Error parsing {}, unable to parse TLV value.",
+                    APDUConstants.oidNameMap.get(super.getOID()));
+            return false;
+        }
 
-            List<BerTlv> values = outer.getList();
-            for (BerTlv tlv : values) {
-                if (tlv.isPrimitive()) {
-                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes),
-                            Hex.encodeHexString(tlv.getBytesValue()));
+        List<BerTlv> values = outer.getList();
+        for (BerTlv tlv : values) {
+            if (tlv.isPrimitive()) {
+                s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                        Hex.encodeHexString(tlv.getBytesValue()));
 
-                    BerTlvs outer2 = tlvp.parse(tlv.getBytesValue());
+                BerTlvs outer2 = tlvp.parse(tlv.getBytesValue());
 
-                    if (outer2 == null) {
-                        s_logger.error("Error parsing {}, unable to parse TLV value.",
-                                APDUConstants.oidNameMap.get(super.getOID()));
-                        return false;
-                    }
+                if (outer2 == null) {
+                    s_logger.error("Error parsing {}, unable to parse TLV value.",
+                            APDUConstants.oidNameMap.get(super.getOID()));
+                    return false;
+                }
 
-                    List<BerTlv> values2 = outer2.getList();
-                    for (BerTlv tlv2 : values2) {
-                        if (tlv2.isPrimitive()) {
-                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.PAIRING_CODE_TAG)) {
+                List<BerTlv> values2 = outer2.getList();
+                for (BerTlv tlv2 : values2) {
+                    if (tlv2.isPrimitive()) {
+                        if (Arrays.equals(tlv2.getTag().bytes, TagConstants.PAIRING_CODE_TAG)) {
 
-                                m_pairingCode = new String(tlv2.getBytesValue());
-                                m_content.put(tlv2.getTag(), tlv2.getBytesValue());
+                            m_pairingCode = new String(tlv2.getBytesValue());
+                            m_content.put(tlv2.getTag(), tlv2.getBytesValue());
 
-                            } else {
-                                s_logger.warn("Unexpected tag: {} with value: {}",
-                                        Hex.encodeHexString(tlv2.getTag().bytes),
-                                        Hex.encodeHexString(tlv2.getBytesValue()));
-                            }
                         } else {
-                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ERROR_DETECTION_CODE_TAG)) {
+                            s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv2.getTag().bytes),
+                                    Hex.encodeHexString(tlv2.getBytesValue()));
+                        }
+                    } else {
+                        if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ERROR_DETECTION_CODE_TAG)) {
 
-                                m_errorDetectionCode = true;
-                                m_content.put(tlv2.getTag(), tlv2.getBytesValue());
+                            m_errorDetectionCode = true;
+                            m_content.put(tlv2.getTag(), tlv2.getBytesValue());
 
-                            } else {
-                                s_logger.warn("Unexpected tag: {} with value: {}",
-                                        Hex.encodeHexString(tlv2.getTag().bytes),
-                                        Hex.encodeHexString(tlv2.getBytesValue()));
-                            }
+                        } else {
+                            s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv2.getTag().bytes),
+                                    Hex.encodeHexString(tlv2.getBytesValue()));
                         }
                     }
                 }
             }
-        } catch (Exception ex) {
-
-            s_logger.error("Error parsing {}: {}", APDUConstants.oidNameMap.get(super.getOID()), ex.getMessage());
-            return false;
         }
 
         if (m_pairingCode == "")

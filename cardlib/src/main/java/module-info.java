@@ -10,5 +10,5 @@ module gov.gsa.pivconformance.cardlib {
     requires transitive java.smartcardio;
     requires transitive org.bouncycastle.pkix;
     requires transitive org.bouncycastle.provider;
-
+    requires java.sql;
 }

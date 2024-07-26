@@ -1,6 +1,7 @@
 /**
  *
  */
+
 package gov.gsa.pivconformance.conformancelib.utilities;
 
 import ch.qos.logback.classic.Logger;
@@ -123,7 +124,9 @@ public class TestRunLogController {
                 Logger logger = (Logger) LoggerFactory.getLogger(loggerClass);
                 TimeStampedFileAppender<ILoggingEvent> appender = null;
 
-                if ((appender = (TimeStampedFileAppender<ILoggingEvent>) logger.getAppender(loggerName)) != null) {
+                appender = (TimeStampedFileAppender<ILoggingEvent>) logger.getAppender(loggerName);
+
+                if (appender != null) {
                     m_filenames.put(loggerName, appender.getFile());
                     m_appenders.put(loggerName, appender);
                     try {

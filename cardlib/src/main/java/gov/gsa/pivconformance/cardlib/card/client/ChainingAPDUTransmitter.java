@@ -12,7 +12,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.gsa.pivconformance.cardlib.card.client.APDUConstants;
 import gov.gsa.pivconformance.cardlib.utils.ITransmitCounter;
 import gov.gsa.pivconformance.cardlib.utils.PCSCWrapper;
 

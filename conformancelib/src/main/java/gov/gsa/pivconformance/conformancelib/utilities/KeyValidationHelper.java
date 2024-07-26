@@ -28,8 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class KeyValidationHelper {
+public final class KeyValidationHelper {
     static Logger s_logger = LoggerFactory.getLogger(KeyValidationHelper.class);
+
     static {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }

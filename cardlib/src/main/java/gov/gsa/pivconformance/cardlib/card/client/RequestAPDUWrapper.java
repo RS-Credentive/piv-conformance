@@ -263,8 +263,8 @@ public class RequestAPDUWrapper {
         this.extendedApdu = extendedApdu;
     }
 
-    public void setNextRequest(RequestAPDUWrapper chainedRequest) {
-        this.nextRequest = chainedRequest;
+    public void setNextRequest(RequestAPDUWrapper nextRequest) {
+        this.nextRequest = nextRequest;
     }
 
     public void setSensitiveContent(boolean sensitiveContent) {

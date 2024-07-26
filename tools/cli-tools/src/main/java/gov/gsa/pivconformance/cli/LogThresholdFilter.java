@@ -1,4 +1,4 @@
-package gov.gsa.pivconformancetools;
+package gov.gsa.pivconformance.cli;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;

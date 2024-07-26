@@ -91,7 +91,7 @@ public class PIVMiddleware {
             // XXX Need to figure out if connections needs to be reset or not
             card.disconnect(false);
             // Invalidate cardHandle object
-            cardHandle = new CardHandle();
+            cardHandle.invalidate();
 
         } catch (Exception ex) {
 

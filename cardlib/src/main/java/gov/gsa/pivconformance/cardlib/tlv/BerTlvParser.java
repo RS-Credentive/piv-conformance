@@ -156,7 +156,7 @@ public class BerTlvParser {
     }
 
     private static class ParseResult {
-        public ParseResult(BerTlv aTlv, int aOffset) {
+        ParseResult(BerTlv aTlv, int aOffset) {
             tlv = aTlv;
             offset = aOffset;
         }

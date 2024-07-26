@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class BerTlv {
 
-    private final static Charset ASCII = StandardCharsets.US_ASCII;
+    private static final Charset ASCII = StandardCharsets.US_ASCII;
 
     private final BerTag theTag;
     private final byte[] theValue;
@@ -147,7 +147,10 @@ public class BerTlv {
 
         for (i = 0; i < theValue.length; i++) {
             j = theValue[i];
-            number = number * 256 + (j < 0 ? j += 256 : j);
+            // NOTE: Rob Changed this to fix a checkstyle issue - assuming that the value of
+            // J did not need to be changed.
+            // number = number * 256 + (j < 0 ? j += 256 : j);
+            number = number * 256 + (j < 0 ? j + 256 : j);
         }
         return number;
     }

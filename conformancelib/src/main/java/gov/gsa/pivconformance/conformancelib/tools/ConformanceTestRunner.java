@@ -47,6 +47,7 @@ public class ConformanceTestRunner {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(ConformanceTestRunner.class);
     private static final Options s_options = new Options();
+
     static {
         s_options.addOption("h", "help", false, "Print this help and exit");
         s_options.addOption("c", "config", true, "path to config file");
@@ -125,9 +126,14 @@ public class ConformanceTestRunner {
             String appPin = cmd.getOptionValue("appPin");
             css.setApplicationPin(appPin);
         } else {
-            Console cons = System.console();
             char[] passwd;
-            if (cons != null && (passwd = cons.readPassword("[Enter %s]", "Application Pin")) != null) {
+
+            Console cons = System.console();
+            if (cons != null) {
+                passwd = cons.readPassword("[Enter %s]", "Application Pin");
+            }
+
+            if (passwd != null) {
                 css.setApplicationPin(new String(passwd));
             }
         }
@@ -308,8 +314,8 @@ public class ConformanceTestRunner {
     }
 
     private static TestExecutionListener createDetailsPrintingListener(PrintWriter out) {
-        boolean disableAnsiColors = false;// options.isAnsiColorOutputDisabled();
-        Theme theme = Theme.valueOf(Charset.defaultCharset());// options.getTheme();
+        boolean disableAnsiColors = false; // options.isAnsiColorOutputDisabled();
+        Theme theme = Theme.valueOf(Charset.defaultCharset()); // options.getTheme();
         return new gov.gsa.pivconformance.conformancelib.tools.junitconsole.VerboseTreePrintingListener(out,
                 disableAnsiColors, 16, theme);
     }

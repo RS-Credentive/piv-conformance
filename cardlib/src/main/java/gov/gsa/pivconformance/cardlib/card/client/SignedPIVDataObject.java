@@ -1,6 +1,7 @@
 /**
  *
  */
+
 package gov.gsa.pivconformance.cardlib.card.client;
 
 import java.io.IOException;
@@ -247,8 +248,8 @@ public class SignedPIVDataObject extends PIVDataObject {
     /**
      * @param m_signatureAlgorithmName the m_signatureAlgorithmName to set
      */
-    public void setSignatureAlgorithmName(String m_signatureAlgorithmName) {
-        this.m_signatureAlgorithmName = m_signatureAlgorithmName;
+    public void setSignatureAlgorithmName(String name) {
+        this.m_signatureAlgorithmName = name;
     }
 
     /**

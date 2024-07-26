@@ -25,7 +25,7 @@ import static gov.gsa.pivconformance.cardlib.card.client.APDUConstants.getFileNa
  * A base class for items that will implement the IPIVApplication interface, to
  * allow those methods that can be common across implementations to be shared
  */
-abstract public class AbstractPIVApplication implements IPIVApplication {
+public abstract class AbstractPIVApplication implements IPIVApplication {
 
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(AbstractPIVApplication.class);
@@ -96,7 +96,7 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
             if (properties != null)
                 applicationProperties.setBytes(properties);
 
-        } catch (Exception ex) {
+        } catch (SecurityException | CardException ex) {
 
             s_logger.error("Error selecting card application: {}", ex.getMessage());
             return MiddlewareStatus.PIV_CONNECTION_FAILURE;
@@ -180,13 +180,19 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
     public MiddlewareStatus pivGetAllDataContainers(CardHandle cardHandle, List<PIVDataObject> dataList) {
 
         MiddlewareStatus result = MiddlewareStatus.PIV_OK;
+        // TODO: not sure why we're building this list - it doesn't look like we use it
+        // for anything.
+        List<PIVDataObject> pivObjList;
 
         if (cardHandle == null)
             return MiddlewareStatus.PIV_INVALID_CARD_HANDLE;
 
         try {
-            if (dataList == null)
-                dataList = new ArrayList<PIVDataObject>();
+            if (dataList == null) {
+                pivObjList = new ArrayList<PIVDataObject>();
+            } else {
+                pivObjList = dataList;
+            }
 
             for (String containerOID : APDUConstants.AllContainers()) {
 
@@ -199,17 +205,13 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
 
                 // Add the data object to the list if successful return code
                 if (result == MiddlewareStatus.PIV_OK)
-                    dataList.add(dataObject);
+                    pivObjList.add(dataObject);
             }
 
         } catch (SecurityException ex) {
 
             s_logger.info("Error retrieving data from the card application: {}", ex.getMessage());
             return MiddlewareStatus.PIV_SECURITY_CONDITIONS_NOT_SATISFIED;
-        } catch (Exception ex) {
-
-            s_logger.info("Error retrieving data from the card application: {}", ex.getMessage());
-            return MiddlewareStatus.PIV_CONNECTION_FAILURE;
         }
 
         return MiddlewareStatus.PIV_OK;
@@ -304,12 +306,9 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
             data.setOID(OID);
             data.setContainerName(getFileNameForOid(OID));
             data.setBytes(response.getData());
-        } catch (SecurityException ex) {
+        } catch (SecurityException | IOException | CardException ex) {
             s_logger.error("Error retrieving data from the card application: {}", ex.getMessage(), ex);
             return MiddlewareStatus.PIV_SECURITY_CONDITIONS_NOT_SATISFIED;
-        } catch (Exception ex) {
-            s_logger.error("Error retrieving data from the card application: {}", ex.getMessage(), ex);
-            return MiddlewareStatus.PIV_CONNECTION_FAILURE;
         }
 
         return MiddlewareStatus.PIV_OK;
@@ -373,14 +372,10 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
             data.setOID(OID);
             data.setBytes(response.getData());
 
-        } catch (SecurityException ex) {
+        } catch (SecurityException | IOException | CardException ex) {
 
             s_logger.info("Error retrieving data from the card application: {}", ex.getMessage());
             return MiddlewareStatus.PIV_SECURITY_CONDITIONS_NOT_SATISFIED;
-        } catch (Exception ex) {
-
-            s_logger.info("Error retrieving data from the card application: {}", ex.getMessage());
-            return MiddlewareStatus.PIV_CONNECTION_FAILURE;
         }
 
         return MiddlewareStatus.PIV_OK;
@@ -462,7 +457,7 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
             }
             algorithmOutput.setBytes(response.getData());
             cardHandle.setCurrentChannel(channel);
-        } catch (Exception e) {
+        } catch (SecurityException | CardException e) {
             s_logger.error("Failed to complete pivCrypt operation for algorithm {} (key {}",
                     Hex.encodeHexString(new byte[] { algorithmIdentifier }),
                     Hex.encodeHexString(new byte[] { keyReference }), e);
@@ -539,7 +534,7 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
             publicKey.setBytes(response.getData());
             cardHandle.setCurrentChannel(channel);
 
-        } catch (Exception ex) {
+        } catch (CardException ex) {
 
             s_logger.error("Error generating key pair: {}", ex.getMessage());
             return MiddlewareStatus.PIV_CONNECTION_FAILURE;
@@ -600,7 +595,7 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
                 return MiddlewareStatus.PIV_SM_FAILED;
             }
 
-        } catch (Exception ex) {
+        } catch (NullPointerException ex) {
 
             s_logger.error("Error establishing secure messaging: {}", ex.getMessage());
             return MiddlewareStatus.PIV_CARD_READER_ERROR;
@@ -692,7 +687,7 @@ abstract public class AbstractPIVApplication implements IPIVApplication {
                 return MiddlewareStatus.PIV_CARD_READER_ERROR;
             }
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
 
             s_logger.error("Error writing data object to the card: {}", ex.getMessage());
             return MiddlewareStatus.PIV_CARD_READER_ERROR;

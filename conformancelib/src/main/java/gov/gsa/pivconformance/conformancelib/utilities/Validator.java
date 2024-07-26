@@ -470,8 +470,8 @@ public class Validator {
      *
      * @param m_storePass password to save
      */
-    public void setStorePass(String m_storePass) {
-        this.m_storePass = m_storePass;
+    public void setStorePass(String newStorePass) {
+        this.m_storePass = newStorePass;
     }
 
     /**

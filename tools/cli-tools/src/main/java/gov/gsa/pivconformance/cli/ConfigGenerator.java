@@ -1,4 +1,4 @@
-package gov.gsa.pivconformancetools;
+package gov.gsa.pivconformance.cli;
 
 import gov.gsa.pivconformance.utils.VersionUtils;
 import org.apache.commons.cli.*;
@@ -17,6 +17,7 @@ public class ConfigGenerator {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(ConfigGenerator.class);
     private static final Options s_options = new Options();
+
     static {
         s_options.addOption("h", "help", false, "Print this help and exit");
         s_options.addOption("d", "database", true, "path to database file");

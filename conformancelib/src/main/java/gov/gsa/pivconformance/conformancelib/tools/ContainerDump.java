@@ -209,7 +209,10 @@ public class ContainerDump {
             } else {
                 Console cons = System.console();
                 char[] passwd;
-                if (cons != null && (passwd = cons.readPassword("[Enter %s]", "PIV Application Pin")) != null) {
+                if (cons != null) {
+                    passwd = cons.readPassword("[Enter %s]", "PIV Application Pin");
+                }
+                if (passwd != null) {
                     appPin = new String(passwd);
                     css.setApplicationPin(appPin);
                 }

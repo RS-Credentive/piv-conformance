@@ -809,8 +809,8 @@ public class SP800_76_Tests {
 
                 // Height of the Size of Scanned Image in y direction is the larger of the
                 // heights of the two input images.
-                assertTrue(true);// TODO: Need to grab both FMRs and ensure that the one with the largest Y size
-                                 // matches
+                assertTrue(true); // TODO: Need to grab both FMRs and ensure that the one with the largest Y size
+                                  // matches
                 a_actualValueLogger.info("{},{},{},{},{}", "  --  ",
                                 "Height of the Size of Scanned Image in y direction is the larger of the heights of the two input images",
                                 true, "");

@@ -5,7 +5,7 @@ import java.awt.Color;
 import javax.swing.JProgressBar;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
-public class ColorChangingProgressBar extends JProgressBar {
+public final class ColorChangingProgressBar extends JProgressBar {
     /**
      *
      */
@@ -22,7 +22,7 @@ public class ColorChangingProgressBar extends JProgressBar {
         m_ui.setCurrentUiColor(currentColor);
     }
 
-    private class ColorChangingProgressBarUi extends BasicProgressBarUI {
+    private final class ColorChangingProgressBarUi extends BasicProgressBarUI {
         public void setCurrentUiColor(Color currentColor) {
         }
         /*

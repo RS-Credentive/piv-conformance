@@ -49,6 +49,7 @@ public class OSUtils {
         case OSX:
         case LINUX:
             rv = "/tmp";
+            break;
         default:
             rv = System.getenv("TEMP");
         }

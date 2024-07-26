@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package gov.gsa.pivconformancetools.junitconsole;
+package gov.gsa.pivconformance.cli.junitconsole;
 
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static gov.gsa.pivconformancetools.junitconsole.Color.NONE;
@@ -166,8 +166,8 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
      */
     private void printDetail(Color color, String detail, String format, Object... args) {
         // print initial verticals - expecting to be at start of the line
-        String verticals = verticals(frames.size() + 1);
-        printf(NONE, verticals);
+        String vertical = verticals(frames.size() + 1);
+        printf(NONE, vertical);
         String detailFormat = "%9s";
         // omit detail string if it's empty
         if (!detail.isEmpty()) {
@@ -183,7 +183,7 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
         String[] lines = format.split("\\R");
         printf(color, "%s", lines[0]);
         if (lines.length > 1) {
-            String delimiter = System.lineSeparator() + verticals + String.format(detailFormat + "    ", "");
+            String delimiter = System.lineSeparator() + vertical + String.format(detailFormat + "    ", "");
             for (int i = 1; i < lines.length; i++) {
                 printf(NONE, "%s", delimiter);
                 printf(color, "%s", lines[i]);

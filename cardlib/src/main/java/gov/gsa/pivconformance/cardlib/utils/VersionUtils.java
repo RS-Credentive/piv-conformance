@@ -3,6 +3,7 @@ package gov.gsa.pivconformance.cardlib.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -24,7 +25,7 @@ public class VersionUtils {
             VersionUtils.class.getClassLoader();
             pis = VersionUtils.class.getResourceAsStream("version.properties");
             s_properties.load(pis);
-        } catch (Exception e) {
+        } catch (NullPointerException | IOException e) {
             s_logger.debug(
                     "Unable to read version.properties file from classpath. This may only be available from jar packaged builds.",
                     e);

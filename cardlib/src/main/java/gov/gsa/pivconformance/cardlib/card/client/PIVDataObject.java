@@ -200,7 +200,8 @@ public class PIVDataObject {
             BerTag tag = pair.getKey();
             byte[] value = pair.getValue();
             // Check length
-            if (!(this.m_lengthOk = this.inBounds(oid, tag, value.length))) {
+            // RS Changed this from assignment "=" to equality check "=="
+            if (!(this.m_lengthOk == this.inBounds(oid, tag, value.length))) {
                 return false;
             }
         }

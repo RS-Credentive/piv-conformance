@@ -9,8 +9,6 @@ import org.bouncycastle.util.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gov.gsa.pivconformance.cardlib.card.client.Algorithm;
-import gov.gsa.pivconformance.cardlib.card.client.SignedPIVDataObject;
 import gov.gsa.pivconformance.cardlib.tlv.BerTag;
 import gov.gsa.pivconformance.cardlib.tlv.BerTlv;
 import gov.gsa.pivconformance.cardlib.tlv.BerTlvParser;
@@ -270,7 +268,10 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
         }
         // Create a bit array to read 5 bits at a time.
         byte[] bits = bitstr.getBytes();
-        int length, value, bctr, pctr;
+        int length;
+        int value;
+        int bctr;
+        int pctr;
         String digits = "";
         for (length = bits.length, value = 0, bctr = 0, pctr = 0; bctr < length - 5; bctr++) {
             // If this bit is a parity bit, process the value and reset the next digit value

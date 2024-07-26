@@ -3,8 +3,6 @@ package gov.gsa.pivconformance.cardlib.tlv;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import gov.gsa.pivconformance.cardlib.tlv.TagLengthRule;
-
 /**
  * Each ContainerRuleset consists of a container name and HashMap of
  * TagLengthRules for each tag in the container

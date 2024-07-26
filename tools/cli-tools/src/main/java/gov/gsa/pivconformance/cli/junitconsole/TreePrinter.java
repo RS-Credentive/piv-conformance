@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package gov.gsa.pivconformancetools.junitconsole;
+package gov.gsa.pivconformance.cli.junitconsole;
 
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static gov.gsa.pivconformancetools.junitconsole.Color.CONTAINER;

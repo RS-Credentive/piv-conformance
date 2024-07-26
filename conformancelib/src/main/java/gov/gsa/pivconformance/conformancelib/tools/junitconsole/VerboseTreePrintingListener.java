@@ -33,7 +33,7 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
     private final boolean disableAnsiColors;
     private final gov.gsa.pivconformance.conformancelib.junitoptions.Theme theme;
     private final Deque<Long> frames;
-    private final String[] verticals;
+    private final String[] verticalsArray;
     private long executionStartedMillis;
 
     public VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel,
@@ -47,13 +47,13 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
         this.frames.push(0L);
 
         // create and populate vertical indentation lookup table
-        this.verticals = new String[Math.max(10, maxContainerNestingLevel) + 1];
-        this.verticals[0] = ""; // no frame
-        this.verticals[1] = ""; // synthetic root "/" level
-        this.verticals[2] = ""; // "engine" level
+        this.verticalsArray = new String[Math.max(10, maxContainerNestingLevel) + 1];
+        this.verticalsArray[0] = ""; // no frame
+        this.verticalsArray[1] = ""; // synthetic root "/" level
+        this.verticalsArray[2] = ""; // "engine" level
 
-        for (int i = 3; i < verticals.length; i++) {
-            verticals[i] = verticals[i - 1] + theme2.vertical();
+        for (int i = 3; i < verticalsArray.length; i++) {
+            verticalsArray[i] = verticalsArray[i - 1] + theme2.vertical();
         }
     }
 
@@ -144,7 +144,7 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
     }
 
     private String verticals(int index) {
-        return verticals[Math.min(index, verticals.length)];
+        return verticalsArray[Math.min(index, verticalsArray.length)];
     }
 
     private void printVerticals(String tile) {

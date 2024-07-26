@@ -34,7 +34,7 @@ import gov.gsa.pivconformance.conformancelib.utilities.TestRunLogController;
 import gov.gsa.pivconformance.conformancelib.configuration.TestStepModel;
 import gov.gsa.pivconformance.cardlib.utils.PCSCWrapper;
 
-public class GuiTestExecutionController {
+public final class GuiTestExecutionController {
     private static final Logger s_logger = LoggerFactory.getLogger(GuiTestExecutionController.class);
     private static final GuiTestExecutionController INSTANCE = new GuiTestExecutionController();
     private static final String tag30TestId = "8.2.2.1"; // TODO: Fixme

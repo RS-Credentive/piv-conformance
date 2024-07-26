@@ -94,10 +94,10 @@ public class CardAuthTest {
     @SuppressWarnings("unused")
     private static String getJCENameForOid(String oid) {
         // XXX *** TODO: make this better and more complete
-        if (oid.equals("1.2.840.10045.2.1")) {
+        if ("1.2.840.10045.2.1".equals(oid)) {
             return "EC";
         }
-        if (oid.contentEquals("1.2.840.113549.1.1.11")) {
+        if ("1.2.840.113549.1.1.11".contentEquals(oid)) {
             return "SHA256withRSA";
         }
         return null;
@@ -256,7 +256,10 @@ public class CardAuthTest {
             } else {
                 Console cons = System.console();
                 char[] passwd;
-                if (cons != null && (passwd = cons.readPassword("[Enter %s]", "PIV Application Pin")) != null) {
+                if (cons != null) {
+                    passwd = cons.readPassword("[Enter %s]", "PIV Application Pin");
+                }
+                if (passwd != null) {
                     appPin = new String(passwd);
                     css.setApplicationPin(appPin);
                 }
@@ -273,7 +276,9 @@ public class CardAuthTest {
                 System.exit(1);
             }
         }
-        for (String containerOid : cmd.getArgList()) {
+        for (
+
+        String containerOid : cmd.getArgList()) {
             if (!APDUConstants.oidToContainerIdMap.containsKey(containerOid)) {
                 s_logger.error("{} is not a valid container OID for this test", containerOid);
                 continue;

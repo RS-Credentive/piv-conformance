@@ -24,7 +24,7 @@ import gov.gsa.pivconformance.conformancelib.configuration.ConformanceTestDataba
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class GuiRunnerAppController {
+public final class GuiRunnerAppController {
     private static final Logger s_logger = LoggerFactory.getLogger(GuiRunnerAppController.class);
 
     // more than one controller will cause problems

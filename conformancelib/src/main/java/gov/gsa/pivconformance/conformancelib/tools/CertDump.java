@@ -153,7 +153,7 @@ public class CertDump {
             }
             System.out.println(readerNum + " readers connected.");
         }
-        String appPin = null;
+
         CardSettingsSingleton css = CardSettingsSingleton.getInstance();
         if (cmd.hasOption("reader")) {
             String readerName = cmd.getOptionValue("reader");
@@ -176,15 +176,19 @@ public class CertDump {
             System.exit(1);
         }
         if (cmd.hasOption("login")) {
+            char[] appPin;
             if (cmd.hasOption("appPin")) {
                 appPin = cmd.getOptionValue("appPin");
-                css.setApplicationPin(appPin);
+                css.setApplicationPin(new String(appPin));
             } else {
+
                 Console cons = System.console();
-                char[] passwd;
-                if (cons != null && (passwd = cons.readPassword("[Enter %s]", "PIV Application Pin")) != null) {
-                    appPin = new String(passwd);
-                    css.setApplicationPin(appPin);
+                if (cons != null) {
+                    appPin = cons.readPassword("[Enter %s]", "Application Pin");
+                }
+
+                if (appPin != null) {
+                    css.setApplicationPin(new String(appPin));
                 }
             }
             try {

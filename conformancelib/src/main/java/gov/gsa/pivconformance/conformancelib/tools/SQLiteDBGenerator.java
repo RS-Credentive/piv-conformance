@@ -22,6 +22,7 @@ public class SQLiteDBGenerator {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(SQLiteDBGenerator.class);
     private static final Options s_options = new Options();
+
     static {
         s_options.addOption("h", "help", false, "Print this help and exit");
         s_options.addOption("d", "database", true, "path to database file");

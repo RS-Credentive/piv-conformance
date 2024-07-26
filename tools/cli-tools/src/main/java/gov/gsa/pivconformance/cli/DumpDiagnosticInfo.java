@@ -1,4 +1,4 @@
-package gov.gsa.pivconformancetools;
+package gov.gsa.pivconformance.cli;
 
 import gov.gsa.pivconformance.utils.PCSCUtils;
 import gov.gsa.pivconformance.utils.VersionUtils;

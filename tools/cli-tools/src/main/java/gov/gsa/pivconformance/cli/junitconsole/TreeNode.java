@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package gov.gsa.pivconformancetools.junitconsole;
+package gov.gsa.pivconformance.cli.junitconsole;
 
 import java.util.Optional;
 import java.util.Queue;
@@ -60,8 +60,8 @@ public class TreeNode {
         return this;
     }
 
-    TreeNode setResult(TestExecutionResult result) {
-        this.result = result;
+    TreeNode setResult(TestExecutionResult newResult) {
+        this.result = newResult;
         this.duration = System.currentTimeMillis() - creation;
         return this;
     }

@@ -60,8 +60,8 @@ class TreeNode {
         return this;
     }
 
-    TreeNode setResult(TestExecutionResult result) {
-        this.result = result;
+    TreeNode setResult(TestExecutionResult newResult) {
+        this.result = newResult;
         this.duration = System.currentTimeMillis() - creation;
         return this;
     }
