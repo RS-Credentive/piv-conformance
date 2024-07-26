@@ -7,7 +7,7 @@ import javax.swing.plaf.basic.BasicProgressBarUI;
 
 public class ColorChangingProgressBar extends JProgressBar {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     private final ColorChangingProgressBarUi m_ui;

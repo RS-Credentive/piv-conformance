@@ -29,7 +29,7 @@ public enum Theme {
      *
      * <p>
      * Example test plan execution tree:
-     * 
+     *
      * <pre class="code">
      * +-- engine alpha
      * | '-- container BEGIN
@@ -52,7 +52,7 @@ public enum Theme {
      *
      * <p>
      * Example test plan execution tree:
-     * 
+     *
      * <pre class="code">
      * ├─ engine alpha ✔
      * │  └─ container BEGIN ✔

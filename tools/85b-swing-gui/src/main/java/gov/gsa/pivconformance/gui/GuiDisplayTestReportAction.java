@@ -25,7 +25,7 @@ import gov.gsa.pivconformance.conformancelib.utilities.Csv2Html;
 public class GuiDisplayTestReportAction extends AbstractAction {
     private static final Logger s_logger = (Logger) LoggerFactory.getLogger(GuiDisplayTestReportAction.class);
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
@@ -90,7 +90,7 @@ public class GuiDisplayTestReportAction extends AbstractAction {
     /**
      * Gets the last known log file from a persistent file,
      * .lastlog-{appendername}.toLowerCase()
-     * 
+     *
      * @param name
      * @return
      */

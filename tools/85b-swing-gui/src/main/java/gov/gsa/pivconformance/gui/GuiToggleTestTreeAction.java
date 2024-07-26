@@ -10,7 +10,7 @@ import javax.swing.JSplitPane;
 public class GuiToggleTestTreeAction extends AbstractAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     JSplitPane m_splitPane;

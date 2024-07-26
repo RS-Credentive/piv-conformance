@@ -15,9 +15,9 @@ public class OSUtils {
 
     /**
      * Get one of the three supported operating system types
-     * 
+     *
      * @return manufactured OSTYPE from environment
-     * 
+     *
      */
     public static OSTYPE getOSType() {
         OSTYPE rv = OSTYPE.LINUX;
@@ -34,7 +34,7 @@ public class OSUtils {
 
     /**
      * Get the location of the temp directory
-     * 
+     *
      * @return the location of the temp directory
      */
 

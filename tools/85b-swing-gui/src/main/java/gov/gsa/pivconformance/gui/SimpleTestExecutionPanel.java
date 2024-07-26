@@ -43,7 +43,7 @@ import java.awt.Component;
 public class SimpleTestExecutionPanel extends JPanel {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 

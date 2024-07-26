@@ -148,7 +148,7 @@ public class PIVDataObject {
 
     /**
      * Sets the flag indicating that this container OID requires a PIN to access
-     * 
+     *
      */
 
     public void setRequiresPin(boolean required) {
@@ -168,7 +168,7 @@ public class PIVDataObject {
 
     /**
      * Indicates whether the given length is within boundaries of the rule
-     * 
+     *
      * @param tag      the tag
      * @param valueLen the value, as counted by byte[].length
      * @return true if the value meets all length requirements for that tag
@@ -210,7 +210,7 @@ public class PIVDataObject {
     /**
      * Returns a list of all of the expected mandatory and optional tags for this
      * object
-     * 
+     *
      * @return a list of BerTags per SP 800-73-4 Appendix A for this object.
      */
     public List<BerTag> expectedTagList() {
@@ -225,7 +225,7 @@ public class PIVDataObject {
     /**
      * Compares the order of the tags received with the order specified in SP
      * 800-73-4 Appendix A.
-     * 
+     *
      * @return true if the order is correct and false otherwise.
      */
 
@@ -251,7 +251,7 @@ public class PIVDataObject {
     /**
      * Dumps the raw container into a file and logs the ascii hex representation of
      * the tags to a file
-     * 
+     *
      * @param clazz the name of the class dumping the container
      */
     public void dump(Class<?> clazz) {
@@ -313,7 +313,7 @@ public class PIVDataObject {
 
     /**
      * Gets the precomputed message digest of the content
-     * 
+     *
      * @return bytes in the digest
      */
 

@@ -226,7 +226,7 @@ public class TagConstants {
 
     public static final HashMap<byte[], String> algMAP = new HashMap<byte[], String>() {
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 1L;
 

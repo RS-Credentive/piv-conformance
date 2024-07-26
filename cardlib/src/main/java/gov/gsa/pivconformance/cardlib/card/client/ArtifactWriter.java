@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gov.gsa.pivconformance.cardlib.card.client;
 
@@ -56,7 +56,7 @@ public class ArtifactWriter {
 
     /**
      * Exports a container
-     * 
+     *
      * @param containerName
      * @param bytes
      * @return
@@ -89,7 +89,7 @@ public class ArtifactWriter {
 
     /**
      * Prepends artifact file names with a time stamp
-     * 
+     *
      * @param timeStamp time stamp to prepend
      */
 

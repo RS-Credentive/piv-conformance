@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gov.gsa.pivconformance.cardlib.tlv;
 
@@ -40,7 +40,7 @@ public class TagLengthRule {
 
     /*
      * Provides the RULE (for lack of a better word at the time) of the rule
-     * 
+     *
      * @return the RULE
      */
 
@@ -50,7 +50,7 @@ public class TagLengthRule {
 
     /*
      * Provides the low value in the rule
-     * 
+     *
      * @return the low value in the rule
      */
     public int getLowVal() {
@@ -59,7 +59,7 @@ public class TagLengthRule {
 
     /*
      * Provides the high value in the rule
-     * 
+     *
      * @return the high value in the rule
      */
 
@@ -69,7 +69,7 @@ public class TagLengthRule {
 
     /*
      * Indicates if a soft boundary exists (due to an embedded CMS or signing cert)
-     * 
+     *
      * @return whether this value is eligible to have a soft upper bound
      */
 

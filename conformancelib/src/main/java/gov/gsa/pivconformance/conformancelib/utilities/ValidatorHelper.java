@@ -46,7 +46,7 @@ public class ValidatorHelper {
 
     /**
      * Read properties from a file
-     * 
+     *
      * @param fileName Property file name
      * @return Properties object
      * @throws Exception
@@ -95,7 +95,7 @@ public class ValidatorHelper {
     /**
      * Gets the trust anchor associated with the end-entity certificate based on
      * Subject CN
-     * 
+     *
      * @param keyStore keyStore object previously opened
      * @param eeCert   end-entity certificate
      * @return X509Certificate of the trust anchor
@@ -169,7 +169,7 @@ public class ValidatorHelper {
 
     /**
      * Get a certificate from the specified keystore using the given alias
-     * 
+     *
      * @param keyStore keytore object
      * @param alias    certificate alias
      * @return X509Certificate object of the given certificate or null
@@ -204,7 +204,7 @@ public class ValidatorHelper {
     /**
      * Scrubs a common name of special characters that would otherwise be illegal or
      * ambiguous in a file name.
-     * 
+     *
      * @param name the name to be scrubbed
      * @return a clean name
      */
@@ -226,7 +226,7 @@ public class ValidatorHelper {
     /**
      * Generates a certificate's full file name given a resourceDir, subject, and
      * issuer
-     * 
+     *
      * @param resourceDir string representing the resource directory
      * @param subject     X.509 certificate Subject
      * @param issuer      X.509 certificate issuer

@@ -34,7 +34,7 @@ public class ChainingAPDUTransmitter {
 
     /**
      * Formats the request with the appropriate LE byte
-     * 
+     *
      * @param request   the request APDU
      * @param correctLE LE byte
      * @return the buffer returned from the smart card application

@@ -15,7 +15,7 @@ import gov.gsa.pivconformance.cardlib.card.client.SoftTagBoundaryException;
 /**
  * This class is intended to be used side-by-side SP 800-73 for quick
  * comparison/updates to lengths.
- * 
+ *
  * TODO: This class statically marks a tag as eligible per SP 800-73-4 table,
  * but until the tag is obtained, we only know that it is allowed in-contecxt if
  * the container also contains a separate signing cert. That gets determined
@@ -216,7 +216,7 @@ public class TagBoundaryManager {
 
     /**
      * Gets the tag length rules
-     * 
+     *
      * @param oid container OID
      * @return HashMap of TagLengthRule objects, one for each tag
      */

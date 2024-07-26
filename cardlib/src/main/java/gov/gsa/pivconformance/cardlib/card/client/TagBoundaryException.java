@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public class TagBoundaryException extends Exception {
     private static final Logger s_logger = LoggerFactory.getLogger(TagBoundaryException.class);
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 

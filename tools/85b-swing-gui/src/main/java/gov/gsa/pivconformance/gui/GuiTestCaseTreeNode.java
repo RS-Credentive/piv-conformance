@@ -7,7 +7,7 @@ import gov.gsa.pivconformance.conformancelib.configuration.TestCaseModel;
 public class GuiTestCaseTreeNode extends DefaultMutableTreeNode {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     TestCaseModel m_testCase;

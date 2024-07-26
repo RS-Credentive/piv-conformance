@@ -134,7 +134,7 @@ public class GuiRunnerApplication {
 
     /**
      * Recursively search for a resource file
-     * 
+     *
      * @param current        directory
      * @param pattern        pattern to search for
      * @param excludePattern patterns to exclude (full path)

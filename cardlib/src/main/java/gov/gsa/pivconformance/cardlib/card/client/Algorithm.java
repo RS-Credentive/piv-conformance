@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gov.gsa.pivconformance.cardlib.card.client;
 
@@ -10,7 +10,7 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cms.CMSSignedData;
 
 /**
- * 
+ *
  * Helpers for converting algorithm OIDs to standard names used in PIV
  *
  */
@@ -56,7 +56,7 @@ public class Algorithm {
     /**
      * Indicates whether this signature block contains only digest algorithms in
      * Table 3-2 of SP 800-78-4
-     * 
+     *
      * @param asymmetricSignature the signature to be checked
      * @return true if the digest is in Table 3-2 and false if not
      */

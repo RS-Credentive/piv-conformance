@@ -767,37 +767,37 @@ public class CMSTests {
 
     // Validate signing and digest algorithms
     /*
-     * 
+     *
      * Table 3-2. Signature Algorithm and Key Size Requirements for PIV Information
      * Public Key Algorithms and Key Sizes | Hash Algorithms | Padding Scheme RSA
      * (2048 or 3072) | SHA-256 | PKCS #1 v1.5 | SHA-256 | PSS
      * ------------------------------------+-----------------+-----------------
      * ECDSA (Curve P-256) | SHA-256 | N/A ECDSA (Curve P-384) | SHA-384 | N/A
-     * 
+     *
      * Note: As of January 1, 2011, only SHA-256 may be used to generate RSA
      * signatures on PIV objects. RSA signatures may use either the PKCS #1 v1.5
      * padding scheme or the Probabilistic Signature Scheme (PSS) padding as defined
      * in [PKCS1]. The PSS padding scheme object identifier (OID) is independent of
      * the hash algorithm; the hash algorithm is specified as a parameter (for
      * details, see [PKCS1]).
-     * 
+     *
      * The secure messaging CVC shall be signed using ECDSA (Curve P-256) with
      * SHA-256 if it contains an ECDH (Curve P-256) subject public key, and shall be
      * signed using ECDSA (Curve P-384) with SHA-384 otherwise. The Intermediate CVC
      * shall be signed using RSA with SHA-256 and PKCS #1 v1.5 padding.
-     * 
+     *
      * FIPS 201-2, SP 800-73-4, and SP 800-76-2 specify formats for the CHUID, the
      * Security Object, the biometric information, and X.509 public key
      * certificates, which rely on OIDs to specify which signature algorithm was
      * used to generate the digital signature. The object identifiers specified in
      * Table 3-3, below, must be used in FIPS 201-2 implementations to identify the
      * signature algorithm. 4,5
-     * 
+     *
      * For the CHUID, Security Object, and biometric information the
      * signatureAlgorithm field of SignerInfo shall contain rsaEncryption
      * (1.2.840.113549.1.1.1) when the signature algorithm is RSA wit PKCS #1 v1.5
      * padding.
-     * 
+     *
      * 3.2.3: SP 800-73-4 mandates inclusion of a Security Object consistent with
      * the Authenticity/Integrity Code defined by the International Civil Aviation
      * Organization (ICAO) in [MRTD]. This object contains message digests of other
@@ -808,7 +808,7 @@ public class CMSTests {
      * Table 3-2. The Security Object format identifies the hash algorithm used when
      * computing the message digests by inclusion of an object identifier; the
      * appropriate object identifiers are identified in Table 3-6. 6
-     * 
+     *
      * Hash Algorithm | Object Identifier (OID) -----------------+-----------------
      * SHA-256 | 2.16.840.1.101.3.4.2.1 SHA-384 | 2.16.840.1.101.3.4.2.2
      */

@@ -7,7 +7,7 @@ import gov.gsa.pivconformance.conformancelib.configuration.TestStepModel;
 public class GuiTestStepTreeNode extends DefaultMutableTreeNode {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     TestStepModel m_testStep;

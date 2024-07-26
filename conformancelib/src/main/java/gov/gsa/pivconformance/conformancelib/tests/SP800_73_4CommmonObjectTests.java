@@ -24,9 +24,9 @@ import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 /**
  * This class is a collector that allows maintainers to collapse like atoms and
  * reduce code maintenance. :1,$s/56/57/g
- * 
+ *
  * 10-step data-driven design approach to code reduction:
- * 
+ *
  * 1. Add 1 to this number right here: [ 56 ] 2. On the Steps Overview tab of
  * the .xlsx sheet, locate the two rows with atoms that perform the same
  * function and change the description to <match the description of the atoms>.
@@ -50,7 +50,7 @@ import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
  * failures and no popups. If either occurs, investigate, fix, and repeat 7-9.
  * 10. The old atoms can be removed from the appropriate test class and the
  * system can be rebuilt.
- * 
+ *
  *
  */
 

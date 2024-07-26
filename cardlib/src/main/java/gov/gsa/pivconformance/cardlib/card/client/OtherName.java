@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The OtherName object.
- * 
+ *
  * <pre>
  * OtherName ::= SEQUENCE {
  *      type-id    OBJECT IDENTIFIER,
@@ -31,7 +31,7 @@ public class OtherName extends ASN1Object {
 
     /**
      * OtherName factory method.
-     * 
+     *
      * @param obj the object used to construct an instance of <code>
      * OtherName</code>. It must be an instance of <code>OtherName
      * </code> or <code>ASN1Sequence</code>.
@@ -57,7 +57,7 @@ public class OtherName extends ASN1Object {
 
     /**
      * Base constructor.
-     * 
+     *
      * @param typeID the type of the other name.
      * @param value  the ANY object that represents the value.
      */

@@ -32,27 +32,27 @@ public class ParameterUtils {
      * key:value parameters, like
      * CARDHOLDER_FINGERPRINTS_OID:513,CARDHOLDER_FACIAL_IMAGE_OID:1281 and returns
      * a dictionary:
-     * 
+     *
      * String "CARDHOLDER_FINGERPRINTS_OID" => List<String>(513)
-     * 
+     *
      * 3. key:value parameters with values corresponding to the allowable values by
      * separating them with "|" symbols like
      * X509_CERTIFICATE_FOR_PIV_AUTHENTICATION_OID:1.2.840.113549.1.1.1|11.2.840.113549.1.1.11
-     * 
+     *
      * Values themselves can have their own parameters, shown in the following
      * parameter snippet:
-     * 
+     *
      * X509_CERTIFICATE_FOR_PIV_AUTHENTICATION_OID:1.2.840.113549.1.1.1|1.2.840.10045.2.1+1.2.840.10045.3.1.7,
-     * 
+     *
      * 1. Duplicate OID keys are not allowed 2. Split the keys:value pairs into a
      * List 3. We create a Map<String,List<String>>). If the value has "|" then more
      * than one value is allowed. 4. Create the inner map by splitting on "|" and
      * adding to the List. A single value is still a one-element List<String>.
-     * 
+     *
      * @param parameters string containing list of comma-separated parameters,
      *                   themselves possibly with parameters
      * @return HashMap of key:value pairs
-     * 
+     *
      *         Note that we throw CardClientExceptions here to capture our own
      *         issues with the database params
      */

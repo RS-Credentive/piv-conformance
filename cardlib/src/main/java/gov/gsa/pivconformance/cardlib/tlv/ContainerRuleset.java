@@ -8,7 +8,7 @@ import gov.gsa.pivconformance.cardlib.tlv.TagLengthRule;
 /**
  * Each ContainerRuleset consists of a container name and HashMap of
  * TagLengthRules for each tag in the container
- * 
+ *
  */
 public class ContainerRuleset {
     private String m_containerName = null;
@@ -21,7 +21,7 @@ public class ContainerRuleset {
 
     /**
      * Adds a container length rule to this container's ruleset
-     * 
+     *
      * @param tag  container tag
      * @param RULE length rule to apply
      */
@@ -31,7 +31,7 @@ public class ContainerRuleset {
 
     /**
      * Gets the list of tags and rules for this container
-     * 
+     *
      * @return
      */
 
@@ -41,7 +41,7 @@ public class ContainerRuleset {
 
     /**
      * Gets the list of tags and rules for this container
-     * 
+     *
      * @return
      */
 

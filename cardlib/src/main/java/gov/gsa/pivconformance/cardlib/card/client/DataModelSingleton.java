@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gov.gsa.pivconformance.cardlib.card.client;
 
@@ -14,7 +14,7 @@ import gov.gsa.pivconformance.cardlib.tlv.*;
  * This class is used indirectly by the test atoms. It instantiates some known
  * SP 800-73 rules. Initially being used to manage the container lengths in
  * Tables 8-43.
- * 
+ *
  */
 
 public class DataModelSingleton {
@@ -35,7 +35,7 @@ public class DataModelSingleton {
 
     /**
      * Public accessor of this so it can be instantiated by the framework
-     * 
+     *
      * @return
      */
 
@@ -64,7 +64,7 @@ public class DataModelSingleton {
 
     /**
      * Day-to-day public accessor
-     * 
+     *
      * @return the SP 800-73-* tag length rules
      */
 
@@ -77,7 +77,7 @@ public class DataModelSingleton {
 
     /**
      * Setter
-     * 
+     *
      * @param clf
      */
 
@@ -87,7 +87,7 @@ public class DataModelSingleton {
 
     /**
      * Gets the cached CHUID signer cert
-     * 
+     *
      * @return the cached CHUID signer cert
      */
 
@@ -97,7 +97,7 @@ public class DataModelSingleton {
 
     /**
      * Sets the cached CHUID signer cert
-     * 
+     *
      * @param cert
      */
 

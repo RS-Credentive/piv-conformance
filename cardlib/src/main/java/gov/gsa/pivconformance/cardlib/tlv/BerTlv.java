@@ -119,7 +119,7 @@ public class BerTlv {
 
     /**
      * Text value with US-ASCII charset
-     * 
+     *
      * @return text
      */
     public String getTextValue() {

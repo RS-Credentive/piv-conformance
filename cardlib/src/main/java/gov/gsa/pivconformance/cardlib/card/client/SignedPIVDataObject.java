@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gov.gsa.pivconformance.cardlib.card.client;
 
@@ -197,7 +197,7 @@ public class SignedPIVDataObject extends PIVDataObject {
 
     /**
      * Gets the signed attributes message digest extracted from SignerInfo
-     * 
+     *
      * @return bytes in the digest
      */
 
@@ -207,9 +207,9 @@ public class SignedPIVDataObject extends PIVDataObject {
 
     /**
      * Sets the extracted message digest in the signed attributes
-     * 
+     *
      * @param digest bytes of the digest
-     * 
+     *
      */
     public void setSignedAttrsDigest(byte[] digest) {
         m_signedAttrsDigest = digest;
@@ -217,7 +217,7 @@ public class SignedPIVDataObject extends PIVDataObject {
 
     /**
      * Gets the computed message digest of the signed objects's content
-     * 
+     *
      * @return the computed message digest of the object's content
      */
 
@@ -227,9 +227,9 @@ public class SignedPIVDataObject extends PIVDataObject {
 
     /**
      * Sets the computed digest of the object
-     * 
+     *
      * @param digest bytes of the digest
-     * 
+     *
      * @returns the bytes of the digest
      */
 
@@ -319,9 +319,9 @@ public class SignedPIVDataObject extends PIVDataObject {
 
     /**
      * Extracts and sets the message digest in the signed attributes
-     * 
+     *
      * @param signers SignerInformationStore in the CMS
-     * 
+     *
      */
     public void setSignedAttrsDigest(SignerInformationStore signers) {
 
@@ -360,7 +360,7 @@ public class SignedPIVDataObject extends PIVDataObject {
 
     /**
      * Computes a digest of the received content in this object and stores it
-     * 
+     *
      * @param signer  SignerInfo of the content signer
      * @param content content to compute the digest over t
      */
@@ -412,7 +412,7 @@ public class SignedPIVDataObject extends PIVDataObject {
 
     /**
      * Sets a flag indicating that this object has an embedded content signer cert.
-     * 
+     *
      * @param hasOwnSignerCert boolean value indicating if this object has its own
      *                         embedded signer cert
      */

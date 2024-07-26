@@ -8,7 +8,7 @@ import javax.swing.Icon;
 public class GuiDisplayAboutDialogAction extends AbstractAction {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 

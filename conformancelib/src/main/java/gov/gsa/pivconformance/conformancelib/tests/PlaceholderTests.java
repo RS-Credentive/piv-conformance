@@ -105,10 +105,10 @@ public class PlaceholderTests {
         return;
         /*
          * PIVDataObject o = AtomHelper.getDataObject(oid);
-         * 
+         *
          * // The first of up to 2 allowed assertions assertTrue(o.decode(),
          * "Couldn't decode " + oid);
-         * 
+         *
          * // TODO: Assert something meaningful here assertTrue(o.getBytes().length >=
          * 0, "Length is < 0");
          */

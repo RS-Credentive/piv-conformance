@@ -78,7 +78,7 @@ public class PKIX_X509DataObjectTests {
     /**
      * Converts a boolean array to a byte array representing the bitmap in
      * high-order first representation
-     * 
+     *
      * @param in incoming boolean array representing bits
      * @return byte array representing the bitmap
      */
@@ -338,7 +338,7 @@ public class PKIX_X509DataObjectTests {
     /**
      * Determines whether the AIA in cert contains the prescribed AccessMethod
      * (id-ad-ocsp or id-ad-caIssuers)
-     * 
+     *
      * @param aia          AIA extension of certificate to be tested
      * @param accessMethod the AccessDescription corresponding the the AccessMethod
      * @return true if the AIA in cert contains the prescribed AccessMethod, false
@@ -419,7 +419,7 @@ public class PKIX_X509DataObjectTests {
     /**
      * Determines whether the URI in the CRL Distribution Point contains an URL
      * starting with http:
-     * 
+     *
      * @param crldp CRL distribution point object
      * @return true if the URI starts with https:, false otherwise
      */
@@ -451,7 +451,7 @@ public class PKIX_X509DataObjectTests {
     /**
      * Determines whether the URI in the CRL Distribution Point contains an URL
      * ending in .crl
-     * 
+     *
      * @param crldp distribution point object
      * @return true if the URI ends in .crl, false otherwise
      */
@@ -1615,7 +1615,7 @@ public class PKIX_X509DataObjectTests {
     /**
      * Attempts to match the UUID in the GeneralNames in the Subject Alternative
      * Name extension in a certificate with the specified UUID
-     * 
+     *
      * @param certificate the certificate to decode
      * @param identifier  the UUID to match
      * @return true if the certificate's subject alternative name contains the UUID
@@ -1662,7 +1662,7 @@ public class PKIX_X509DataObjectTests {
     /**
      * Attempts to match the FASC-N in the GeneralNames in the Subject Alternative
      * Name extension in a certificate with the specified FASC-N
-     * 
+     *
      * @param certificate the certificate to decode
      * @param identifier  the FASC-N to match
      * @return true if the certificate's subject alternative name contains the
@@ -1713,7 +1713,7 @@ public class PKIX_X509DataObjectTests {
     /**
      * Determines whether the subject alternative name extension contains no
      * GeneralNames besides the types specified in a given list
-     * 
+     *
      * @param certificate    to be parsed
      * @param allowedTypeIds list of allowable type IDs
      * @return true if no other IDs in the allowed list are present

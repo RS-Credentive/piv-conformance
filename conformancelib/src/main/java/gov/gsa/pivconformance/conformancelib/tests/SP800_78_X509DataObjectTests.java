@@ -62,15 +62,15 @@ public class SP800_78_X509DataObjectTests {
      * 840.10045.2.1+1.2.840.10045.3.1.7|1.2.840.10045.2.1+1.3.132.0.34,
      * X509_CERTIFICATE_FOR_KEY_MANAGEMENT_OID:1.2.840.113549.1.1.1+NULL|1.2.840.
      * 10045.2.1+1.2.840.10045.3.1.7|1.2.840.10045.2.1+1.3.132.0.34
-     * 
+     *
      * Gets converted to:
-     * 
+     *
      * Map<String, List<String, String>>
      * add("X509_CERTIFICATE_FOR_PIV_AUTHENTICATION_OID", new
      * List<String>("1.2.840.113549.1.1.1+NULL",
      * "1.2.840.10045.2.1+1.2.840.10045.3.1.7");
-     * 
-     * 
+     *
+     *
      * TODO: Evaluate this atom for suitability as a 78-3 table. Table 3-1
      * establishes specific requirements for cryptographic algorithms and key sizes
      * for each key type. In addition to the key sizes, keys must be generated using
@@ -86,7 +86,7 @@ public class SP800_78_X509DataObjectTests {
      * management key, or any of the retired key management keys are elliptic curve
      * keys corresponding to Curve P-384, then the PIV Secure Messaging key shall
      * use P-384, otherwise it may use P-256 or P-384.
-     * 
+     *
      * Table 3-1. Algorithm and Key Size Requirements for PIV Key Types
      * -----------------------------------+-----------------------------------------
      * ------ PIV Key Type | Algorithms and Key Sizes PIV
@@ -107,7 +107,7 @@ public class SP800_78_X509DataObjectTests {
      * ------ PIV Secure Messaging key | ECDH (Curve P-256 or P-384)
      * -----------------------------------+-----------------------------------------
      * ------
-     * 
+     *
      */
     // The key size and types used are in accordance with Table 3-1 of SP80078.
     // Expect to see paramsString contain an containerOid:keyAlgorithmOid

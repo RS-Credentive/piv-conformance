@@ -99,7 +99,7 @@ public class CardHandle {
      * Sets the value that indicates the status of the card handle object
      *
      * sets the boolen value that indicates the status of card handle object
-     * 
+     *
      * @param valid
      */
     public void setValid(boolean valid) {

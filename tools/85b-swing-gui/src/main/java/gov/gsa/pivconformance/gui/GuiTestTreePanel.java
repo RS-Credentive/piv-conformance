@@ -18,7 +18,7 @@ import gov.gsa.pivconformance.conformancelib.configuration.TestStepModel;
 public class GuiTestTreePanel extends JPanel {
     // TODO: Look at tooltips here
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
     List<TestCaseModel> m_testCases;

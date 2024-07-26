@@ -75,7 +75,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The byte sequence for the complete encoded request.
-     * 
+     *
      * @return
      */
     public byte[] getBytes() {
@@ -121,7 +121,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The class indicator.
-     * 
+     *
      * @return
      */
     public int getCla() {
@@ -133,7 +133,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The net data transproted by the APDU.
-     * 
+     *
      * @return
      */
     public byte[] getData() {
@@ -142,7 +142,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The instruction indicator
-     * 
+     *
      * @return
      */
     public int getIns() {
@@ -151,7 +151,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The expected length
-     * 
+     *
      * @return
      */
     public int getLe() {
@@ -160,7 +160,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The total encoded APDU length
-     * 
+     *
      * @return
      */
     public int getLength() {
@@ -196,7 +196,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The P1 byte
-     * 
+     *
      * @return
      */
     public int getP1() {
@@ -205,7 +205,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The P2 byte
-     * 
+     *
      * @return
      */
     public int getP2() {
@@ -214,7 +214,7 @@ public class RequestAPDUWrapper {
 
     /**
      * The expected length of the received byte array.
-     * 
+     *
      * @return
      */
     public int getReceiveLength() {

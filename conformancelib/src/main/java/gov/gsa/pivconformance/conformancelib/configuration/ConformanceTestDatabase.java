@@ -47,7 +47,7 @@ public class ConformanceTestDatabase {
     /**
      * Opens the Sqlite database in the file and makes the connection handle
      * available
-     * 
+     *
      * @param filename of the file to be opened
      * @throws ConfigurationException
      */

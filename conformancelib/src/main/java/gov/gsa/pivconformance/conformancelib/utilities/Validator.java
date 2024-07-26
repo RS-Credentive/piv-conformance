@@ -22,7 +22,7 @@ import static gov.gsa.pivconformance.conformancelib.utilities.ValidatorHelper.*;
 /**
  * Provides the API to validating a given end entity certificate for given
  * certificate policy.
- * 
+ *
  * <pre>
  *
  * In  October 2020 the Federal Government created a new
@@ -42,7 +42,7 @@ import static gov.gsa.pivconformance.conformancelib.utilities.ValidatorHelper.*;
  * o May 2021 the FPKIMA team will decommission the old FCPCA
  *
  * </pre>
- * 
+ *
  * Validator can be used to build a certificate path to an end-entity (EE)
  * certificate. By default, the trust anchor is extracted from the keystore file
  * cacerts.jks, based on the EE distinguished name. ICAM test card common names
@@ -124,7 +124,7 @@ public class Validator {
 
     /**
      * Default constructor for Validator class.
-     * 
+     *
      * @throws ConformanceTestException
      */
     public Validator() throws ConformanceTestException {
@@ -133,7 +133,7 @@ public class Validator {
 
     /**
      * Constructor for Validator class
-     * 
+     *
      * @param provider provider to use for cryptographic operations
      * @throws ConformanceTestException
      */
@@ -143,7 +143,7 @@ public class Validator {
 
     /**
      * Constructor for Validator class where provider and keystore are given
-     * 
+     *
      * @param provider
      * @param keyStoreName
      * @throws ConformanceTestException
@@ -301,7 +301,7 @@ public class Validator {
 
     /**
      * Sets the local file name containing intermediate certificates
-     * 
+     *
      * @param fileName name of local file containing intermediate certificates
      */
     public void setCaFileName(String fileName) {
@@ -310,7 +310,7 @@ public class Validator {
 
     /**
      * Sets the local file name containing intermediate certificates
-     * 
+     *
      * @return name of local file containing intermediate certificates
      */
     public String getCaFileName() {
@@ -324,7 +324,7 @@ public class Validator {
 
     /**
      * Indicates whether AIA in certs will be downloaded
-     * 
+     *
      * @return true if CertPath engine will download certs (Sun only) false if not
      */
     public boolean getDownloadAia() {
@@ -333,7 +333,7 @@ public class Validator {
 
     /**
      * Configure validator to download AIA
-     * 
+     *
      * @param downloadAia flag true or false
      */
     public void setDownloadAia(boolean downloadAia) {
@@ -348,7 +348,7 @@ public class Validator {
      * Gets the URL/directory name where resources are found. If resourceDir starts
      * with "https://" it will be fetched using the HTTPS scheme. If resourceDir
      * starts with "file://", it is treated as a local directory name.
-     * 
+     *
      * @return URL/directory where resources are found
      */
     public String getResourceDir() {
@@ -368,7 +368,7 @@ public class Validator {
 
     /**
      * Gets the full path to the end-entity certificate to be validated
-     * 
+     *
      * @return the path to the end-entity certificate
      */
     public String getEndEntityCertPath() {
@@ -377,7 +377,7 @@ public class Validator {
 
     /**
      * Sets the full path to the end-entity certificate to be validated
-     * 
+     *
      * @param eeFullCertPath path to the end-entity certificate
      */
     public void setEndEntityCertPath(String eeFullCertPath) {
@@ -386,7 +386,7 @@ public class Validator {
 
     /**
      * Gets the full path to the trust anchor certificate
-     * 
+     *
      * @return the path to the trust anchor certificate
      */
     public String getTrustAnchorCertPath() {
@@ -395,7 +395,7 @@ public class Validator {
 
     /**
      * Sets the full path to the trust anchor certificate to be validated
-     * 
+     *
      * @param taFullCertPath path to the trust anchor certificate
      */
     public void setTrustAnchorFullCertPath(String taFullCertPath) {
@@ -404,7 +404,7 @@ public class Validator {
 
     /**
      * Sets the trust anchor cert
-     * 
+     *
      * @param trustAnchorCert the trust anchor cert
      */
     private void setTaCert(X509Certificate trustAnchorCert) {
@@ -413,7 +413,7 @@ public class Validator {
 
     /**
      * Gets the trust anchor cert
-     * 
+     *
      * @return X509Certificate of the trust anchor
      */
     private X509Certificate getTaCert() {
@@ -422,7 +422,7 @@ public class Validator {
 
     /**
      * Sets the end-entity cert
-     * 
+     *
      * @param eeCert the end-entity cert
      */
     private void setEeCert(X509Certificate eeCert) {
@@ -431,7 +431,7 @@ public class Validator {
 
     /**
      * Gets the end-entity cert
-     * 
+     *
      * @return X509Certificate of the end-entity
      */
     private X509Certificate getEeCert() {
@@ -440,7 +440,7 @@ public class Validator {
 
     /**
      * Sets the validator's resulting CertPath
-     * 
+     *
      * @param certPath a validated certificate path
      */
     private void setCertPath(CertPath certPath) {
@@ -449,7 +449,7 @@ public class Validator {
 
     /**
      * Gets the validator's CertPath
-     * 
+     *
      * @return CertPath built by the validator
      */
     public CertPath getCertPath() {
@@ -458,7 +458,7 @@ public class Validator {
 
     /**
      * Gets the keystore password
-     * 
+     *
      * @return the keystore password
      */
     public String getStorePass() {
@@ -467,7 +467,7 @@ public class Validator {
 
     /**
      * Sets the keystore password
-     * 
+     *
      * @param m_storePass password to save
      */
     public void setStorePass(String m_storePass) {
@@ -476,7 +476,7 @@ public class Validator {
 
     /**
      * Sets the path of the temporary trust anchor X509 cert file
-     * 
+     *
      * @param tempPath temp file path
      */
     public void setTempTaPath(String tempPath) {
@@ -632,7 +632,7 @@ public class Validator {
     /**
      * Determines if a valid certificate path can be built to the specified trust
      * anchor using the given policy OIDs
-     * 
+     *
      * @param endEntityCertFile string with file name of end entity cert
      * @param policyOids        comma-separated string of policy OIDs
      * @param trustAnchorFile   string with file name of trust anchor cert
@@ -727,7 +727,7 @@ public class Validator {
     /**
      * Determines if a valid certificate path can be built to the specified trust
      * anchor using the given policy OIDs
-     * 
+     *
      * @param eeCert          X509Certificate end entity cert
      * @param policyOids      comma-separated string of policy OIDs
      * @param trustAnchorCert X509Certificate trust anchor cert
@@ -811,7 +811,7 @@ public class Validator {
 
     /**
      * Validates a certificate for a collection of CA certs and policy OIDs
-     * 
+     *
      * @param certificate     to be validated
      * @param additionalCerts certs to build a path with
      * @param policies        policy OIDs, one of which must be valid in each
@@ -868,7 +868,7 @@ public class Validator {
 
     /**
      * Loads a CMS-signed bundle of CA certs
-     * 
+     *
      * @return
      */
     private CertStore getCertBundle(String caPathString, String caFileName) throws ConformanceTestException {
@@ -963,7 +963,7 @@ public class Validator {
 
     /**
      * Resets the object to the desired provider
-     * 
+     *
      * @param provider Crypto and path builder provider
      * @throws ConformanceTestException
      */
@@ -1026,7 +1026,7 @@ public class Validator {
     /**
      * Sets the default alias for the validator to use when fetching a trust anchor
      * from the keystore.
-     * 
+     *
      * @param defaultAlias alias to use
      */
     public void setDefaultAlias(String defaultAlias) {
@@ -1035,7 +1035,7 @@ public class Validator {
 
     /**
      * Gets the default alias
-     * 
+     *
      * @return the alias
      */
     public String getDefaultAlias() {
@@ -1045,7 +1045,7 @@ public class Validator {
     /**
      * Dumps the CertPath found by the validator to the logger and to a file if
      * saveToDisk is true
-     * 
+     *
      * @param saveToDisk
      */
     public void dumpCertPath(boolean saveToDisk) {
@@ -1088,7 +1088,7 @@ public class Validator {
 
     /**
      * Prints out Validator fields
-     * 
+     *
      * @return string with any non-null fields populated
      */
     @Override

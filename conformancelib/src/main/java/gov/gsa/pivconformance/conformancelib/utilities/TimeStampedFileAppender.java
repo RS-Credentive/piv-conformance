@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gov.gsa.pivconformance.conformancelib.utilities;
 
@@ -72,7 +72,7 @@ public class TimeStampedFileAppender<E> extends FileAppender<E> {
 
     /**
      * Sets the full path of the log
-     * 
+     *
      * @param logPath path to set
      */
     public void setTimeStampedLogPath(String logPath) {

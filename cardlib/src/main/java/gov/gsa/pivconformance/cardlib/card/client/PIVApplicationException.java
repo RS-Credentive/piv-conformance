@@ -10,7 +10,7 @@ public class PIVApplicationException extends Exception {
     private static final Logger s_logger = LoggerFactory.getLogger(PIVApplicationException.class);
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package gov.gsa.pivconformance.conformancelib.utilities;
 
@@ -163,7 +163,7 @@ public class TestRunLogController {
 
     /**
      * Bootstraps the logging system with sane values
-     * 
+     *
      * @param logConfigFile log config File
      */
     public void bootStrapLogging(File logConfigFile) {
@@ -217,7 +217,7 @@ public class TestRunLogController {
 
     /**
      * Gets the appender object associated with a friendly name
-     * 
+     *
      * @param appenderName
      * @return appender object
      */
@@ -410,12 +410,12 @@ public class TestRunLogController {
 
     /**
      * Creates the path names of the timestamped copy of each configured log
-     * 
+     *
      * @param logger   the logger
      * @param appender the appender
      * @param logName  the logger's friendly name
      * @param stopTime stop time
-     * 
+     *
      */
     public void setTimeStamp(Logger logger, TimeStampedFileAppender<ILoggingEvent> appender, String logName,
             Date stopTime) {
@@ -451,7 +451,7 @@ public class TestRunLogController {
 
     /**
      * Copies the contents of oldPath to newPath and removes the existing
-     * 
+     *
      * @param oldPath the original file
      * @param newPath the new copy
      * @return true if successful, false otherwise
@@ -483,7 +483,7 @@ public class TestRunLogController {
 
     /**
      * Removes the default log file names
-     * 
+     *
      */
 
     @SuppressWarnings("unchecked")
@@ -514,7 +514,7 @@ public class TestRunLogController {
 
     /**
      * Indicates the the configured appenders are set up and named properly
-     * 
+     *
      * @return true if required appenders are configured, false otherwise
      */
 
@@ -554,7 +554,7 @@ public class TestRunLogController {
 
     /**
      * Gets the currently running directory based on input
-     * 
+     *
      * @param caller class to obtain directory for
      * @return the currently running directory w.r.t input class
      */
@@ -591,7 +591,7 @@ public class TestRunLogController {
 
     /**
      * Corrects the path separators for a path.
-     * 
+     *
      * @param inPath the path as read from a configuration file, etc.
      * @return a path with the correct path separators for the local OS
      */
