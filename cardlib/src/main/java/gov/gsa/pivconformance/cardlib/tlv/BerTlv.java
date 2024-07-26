@@ -20,8 +20,8 @@ public class BerTlv {
     /**
      * Creates constructed TLV
      *
-     * @param aTag   tag
-     * @param aList  set of nested TLVs
+     * @param aTag  tag
+     * @param aList set of nested TLVs
      */
     public BerTlv(BerTag aTag, List<BerTlv> aList) {
         theTag = aTag;
@@ -76,15 +76,16 @@ public class BerTlv {
     //
 
     public BerTlv find(BerTag aTag) {
-        if(aTag.equals(getTag())) {
+        if (aTag.equals(getTag())) {
             return this;
         }
 
-        if(isConstructed()) {
-        	if(theList == null) return null;
+        if (isConstructed()) {
+            if (theList == null)
+                return null;
             for (BerTlv tlv : theList) {
                 BerTlv ret = tlv.find(aTag);
-                if(ret!=null) {
+                if (ret != null) {
                     return ret;
                 }
             }
@@ -95,10 +96,10 @@ public class BerTlv {
 
     public List<BerTlv> findAll(BerTag aTag) {
         List<BerTlv> list = new ArrayList<BerTlv>();
-        if(aTag.equals(getTag())) {
+        if (aTag.equals(getTag())) {
             list.add(this);
             return list;
-        } else if(isConstructed()) {
+        } else if (isConstructed()) {
             for (BerTlv tlv : theList) {
                 list.addAll(tlv.findAll(aTag));
             }
@@ -111,12 +112,14 @@ public class BerTlv {
     //
 
     public String getHexValue() {
-        if(isConstructed() && theValue == null) throw new IllegalStateException("Tag is CONSTRUCTED "+ HexUtil.toHexString(theTag.bytes));
+        if (isConstructed() && theValue == null)
+            throw new IllegalStateException("Tag is CONSTRUCTED " + HexUtil.toHexString(theTag.bytes));
         return HexUtil.toHexString(theValue);
     }
 
     /**
      * Text value with US-ASCII charset
+     * 
      * @return text
      */
     public String getTextValue() {
@@ -124,45 +127,50 @@ public class BerTlv {
     }
 
     public String getTextValue(Charset aCharset) {
-        if(isConstructed()) {
+        if (isConstructed()) {
             throw new IllegalStateException("TLV is constructed");
         }
         return new String(theValue, aCharset);
     }
 
     public byte[] getBytesValue() {
-        if(isConstructed() && theValue == null) {
-            throw new IllegalStateException("TLV ["+theTag+"]is constructed");
+        if (isConstructed() && theValue == null) {
+            throw new IllegalStateException("TLV [" + theTag + "]is constructed");
         }
         return theValue;
     }
 
     public int getIntValue() {
-        int i=0;
-        int j=0;
+        int i = 0;
+        int j = 0;
         int number = 0;
 
         for (i = 0; i < theValue.length; i++) {
-            j=theValue[i];
-            number = number * 256 + ( j<0 ? j+=256 : j);
+            j = theValue[i];
+            number = number * 256 + (j < 0 ? j += 256 : j);
         }
         return number;
     }
 
     public List<BerTlv> getValues() {
-        if(isPrimitive()) throw  new IllegalStateException("Tag is PRIMITIVE");
+        if (isPrimitive())
+            throw new IllegalStateException("Tag is PRIMITIVE");
         return theList;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         BerTlv berTlv = (BerTlv) o;
 
-        if (theTag != null ? !theTag.equals(berTlv.theTag) : berTlv.theTag != null) return false;
-        if (!Arrays.equals(theValue, berTlv.theValue)) return false;
+        if (theTag != null ? !theTag.equals(berTlv.theTag) : berTlv.theTag != null)
+            return false;
+        if (!Arrays.equals(theValue, berTlv.theValue))
+            return false;
         return theList != null ? theList.equals(berTlv.theList) : berTlv.theList == null;
     }
 
@@ -177,11 +185,8 @@ public class BerTlv {
     @Override
     public String toString() {
 
-        return "BerTlv{" +
-                "theTag=" + theTag +
-                ", theValue=" + Arrays.toString(theValue) +
-                ", theList=" + theList +
-                '}';
+        return "BerTlv{" + "theTag=" + theTag + ", theValue=" + Arrays.toString(theValue) + ", theList=" + theList
+                + '}';
     }
 
 }

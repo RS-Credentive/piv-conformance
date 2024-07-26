@@ -35,10 +35,10 @@ public class PIVRunner {
     }
 
     public static boolean TestCard(CardHandle c) {
-        if(c.isValid()) {
+        if (c.isValid()) {
             CardTerminal t = c.getConnectionDescription().getTerminal();
             try {
-                if(t.isCardPresent()) {
+                if (t.isCardPresent()) {
                     s_logger.info("Card found in reader {}", t.getName());
                 } else {
                     s_logger.error("No card was present in reader {}", t.getName());
@@ -57,43 +57,45 @@ public class PIVRunner {
             s_logger.info("Attempting to select default PIV application");
             MiddlewareStatus result = piv.pivSelectCardApplication(c, aid, cardAppProperties);
             s_logger.info("pivSelectCardApplication() returned {}", result);
-            if(result == MiddlewareStatus.PIV_OK) {
+            if (result == MiddlewareStatus.PIV_OK) {
                 byte[] pcap = cardAppProperties.getBytes();
 
-                byte [] appID = cardAppProperties.getAppID();
+                byte[] appID = cardAppProperties.getAppID();
                 String appLabel = cardAppProperties.getAppLabel();
                 String url = cardAppProperties.getURL();
                 List<byte[]> cryptoAlgs = cardAppProperties.getCryptoAlgs();
-                byte [] coexistentTagAllocationAuthority = cardAppProperties.getCoexistentTagAllocationAuthority();
+                byte[] coexistentTagAllocationAuthority = cardAppProperties.getCoexistentTagAllocationAuthority();
 
-                if(appID != null)
+                if (appID != null)
                     s_logger.info("Application identifier of application: {}", Hex.encodeHexString(appID));
 
-                if(coexistentTagAllocationAuthority != null)
-                    s_logger.info("Coexistent tag allocation authority: {}", Hex.encodeHexString(coexistentTagAllocationAuthority));
+                if (coexistentTagAllocationAuthority != null)
+                    s_logger.info("Coexistent tag allocation authority: {}",
+                            Hex.encodeHexString(coexistentTagAllocationAuthority));
 
-                if(appLabel != "")
+                if (appLabel != "")
                     s_logger.info("Application label: {}", appLabel);
 
-                if(url != "")
+                if (url != "")
                     s_logger.info("Uniform resource locator: {}", url);
 
-                if(cryptoAlgs != null) {
-                    for(byte[] b : cryptoAlgs) {
+                if (cryptoAlgs != null) {
+                    for (byte[] b : cryptoAlgs) {
 
                         s_logger.info("Cryptographic algorithms supported:");
-                        s_logger.info("Algorithm ID: {} Algorithm Description: {}", Hex.encodeHexString(b), TagConstants.algMAP.get(b));
+                        s_logger.info("Algorithm ID: {} Algorithm Description: {}", Hex.encodeHexString(b),
+                                TagConstants.algMAP.get(b));
                     }
                 }
-
 
                 s_logger.info("PCAP: {}", Hex.encodeHexString(pcap));
                 BerTlvParser tp = new BerTlvParser(new CCTTlvLogger(PIVRunner.class));
                 BerTlv outer = tp.parseConstructed(pcap);
                 List<BerTlv> values = outer.getValues();
-                for(BerTlv tlv : values) {
-                    if(tlv.isPrimitive()) {
-                        s_logger.info("PCAP Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+                for (BerTlv tlv : values) {
+                    if (tlv.isPrimitive()) {
+                        s_logger.info("PCAP Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                                Hex.encodeHexString(tlv.getBytesValue()));
                     } else {
                         s_logger.info("PCAP object: {}", Hex.encodeHexString(tlv.getTag().bytes));
                     }
@@ -101,29 +103,35 @@ public class PIVRunner {
 
                 result = MiddlewareStatus.PIV_AUTHENTICATION_FAILURE;
 
-                if(result != MiddlewareStatus.PIV_OK)
+                if (result != MiddlewareStatus.PIV_OK)
                     s_logger.error("Error authenticating to the smartcard: {}", result.toString());
 
                 X509Certificate signingCertificate = null;
 
-                HashMap<String, byte[]> soDataElements = new  HashMap<String, byte[]>();
+                HashMap<String, byte[]> soDataElements = new HashMap<String, byte[]>();
                 PIVDataObject securityObject = null;
 
-                for(String containerOID : APDUConstants.MandatoryContainers()) {
+                for (String containerOID : APDUConstants.MandatoryContainers()) {
                     PIVDataObject dataObject = PIVDataObjectFactory.createDataObjectForOid(containerOID);
-                    s_logger.info("Attempting to read data object for OID {} ({})", containerOID, APDUConstants.oidNameMap.get(containerOID));
+                    s_logger.info("Attempting to read data object for OID {} ({})", containerOID,
+                            APDUConstants.oidNameMap.get(containerOID));
                     result = piv.pivGetData(c, containerOID, dataObject);
-                    if(result != MiddlewareStatus.PIV_OK) continue;
+                    if (result != MiddlewareStatus.PIV_OK)
+                        continue;
                     boolean decoded = dataObject.decode();
-                    s_logger.info("{} {}", dataObject.getFriendlyName(), decoded ? "decoded successfully" : "failed to decode");
+                    s_logger.info("{} {}", dataObject.getFriendlyName(),
+                            decoded ? "decoded successfully" : "failed to decode");
                     s_logger.info("pivGetData returned {}", result);
                     s_logger.info(dataObject.toString());
 
-                    if(containerOID.equals(APDUConstants.CARD_CAPABILITY_CONTAINER_OID)) {
+                    if (containerOID.equals(APDUConstants.CARD_CAPABILITY_CONTAINER_OID)) {
 
-                        s_logger.info("Card Identifier: {}", Hex.encodeHexString(((CardCapabilityContainer) dataObject).getCardIdentifier()));
-                        s_logger.info("Capability Container Version Number: {}", Hex.encodeHexString(((CardCapabilityContainer) dataObject).getCapabilityContainerVersionNumber()));
-                        s_logger.info("Capability Grammar Version Number: {}", Hex.encodeHexString(((CardCapabilityContainer) dataObject).getCapabilityGrammarVersionNumber()));
+                        s_logger.info("Card Identifier: {}",
+                                Hex.encodeHexString(((CardCapabilityContainer) dataObject).getCardIdentifier()));
+                        s_logger.info("Capability Container Version Number: {}", Hex.encodeHexString(
+                                ((CardCapabilityContainer) dataObject).getCapabilityContainerVersionNumber()));
+                        s_logger.info("Capability Grammar Version Number: {}", Hex.encodeHexString(
+                                ((CardCapabilityContainer) dataObject).getCapabilityGrammarVersionNumber()));
 
                         List<byte[]> appCardURLList = ((CardCapabilityContainer) dataObject).getAppCardURL();
 
@@ -134,19 +142,25 @@ public class PIVRunner {
                             }
                         }
 
-                        s_logger.info("Registered Data Model number: {}", Hex.encodeHexString(((CardCapabilityContainer) dataObject).getRegisteredDataModelNumber()));
-                        s_logger.info("Access Control Rule Table: {}", Hex.encodeHexString(((CardCapabilityContainer) dataObject).getAccessControlRuleTable()));
+                        s_logger.info("Registered Data Model number: {}", Hex.encodeHexString(
+                                ((CardCapabilityContainer) dataObject).getRegisteredDataModelNumber()));
+                        s_logger.info("Access Control Rule Table: {}", Hex
+                                .encodeHexString(((CardCapabilityContainer) dataObject).getAccessControlRuleTable()));
 
-
-                        s_logger.info("Card APDUs Tag Present: {}", ((CardCapabilityContainer) dataObject).getCardAPDUs());
-                        s_logger.info("RedirectionTag Tag Present: {}", ((CardCapabilityContainer) dataObject).getRedirectionTag());
-                        s_logger.info("Capability Tuples Tag Present: {}", ((CardCapabilityContainer) dataObject).getCapabilityTuples());
-                        s_logger.info("Status Tuples Tag Present: {}", ((CardCapabilityContainer) dataObject).getStatusTuples());
+                        s_logger.info("Card APDUs Tag Present: {}",
+                                ((CardCapabilityContainer) dataObject).getCardAPDUs());
+                        s_logger.info("RedirectionTag Tag Present: {}",
+                                ((CardCapabilityContainer) dataObject).getRedirectionTag());
+                        s_logger.info("Capability Tuples Tag Present: {}",
+                                ((CardCapabilityContainer) dataObject).getCapabilityTuples());
+                        s_logger.info("Status Tuples Tag Present: {}",
+                                ((CardCapabilityContainer) dataObject).getStatusTuples());
                         s_logger.info("Next CCC Tag Present: {}", ((CardCapabilityContainer) dataObject).getNextCCC());
 
                         if (((CardCapabilityContainer) dataObject).getExtendedApplicationCardURL() != null) {
 
-                            List<byte[]> extendedAppCardURLList = ((CardCapabilityContainer) dataObject).getExtendedApplicationCardURL();
+                            List<byte[]> extendedAppCardURLList = ((CardCapabilityContainer) dataObject)
+                                    .getExtendedApplicationCardURL();
 
                             if (extendedAppCardURLList.size() > 0) {
                                 s_logger.info("Extended Application CardURL List:");
@@ -157,31 +171,39 @@ public class PIVRunner {
                         }
 
                         if (((CardCapabilityContainer) dataObject).getSecurityObjectBuffer() != null)
-                            s_logger.info("Security Object Buffer: {}", Hex.encodeHexString(((CardCapabilityContainer) dataObject).getSecurityObjectBuffer()));
-
+                            s_logger.info("Security Object Buffer: {}", Hex
+                                    .encodeHexString(((CardCapabilityContainer) dataObject).getSecurityObjectBuffer()));
 
                         s_logger.info("Error Detection Code Tag Present: {}", dataObject.getErrorDetectionCode());
 
-                        soDataElements.put(APDUConstants.CARD_CAPABILITY_CONTAINER_OID, ((CardCapabilityContainer) dataObject).getSignedContent());
+                        soDataElements.put(APDUConstants.CARD_CAPABILITY_CONTAINER_OID,
+                                ((CardCapabilityContainer) dataObject).getSignedContent());
                     }
 
                     if (containerOID.equals(APDUConstants.CARD_HOLDER_UNIQUE_IDENTIFIER_OID)) {
                         if (((CardHolderUniqueIdentifier) dataObject).getBufferLength() != null) {
-                            s_logger.info("Buffer Length: {}", Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getBufferLength()));
+                            s_logger.info("Buffer Length: {}",
+                                    Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getBufferLength()));
                         }
-                        s_logger.info("FASC-N: {}", Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getfASCN()));
+                        s_logger.info("FASC-N: {}",
+                                Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getfASCN()));
                         if (((CardHolderUniqueIdentifier) dataObject).getOrganizationalIdentifier() != null) {
-                            s_logger.info("Organizational Identifier: {}", Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getOrganizationalIdentifier()));
+                            s_logger.info("Organizational Identifier: {}", Hex.encodeHexString(
+                                    ((CardHolderUniqueIdentifier) dataObject).getOrganizationalIdentifier()));
                         }
                         if (((CardHolderUniqueIdentifier) dataObject).getdUNS() != null) {
-                            s_logger.info("DUNS: {}", Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getdUNS()));
+                            s_logger.info("DUNS: {}",
+                                    Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getdUNS()));
                         }
-                        s_logger.info("GUID: {}", Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getgUID()));
+                        s_logger.info("GUID: {}",
+                                Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getgUID()));
 
                         SimpleDateFormat sdfmt = new SimpleDateFormat("MM/dd/yyyy");
-                        s_logger.info("Expiration Date: {}", sdfmt.format(((CardHolderUniqueIdentifier) dataObject).getExpirationDate()));
+                        s_logger.info("Expiration Date: {}",
+                                sdfmt.format(((CardHolderUniqueIdentifier) dataObject).getExpirationDate()));
 
-                        s_logger.info("Cardholder UUID: {}", Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getCardholderUUID()));
+                        s_logger.info("Cardholder UUID: {}",
+                                Hex.encodeHexString(((CardHolderUniqueIdentifier) dataObject).getCardholderUUID()));
                         s_logger.info("Issuer Asymmetric Signature Info:");
 
                         CMSSignedData sd = ((CardHolderUniqueIdentifier) dataObject).getAsymmetricSignature();
@@ -189,88 +211,95 @@ public class PIVRunner {
                         Collection<SignerInformation> collection = signers.getSigners();
                         Iterator<SignerInformation> it = collection.iterator();
 
-                        while (it.hasNext())
-                        {
+                        while (it.hasNext()) {
                             SignerInformation signer = it.next();
                             SignerId sid = signer.getSID();
                             String issuer = sid.getIssuer().toString();
                             String serial = Hex.encodeHexString(sid.getSerialNumber().toByteArray());
                             String skid = "";
-                            if( sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 skid = Hex.encodeHexString(sid.getSubjectKeyIdentifier());
 
-                            if(sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 s_logger.info("Signer skid: {} ", skid);
                             else
                                 s_logger.info("Signer Issuer: {}, Serial Number: {} ", issuer, serial);
 
                         }
-                        s_logger.info("Signature valid: {}", ((CardHolderUniqueIdentifier) dataObject).verifySignature());
+                        s_logger.info("Signature valid: {}",
+                                ((CardHolderUniqueIdentifier) dataObject).verifySignature());
                         signingCertificate = ((CardHolderUniqueIdentifier) dataObject).getSignerCert();
 
                         s_logger.info("Error Detection Code Tag Present: {}", dataObject.getErrorDetectionCode());
 
-                        soDataElements.put(APDUConstants.CARD_HOLDER_UNIQUE_IDENTIFIER_OID, ((CardHolderUniqueIdentifier) dataObject).getChuidContainer());
+                        soDataElements.put(APDUConstants.CARD_HOLDER_UNIQUE_IDENTIFIER_OID,
+                                ((CardHolderUniqueIdentifier) dataObject).getChuidContainer());
                     }
 
                     if (containerOID.equals(APDUConstants.X509_CERTIFICATE_FOR_PIV_AUTHENTICATION_OID)) {
                         X509Certificate pibAuthCert = ((X509CertificateDataObject) dataObject).getCertificate();
 
                         s_logger.info("PIV Auth Cert SubjectName: {}", pibAuthCert.getSubjectDN().getName());
-                        s_logger.info("PIV Auth Cert SerialNumber: {}", Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
+                        s_logger.info("PIV Auth Cert SerialNumber: {}",
+                                Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
                         s_logger.info("PIV Auth Cert IssuerName: {}", pibAuthCert.getSubjectDN().getName());
                     }
 
                     if (containerOID.equals(APDUConstants.CARDHOLDER_FINGERPRINTS_OID)) {
 
-                        s_logger.info("Fingerprint I & II: {}", Hex.encodeHexString(((CardHolderBiometricData) dataObject).getBiometricData()));
+                        s_logger.info("Fingerprint I & II: {}",
+                                Hex.encodeHexString(((CardHolderBiometricData) dataObject).getBiometricData()));
 
-
-                        s_logger.info("Biometric Creation Date: {}", ((CardHolderBiometricData) dataObject).getBiometricCreationDate());
-                        s_logger.info("Validity Period From: {}", ((CardHolderBiometricData) dataObject).getValidityPeriodFrom());
-                        s_logger.info("Validity Period To: {}",((CardHolderBiometricData) dataObject).getValidityPeriodTo());
+                        s_logger.info("Biometric Creation Date: {}",
+                                ((CardHolderBiometricData) dataObject).getBiometricCreationDate());
+                        s_logger.info("Validity Period From: {}",
+                                ((CardHolderBiometricData) dataObject).getValidityPeriodFrom());
+                        s_logger.info("Validity Period To: {}",
+                                ((CardHolderBiometricData) dataObject).getValidityPeriodTo());
 
                         CMSSignedData sd = ((SignedPIVDataObject) dataObject).getAsymmetricSignature();
                         SignerInformationStore signers = sd.getSignerInfos();
                         Collection<SignerInformation> collection = signers.getSigners();
                         Iterator<SignerInformation> it = collection.iterator();
 
-                        while (it.hasNext())
-                        {
+                        while (it.hasNext()) {
                             SignerInformation signer = it.next();
                             SignerId sid = signer.getSID();
                             String issuer = sid.getIssuer().toString();
                             String serial = Hex.encodeHexString(sid.getSerialNumber().toByteArray());
                             String skid = "";
-                            if( sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 skid = Hex.encodeHexString(sid.getSubjectKeyIdentifier());
 
-                            if(sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 s_logger.info("Signer skid: {} ", skid);
                             else
                                 s_logger.info("Signer Issuer: {}, Serial Number: {} ", issuer, serial);
 
                         }
-                        if(signingCertificate != null)
-                            s_logger.info("Is signatue valid: {}",((SignedPIVDataObject) dataObject).verifySignature());
+                        if (signingCertificate != null)
+                            s_logger.info("Is signatue valid: {}",
+                                    ((SignedPIVDataObject) dataObject).verifySignature());
                         else
                             s_logger.info("Missing signing certificate to verify signature.");
 
-
                         s_logger.info("Error Detection Code Tag Present: {}", dataObject.getErrorDetectionCode());
 
-                        soDataElements.put(APDUConstants.CARDHOLDER_FINGERPRINTS_OID, ((CardHolderBiometricData) dataObject).getCbeffContainer());
+                        soDataElements.put(APDUConstants.CARDHOLDER_FINGERPRINTS_OID,
+                                ((CardHolderBiometricData) dataObject).getCbeffContainer());
                     }
 
                     if (containerOID.equals(APDUConstants.SECURITY_OBJECT_OID)) {
 
-                        s_logger.info("RAW Mapping of DG to ContainerID value: {}", Hex.encodeHexString(((SecurityObject) dataObject).getMapping()));
+                        s_logger.info("RAW Mapping of DG to ContainerID value: {}",
+                                Hex.encodeHexString(((SecurityObject) dataObject).getMapping()));
 
                         HashMap<Integer, String> idMap = ((SecurityObject) dataObject).getContainerIDList();
 
                         s_logger.info("List of containers included in the Security Object:");
                         for (HashMap.Entry<Integer, String> entry : idMap.entrySet()) {
-                            s_logger.info("Container ID: {}, Container Name: {}, Container OID: {}",entry.getKey(), entry.getValue(), APDUConstants.oidNameMap.get(entry.getValue()));
+                            s_logger.info("Container ID: {}, Container Name: {}, Container OID: {}", entry.getKey(),
+                                    entry.getValue(), APDUConstants.oidNameMap.get(entry.getValue()));
                         }
 
                         CMSSignedData sd = ((SignedPIVDataObject) dataObject).getAsymmetricSignature();
@@ -278,185 +307,214 @@ public class PIVRunner {
                         Collection<SignerInformation> collection = signers.getSigners();
                         Iterator<SignerInformation> it = collection.iterator();
 
-                        while (it.hasNext())
-                        {
+                        while (it.hasNext()) {
                             SignerInformation signer = it.next();
                             SignerId sid = signer.getSID();
                             String issuer = sid.getIssuer().toString();
                             String serial = Hex.encodeHexString(sid.getSerialNumber().toByteArray());
                             String skid = "";
-                            if( sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 skid = Hex.encodeHexString(sid.getSubjectKeyIdentifier());
 
-                            if(sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 s_logger.info("Signer skid: {} ", skid);
                             else
                                 s_logger.info("Signer Issuer: {}, Serial Number: {} ", issuer, serial);
 
                         }
-                        //s_logger.info("Error Detection Code Tag Present: {}", ((SecurityObject) dataObject).getErrorDetectionCode());
+                        // s_logger.info("Error Detection Code Tag Present: {}", ((SecurityObject)
+                        // dataObject).getErrorDetectionCode());
 
-                        s_logger.info("SecurityObject signatue valid: {}", ((SignedPIVDataObject) dataObject).verifySignature());
+                        s_logger.info("SecurityObject signatue valid: {}",
+                                ((SignedPIVDataObject) dataObject).verifySignature());
 
                         securityObject = dataObject;
                     }
 
                     if (containerOID.equals(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID)) {
-                        s_logger.info("Image for Visual Verification: {}", Hex.encodeHexString(((CardHolderBiometricData) dataObject).getBiometricData()));
+                        s_logger.info("Image for Visual Verification: {}",
+                                Hex.encodeHexString(((CardHolderBiometricData) dataObject).getBiometricData()));
 
-                        s_logger.info("Biometric Creation Date: {}", ((CardHolderBiometricData) dataObject).getBiometricCreationDate());
-                        s_logger.info("Validity Period From: {}", ((CardHolderBiometricData) dataObject).getValidityPeriodFrom());
-                        s_logger.info("Validity Period To: {}", ((CardHolderBiometricData) dataObject).getValidityPeriodTo());
-
+                        s_logger.info("Biometric Creation Date: {}",
+                                ((CardHolderBiometricData) dataObject).getBiometricCreationDate());
+                        s_logger.info("Validity Period From: {}",
+                                ((CardHolderBiometricData) dataObject).getValidityPeriodFrom());
+                        s_logger.info("Validity Period To: {}",
+                                ((CardHolderBiometricData) dataObject).getValidityPeriodTo());
 
                         CMSSignedData sd = ((SignedPIVDataObject) dataObject).getAsymmetricSignature();
                         SignerInformationStore signers = sd.getSignerInfos();
                         Collection<SignerInformation> collection = signers.getSigners();
                         Iterator<SignerInformation> it = collection.iterator();
 
-                        while (it.hasNext())
-                        {
+                        while (it.hasNext()) {
                             SignerInformation signer = it.next();
                             SignerId sid = signer.getSID();
                             String issuer = sid.getIssuer().toString();
                             String serial = Hex.encodeHexString(sid.getSerialNumber().toByteArray());
                             String skid = "";
-                            if( sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 skid = Hex.encodeHexString(sid.getSubjectKeyIdentifier());
 
-                            if(sid.getSubjectKeyIdentifier() != null)
+                            if (sid.getSubjectKeyIdentifier() != null)
                                 s_logger.info("Signer skid: {} ", skid);
                             else
                                 s_logger.info("Signer Issuer: {}, Serial Number: {} ", issuer, serial);
                         }
 
-                        if(signingCertificate != null)
-                            s_logger.info("Is signatue valid: {}",((SignedPIVDataObject) dataObject).verifySignature());
+                        if (signingCertificate != null)
+                            s_logger.info("Is signatue valid: {}",
+                                    ((SignedPIVDataObject) dataObject).verifySignature());
                         else
                             s_logger.info("Missing signing certificate to verify signature.");
 
                         s_logger.info("Error Detection Code Tag Present: {}", dataObject.getErrorDetectionCode());
 
-                        soDataElements.put(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID, ((CardHolderBiometricData) dataObject).getCbeffContainer());
+                        soDataElements.put(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID,
+                                ((CardHolderBiometricData) dataObject).getCbeffContainer());
                     }
 
-                    if(containerOID.equals(APDUConstants.X509_CERTIFICATE_FOR_KEY_MANAGEMENT_OID)){
+                    if (containerOID.equals(APDUConstants.X509_CERTIFICATE_FOR_KEY_MANAGEMENT_OID)) {
                         X509Certificate pibAuthCert = ((X509CertificateDataObject) dataObject).getCertificate();
 
                         s_logger.info("Key Managment Cert SubjectName: {}", pibAuthCert.getSubjectDN().getName());
-                        s_logger.info("Key Managment Cert SerialNumber: {}", Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
+                        s_logger.info("Key Managment Cert SerialNumber: {}",
+                                Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
                         s_logger.info("Key Managment Cert IssuerName: {}", pibAuthCert.getSubjectDN().getName());
                     }
 
-                    if(containerOID.equals(APDUConstants.X509_CERTIFICATE_FOR_DIGITAL_SIGNATURE_OID)){
+                    if (containerOID.equals(APDUConstants.X509_CERTIFICATE_FOR_DIGITAL_SIGNATURE_OID)) {
                         X509Certificate pibAuthCert = ((X509CertificateDataObject) dataObject).getCertificate();
 
                         s_logger.info("Digital Signature Cert SubjectName: {}", pibAuthCert.getSubjectDN().getName());
-                        s_logger.info("Digital Signature SerialNumber: {}", Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
+                        s_logger.info("Digital Signature SerialNumber: {}",
+                                Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
                         s_logger.info("Digital Signature IssuerName: {}", pibAuthCert.getSubjectDN().getName());
                     }
 
-                    if(containerOID.equals(APDUConstants.X509_CERTIFICATE_FOR_CARD_AUTHENTICATION_OID)){
+                    if (containerOID.equals(APDUConstants.X509_CERTIFICATE_FOR_CARD_AUTHENTICATION_OID)) {
                         X509Certificate pibAuthCert = ((X509CertificateDataObject) dataObject).getCertificate();
 
                         s_logger.info("Card Auth Cert SubjectName: {}", pibAuthCert.getSubjectDN().getName());
-                        s_logger.info("Card Auth Cert SerialNumber: {}", Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
+                        s_logger.info("Card Auth Cert SerialNumber: {}",
+                                Hex.encodeHexString(pibAuthCert.getSerialNumber().toByteArray()));
                         s_logger.info("Card Auth Cert IssuerName: {}", pibAuthCert.getSubjectDN().getName());
                     }
 
                 }
 
-                PIVDataObject printedInformation = PIVDataObjectFactory.createDataObjectForOid(APDUConstants.PRINTED_INFORMATION_OID);
+                PIVDataObject printedInformation = PIVDataObjectFactory
+                        .createDataObjectForOid(APDUConstants.PRINTED_INFORMATION_OID);
                 result = piv.pivGetData(c, APDUConstants.PRINTED_INFORMATION_OID, printedInformation);
 
-                if(result == MiddlewareStatus.PIV_OK) {
-                    s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap.get(APDUConstants.PRINTED_INFORMATION_OID), result);
+                if (result == MiddlewareStatus.PIV_OK) {
+                    s_logger.info("Attempted to read {} object: {}",
+                            APDUConstants.oidNameMap.get(APDUConstants.PRINTED_INFORMATION_OID), result);
                     boolean decoded = printedInformation.decode();
-                    s_logger.info("{} {}", printedInformation.getFriendlyName(), decoded ? "decoded successfully" : "failed to decode");
+                    s_logger.info("{} {}", printedInformation.getFriendlyName(),
+                            decoded ? "decoded successfully" : "failed to decode");
 
                     if (decoded) {
                         s_logger.info("Name: {}", ((PrintedInformation) printedInformation).getName());
-                        s_logger.info("Employee Affiliation: {}", ((PrintedInformation) printedInformation).getEmployeeAffiliation());
-                        s_logger.info("Expiration date: {}", ((PrintedInformation) printedInformation).getExpirationDate());
-                        s_logger.info("Agency Card Serial Number: {}", ((PrintedInformation) printedInformation).getAgencyCardSerialNumber());
-                        s_logger.info("Issuer Identification: {}", ((PrintedInformation) printedInformation).getIssuerIdentification());
+                        s_logger.info("Employee Affiliation: {}",
+                                ((PrintedInformation) printedInformation).getEmployeeAffiliation());
+                        s_logger.info("Expiration date: {}",
+                                ((PrintedInformation) printedInformation).getExpirationDate());
+                        s_logger.info("Agency Card Serial Number: {}",
+                                ((PrintedInformation) printedInformation).getAgencyCardSerialNumber());
+                        s_logger.info("Issuer Identification: {}",
+                                ((PrintedInformation) printedInformation).getIssuerIdentification());
                         if (((PrintedInformation) printedInformation).getOrganizationAffiliation1() != "")
-                            s_logger.info("Name: {}", ((PrintedInformation) printedInformation).getOrganizationAffiliation1());
+                            s_logger.info("Name: {}",
+                                    ((PrintedInformation) printedInformation).getOrganizationAffiliation1());
                         if (((PrintedInformation) printedInformation).getOrganizationAffiliation2() != "")
-                            s_logger.info("Name: {}", ((PrintedInformation) printedInformation).getOrganizationAffiliation2());
-                        s_logger.info("Error Detection Code Tag Present: {}", printedInformation.getErrorDetectionCode());
+                            s_logger.info("Name: {}",
+                                    ((PrintedInformation) printedInformation).getOrganizationAffiliation2());
+                        s_logger.info("Error Detection Code Tag Present: {}",
+                                printedInformation.getErrorDetectionCode());
 
                     }
 
-
-                    soDataElements.put(APDUConstants.PRINTED_INFORMATION_OID, ((PrintedInformation) printedInformation).getSignedContent());
+                    soDataElements.put(APDUConstants.PRINTED_INFORMATION_OID,
+                            ((PrintedInformation) printedInformation).getSignedContent());
                 }
 
                 boolean decoded = false;
-                PIVDataObject discoveryObject = PIVDataObjectFactory.createDataObjectForOid(APDUConstants.DISCOVERY_OBJECT_OID);
+                PIVDataObject discoveryObject = PIVDataObjectFactory
+                        .createDataObjectForOid(APDUConstants.DISCOVERY_OBJECT_OID);
                 result = piv.pivGetData(c, APDUConstants.DISCOVERY_OBJECT_OID, discoveryObject);
 
-                if(result == MiddlewareStatus.PIV_OK) {
+                if (result == MiddlewareStatus.PIV_OK) {
                     s_logger.info("Attempted to read discovery object: {}", result);
                     decoded = discoveryObject.decode();
-                    s_logger.info("{} {}", discoveryObject.getFriendlyName(), decoded ? "decoded successfully" : "failed to decode");
+                    s_logger.info("{} {}", discoveryObject.getFriendlyName(),
+                            decoded ? "decoded successfully" : "failed to decode");
                 }
 
-                soDataElements.put(APDUConstants.DISCOVERY_OBJECT_OID, ((DiscoveryObject) discoveryObject).getSignedContent());
+                soDataElements.put(APDUConstants.DISCOVERY_OBJECT_OID,
+                        ((DiscoveryObject) discoveryObject).getSignedContent());
 
-                PIVDataObject cardholderIrisImages = PIVDataObjectFactory.createDataObjectForOid(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID);
+                PIVDataObject cardholderIrisImages = PIVDataObjectFactory
+                        .createDataObjectForOid(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID);
                 result = piv.pivGetData(c, APDUConstants.CARDHOLDER_IRIS_IMAGES_OID, cardholderIrisImages);
 
-                if(result == MiddlewareStatus.PIV_OK) {
-                    s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap.get(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID), result);
+                if (result == MiddlewareStatus.PIV_OK) {
+                    s_logger.info("Attempted to read {} object: {}",
+                            APDUConstants.oidNameMap.get(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID), result);
                     decoded = cardholderIrisImages.decode();
-                    s_logger.info("{} {}", cardholderIrisImages.getFriendlyName(), decoded ? "decoded successfully" : "failed to decode");
+                    s_logger.info("{} {}", cardholderIrisImages.getFriendlyName(),
+                            decoded ? "decoded successfully" : "failed to decode");
 
                     if (decoded) {
                         if (((CardHolderBiometricData) cardholderIrisImages).getBiometricData() != null) {
-                            s_logger.info("Images for Iris: {}", Hex.encodeHexString(((CardHolderBiometricData) cardholderIrisImages).getBiometricData()));
+                            s_logger.info("Images for Iris: {}", Hex.encodeHexString(
+                                    ((CardHolderBiometricData) cardholderIrisImages).getBiometricData()));
 
-                            s_logger.info("Biometric Creation Date: {}", ((CardHolderBiometricData) cardholderIrisImages).getBiometricCreationDate());
-                            s_logger.info("Validity Period From: {}", ((CardHolderBiometricData) cardholderIrisImages).getValidityPeriodFrom());
-                            s_logger.info("Validity Period To: {}", ((CardHolderBiometricData) cardholderIrisImages).getValidityPeriodTo());
-
+                            s_logger.info("Biometric Creation Date: {}",
+                                    ((CardHolderBiometricData) cardholderIrisImages).getBiometricCreationDate());
+                            s_logger.info("Validity Period From: {}",
+                                    ((CardHolderBiometricData) cardholderIrisImages).getValidityPeriodFrom());
+                            s_logger.info("Validity Period To: {}",
+                                    ((CardHolderBiometricData) cardholderIrisImages).getValidityPeriodTo());
 
                             CMSSignedData sd = ((SignedPIVDataObject) cardholderIrisImages).getAsymmetricSignature();
                             SignerInformationStore signers = sd.getSignerInfos();
                             Collection<SignerInformation> collection = signers.getSigners();
                             Iterator<SignerInformation> it = collection.iterator();
 
-                            while (it.hasNext())
-                            {
+                            while (it.hasNext()) {
                                 SignerInformation signer = it.next();
                                 SignerId sid = signer.getSID();
                                 String issuer = sid.getIssuer().toString();
                                 String serial = Hex.encodeHexString(sid.getSerialNumber().toByteArray());
                                 String skid = "";
-                                if( sid.getSubjectKeyIdentifier() != null)
+                                if (sid.getSubjectKeyIdentifier() != null)
                                     skid = Hex.encodeHexString(sid.getSubjectKeyIdentifier());
 
-                                if(sid.getSubjectKeyIdentifier() != null)
+                                if (sid.getSubjectKeyIdentifier() != null)
                                     s_logger.info("Signer skid: {} ", skid);
                                 else
                                     s_logger.info("Signer Issuer: {}, Serial Number: {} ", issuer, serial);
 
                             }
 
-                            if(signingCertificate != null)
-                                s_logger.info("Is signatue valid: {}",((SignedPIVDataObject) cardholderIrisImages).verifySignature());
+                            if (signingCertificate != null)
+                                s_logger.info("Is signatue valid: {}",
+                                        ((SignedPIVDataObject) cardholderIrisImages).verifySignature());
                             else
                                 s_logger.info("Missing signing certificate to verify signature.");
                         }
-                        s_logger.info("Error Detection Code Tag Present: {}", cardholderIrisImages.getErrorDetectionCode());
+                        s_logger.info("Error Detection Code Tag Present: {}",
+                                cardholderIrisImages.getErrorDetectionCode());
 
                     }
                 }
 
-                PIVDataObject keyHistoryObject = PIVDataObjectFactory.createDataObjectForOid(APDUConstants.KEY_HISTORY_OBJECT_OID);
+                PIVDataObject keyHistoryObject = PIVDataObjectFactory
+                        .createDataObjectForOid(APDUConstants.KEY_HISTORY_OBJECT_OID);
                 result = piv.pivGetData(c, APDUConstants.KEY_HISTORY_OBJECT_OID, keyHistoryObject);
 
-                if(result == MiddlewareStatus.PIV_OK) {
+                if (result == MiddlewareStatus.PIV_OK) {
                     s_logger.info("Attempted to read key history object: {}", result);
                     decoded = keyHistoryObject.decode();
                     if (decoded) {
@@ -464,58 +522,90 @@ public class PIVRunner {
                     }
                 }
 
-                PIVDataObject biometricInformationTemplatesGroupTemplate = PIVDataObjectFactory.createDataObjectForOid(APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID);
-                result = piv.pivGetData(c, APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID, biometricInformationTemplatesGroupTemplate);
+                PIVDataObject biometricInformationTemplatesGroupTemplate = PIVDataObjectFactory
+                        .createDataObjectForOid(APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID);
+                result = piv.pivGetData(c, APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID,
+                        biometricInformationTemplatesGroupTemplate);
 
-                if(result == MiddlewareStatus.PIV_OK) {
-                    s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap.get(APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID), result);
+                if (result == MiddlewareStatus.PIV_OK) {
+                    s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap
+                            .get(APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID), result);
                     decoded = biometricInformationTemplatesGroupTemplate.decode();
-                    s_logger.info("{} {}", biometricInformationTemplatesGroupTemplate.getFriendlyName(), decoded ? "decoded successfully" : "failed to decode");
+                    s_logger.info("{} {}", biometricInformationTemplatesGroupTemplate.getFriendlyName(),
+                            decoded ? "decoded successfully" : "failed to decode");
 
                     if (decoded) {
 
-                        s_logger.info("Number of fingers: {}", ((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate).getNumberOfFingers());
-                        if (((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate).getbITForFirstFinger() != null)
-                            s_logger.info("BIT for first Finger: {}", Hex.encodeHexString(((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate).getbITForFirstFinger()));
-                        if (((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate).getbITForSecondFinger() != null)
-                            s_logger.info("BIT for second Finger: {}", Hex.encodeHexString(((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate).getbITForSecondFinger()));
+                        s_logger.info("Number of fingers: {}",
+                                ((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate)
+                                        .getNumberOfFingers());
+                        if (((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate)
+                                .getbITForFirstFinger() != null)
+                            s_logger.info("BIT for first Finger: {}", Hex.encodeHexString(
+                                    ((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate)
+                                            .getbITForFirstFinger()));
+                        if (((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate)
+                                .getbITForSecondFinger() != null)
+                            s_logger.info("BIT for second Finger: {}", Hex.encodeHexString(
+                                    ((BiometricInformationTemplatesGroupTemplate) biometricInformationTemplatesGroupTemplate)
+                                            .getbITForSecondFinger()));
 
                     }
                 }
 
-                PIVDataObject secureMessagingCertificateSigner = PIVDataObjectFactory.createDataObjectForOid(APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID);
-                result = piv.pivGetData(c, APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID, secureMessagingCertificateSigner);
+                PIVDataObject secureMessagingCertificateSigner = PIVDataObjectFactory
+                        .createDataObjectForOid(APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID);
+                result = piv.pivGetData(c, APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID,
+                        secureMessagingCertificateSigner);
 
-                if(result == MiddlewareStatus.PIV_OK) {
-                    s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap.get(APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID), result);
+                if (result == MiddlewareStatus.PIV_OK) {
+                    s_logger.info("Attempted to read {} object: {}",
+                            APDUConstants.oidNameMap.get(APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID),
+                            result);
                     decoded = secureMessagingCertificateSigner.decode();
-                    s_logger.info("{} {}", secureMessagingCertificateSigner.getFriendlyName(), decoded ? "decoded successfully" : "failed to decode");
+                    s_logger.info("{} {}", secureMessagingCertificateSigner.getFriendlyName(),
+                            decoded ? "decoded successfully" : "failed to decode");
 
                     if (decoded) {
 
-                        X509Certificate contentSigningCert = ((SecureMessagingCertificateSigner) secureMessagingCertificateSigner).getCertificate();
+                        X509Certificate contentSigningCert = ((SecureMessagingCertificateSigner) secureMessagingCertificateSigner)
+                                .getCertificate();
 
-                        s_logger.info("Content Signing Cert SubjectName: {}", contentSigningCert.getSubjectDN().getName());
-                        s_logger.info("Content Signing Cert SerialNumber: {}", Hex.encodeHexString(contentSigningCert.getSerialNumber().toByteArray()));
-                        s_logger.info("Content Signing Cert IssuerName: {}", contentSigningCert.getSubjectDN().getName());
+                        s_logger.info("Content Signing Cert SubjectName: {}",
+                                contentSigningCert.getSubjectDN().getName());
+                        s_logger.info("Content Signing Cert SerialNumber: {}",
+                                Hex.encodeHexString(contentSigningCert.getSerialNumber().toByteArray()));
+                        s_logger.info("Content Signing Cert IssuerName: {}",
+                                contentSigningCert.getSubjectDN().getName());
 
-                        if (((SecureMessagingCertificateSigner) secureMessagingCertificateSigner).getIntermediateCVC() != null)
-                            s_logger.info("Intermediate CVC: {}", Hex.encodeHexString(((SecureMessagingCertificateSigner) secureMessagingCertificateSigner).getIntermediateCVC()));
+                        if (((SecureMessagingCertificateSigner) secureMessagingCertificateSigner)
+                                .getIntermediateCVC() != null)
+                            s_logger.info("Intermediate CVC: {}",
+                                    Hex.encodeHexString(
+                                            ((SecureMessagingCertificateSigner) secureMessagingCertificateSigner)
+                                                    .getIntermediateCVC()));
 
                     }
                 }
 
-                PIVDataObject pairingCodeReferenceDataContainer = PIVDataObjectFactory.createDataObjectForOid(APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID);
-                result = piv.pivGetData(c, APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID, pairingCodeReferenceDataContainer);
+                PIVDataObject pairingCodeReferenceDataContainer = PIVDataObjectFactory
+                        .createDataObjectForOid(APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID);
+                result = piv.pivGetData(c, APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID,
+                        pairingCodeReferenceDataContainer);
 
-                if(result == MiddlewareStatus.PIV_OK) {
-                    s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap.get(APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID), result);
+                if (result == MiddlewareStatus.PIV_OK) {
+                    s_logger.info("Attempted to read {} object: {}",
+                            APDUConstants.oidNameMap.get(APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID),
+                            result);
                     decoded = pairingCodeReferenceDataContainer.decode();
-                    s_logger.info("{} {}", pairingCodeReferenceDataContainer.getFriendlyName(), decoded ? "decoded successfully" : "failed to decode");
+                    s_logger.info("{} {}", pairingCodeReferenceDataContainer.getFriendlyName(),
+                            decoded ? "decoded successfully" : "failed to decode");
 
                     if (decoded) {
-                        s_logger.info("Name: {}", ((PairingCodeReferenceDataContainer) pairingCodeReferenceDataContainer).getName());
-                        s_logger.info("Error Detection Code Tag Present: {}", pairingCodeReferenceDataContainer.getErrorDetectionCode());
+                        s_logger.info("Name: {}",
+                                ((PairingCodeReferenceDataContainer) pairingCodeReferenceDataContainer).getName());
+                        s_logger.info("Error Detection Code Tag Present: {}",
+                                pairingCodeReferenceDataContainer.getErrorDetectionCode());
 
                     }
                 }
@@ -528,7 +618,7 @@ public class PIVRunner {
                 s_logger.info("Printed Information hash verified: {}", hashVerified);
 
             }
-            //ResponseAPDU rsp = null;
+            // ResponseAPDU rsp = null;
             return true;
         } else {
             s_logger.error("TestCard called with invalid card handle");
@@ -550,7 +640,7 @@ public class PIVRunner {
             PrintHelpAndExit(1);
         }
 
-        if(cmd.hasOption("help")) {
+        if (cmd.hasOption("help")) {
             PrintHelpAndExit(0);
         }
 
@@ -567,22 +657,22 @@ public class PIVRunner {
             s_logger.error("Failed to list card terminals", e);
             System.exit(1);
         }
-        if(terminals.size() == 0) {
+        if (terminals.size() == 0) {
             s_logger.error("No readers were found.");
             System.exit(1);
         }
         int terminalCount = 0;
-        for(CardTerminal t : terminals) {
+        for (CardTerminal t : terminals) {
             terminalCount++;
             ConnectionDescription cd = ConnectionDescription.createFromTerminal(t);
             byte[] descriptor = cd.getBytes();
-            if(descriptor != null) {
+            if (descriptor != null) {
                 s_logger.info("Descriptor for terminal {}: {}", terminalCount, Hex.encodeHexString(descriptor, false));
             }
             // if there is only one reader or if we've been asked to only test one reader,
             // wait for a card
             try {
-                if(!t.isCardPresent() && (!cmd.hasOption("all") || terminals.size() == 1)) {
+                if (!t.isCardPresent() && (!cmd.hasOption("all") || terminals.size() == 1)) {
                     s_logger.info("Insert a card into {}", t.getName());
                     t.waitForCardPresent(0);
                 }
@@ -592,14 +682,15 @@ public class PIVRunner {
             s_logger.info("Testing with terminal {}: {}", terminalCount, t.getName());
             CardHandle ch = new CardHandle();
             MiddlewareStatus result = PIVMiddleware.pivConnect(true, cd, ch);
-            s_logger.info("[{}] PIVMiddleware.pivConnect() returned {} for reader {}", terminalCount, result, t.getName());
+            s_logger.info("[{}] PIVMiddleware.pivConnect() returned {} for reader {}", terminalCount, result,
+                    t.getName());
             boolean testResult = TestCard(ch);
-            if(testResult) {
+            if (testResult) {
                 s_logger.info("Card test completed successfully.");
             } else {
                 s_logger.error("Card test failed.");
             }
-            if(!cmd.hasOption("all")) {
+            if (!cmd.hasOption("all")) {
                 break;
             }
         }

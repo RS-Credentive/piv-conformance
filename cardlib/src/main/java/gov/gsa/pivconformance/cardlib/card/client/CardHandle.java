@@ -6,8 +6,8 @@ import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 
 /**
- * A class that serves the function of the handle objects passed around that encapsulate a connection to a card
- * in SP800-73
+ * A class that serves the function of the handle objects passed around that
+ * encapsulate a connection to a card in SP800-73
  */
 public class CardHandle {
     // slf4j will thunk this through to an appropriately configured logging library
@@ -17,7 +17,8 @@ public class CardHandle {
      *
      * Get the connection description object associated with this card handle
      *
-     * @return ConnectionDescription that includes as CardTerminal object used to access the reader
+     * @return ConnectionDescription that includes as CardTerminal object used to
+     *         access the reader
      */
     public ConnectionDescription getConnectionDescription() {
         return m_connectionDescription;
@@ -98,6 +99,7 @@ public class CardHandle {
      * Sets the value that indicates the status of the card handle object
      *
      * sets the boolen value that indicates the status of card handle object
+     * 
      * @param valid
      */
     public void setValid(boolean valid) {
@@ -107,7 +109,6 @@ public class CardHandle {
     private ConnectionDescription m_connectionDescription;
     private boolean m_valid = false;
     private Card m_card;
-
 
     private CardChannel m_currentChannel;
 

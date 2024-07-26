@@ -27,8 +27,10 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 
 /**
  *
- * Container class that parses and stores information about Biometric Data elements.  Biometric Data elements include Cardholder Fingerprints,
- * Cardholder Facial Image and  Cardholder Iris Image as defined by SP800-73-4 Part 2 Appendix A Table 11, Table 13 and Table 40
+ * Container class that parses and stores information about Biometric Data
+ * elements. Biometric Data elements include Cardholder Fingerprints, Cardholder
+ * Facial Image and Cardholder Iris Image as defined by SP800-73-4 Part 2
+ * Appendix A Table 11, Table 13 and Table 40
  *
  */
 public class CardHolderBiometricData extends SignedPIVDataObject {
@@ -48,7 +50,7 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
      * CardholderBiometricData class constructor, initializes all the class fields.
      */
     public CardHolderBiometricData() {
-    	super();
+        super();
         m_biometricData = null;
         m_errorDetectionCode = false;
         m_biometricCreationDate = null;
@@ -99,6 +101,7 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
     public byte[] getSignatureBlock() {
         return m_signatureBlock;
     }
+
     /**
      *
      * Sets the biometric data
@@ -116,7 +119,7 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
      * @return Returns true if error detection code is present, false otherwise
      */
     @Override
-	public boolean getErrorDetectionCode() {
+    public boolean getErrorDetectionCode() {
         return m_errorDetectionCode;
     }
 
@@ -124,13 +127,13 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
      *
      * Sets if error detection code is present
      *
-     * @param errorDetectionCode Boolean indicating if error detection code is present
+     * @param errorDetectionCode Boolean indicating if error detection code is
+     *                           present
      */
     @Override
-	public void setErrorDetectionCode(boolean errorDetectionCode) {
+    public void setErrorDetectionCode(boolean errorDetectionCode) {
         m_errorDetectionCode = errorDetectionCode;
     }
-
 
     /**
      *
@@ -214,14 +217,15 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
 
     /**
      *
-     * Decode function that decodes biometric data object retrieved from the card and populates various class fields.
+     * Decode function that decodes biometric data object retrieved from the card
+     * and populates various class fields.
      *
      * @return True if decode was successful, false otherwise
      */
     @Override
-	public boolean decode() {
+    public boolean decode() {
 
-    	boolean certFound = false;        
+        boolean certFound = false;
         ByteArrayOutputStream signedContentOutputStream = new ByteArrayOutputStream();
         SignerInformationStore signers = null;
         SignerInformation signer = null;
@@ -230,7 +234,7 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
 
             s_logger.trace("rawBytes: {}", Hex.encodeHexString(rawBytes));
 
-            if(rawBytes == null){
+            if (rawBytes == null) {
                 s_logger.error("No buffer to decode for {}.", APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
@@ -238,65 +242,77 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
             BerTlvParser tlvp = new BerTlvParser(new CCTTlvLogger(this.getClass()));
             BerTlvs outer = tlvp.parse(rawBytes);
 
-            if(outer == null){
-                s_logger.error("Error parsing {}, unable to parse TLV value.", APDUConstants.oidNameMap.get(super.getOID()));
+            if (outer == null) {
+                s_logger.error("Error parsing {}, unable to parse TLV value.",
+                        APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
-            
+
             List<BerTlv> values = outer.getList();
-            for(BerTlv tlv : values) {
-                if(tlv.isPrimitive()) {
-                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+            for (BerTlv tlv : values) {
+                if (tlv.isPrimitive()) {
+                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                            Hex.encodeHexString(tlv.getBytesValue()));
 
                     BerTlvs outer2 = tlvp.parse(tlv.getBytesValue());
 
                     if (outer2 == null) {
-                        s_logger.error("Error parsing {}, unable to parse TLV value.", APDUConstants.oidNameMap.get(super.getOID()));
+                        s_logger.error("Error parsing {}, unable to parse TLV value.",
+                                APDUConstants.oidNameMap.get(super.getOID()));
                         return false;
                     }
 
                     List<BerTlv> values2 = outer2.getList();
                     for (BerTlv tlv2 : values2) {
                         if (tlv2.isPrimitive()) {
-                            s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv2.getTag().bytes), Hex.encodeHexString(tlv2.getBytesValue()));
+                            s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv2.getTag().bytes),
+                                    Hex.encodeHexString(tlv2.getBytesValue()));
                         } else {
-                        	BerTag tag = tlv2.getTag();
-                        	byte[] value = tlv2.getBytesValue();
+                            BerTag tag = tlv2.getTag();
+                            byte[] value = tlv2.getBytesValue();
 
-                        	super.m_tagList.add(tag);
-                            if (Arrays.equals(tag.bytes, TagConstants.FINGERPRINT_I_AND_II_TAG) && getOID().compareTo(APDUConstants.CARDHOLDER_FINGERPRINTS_OID) == 0) {
+                            super.m_tagList.add(tag);
+                            if (Arrays.equals(tag.bytes, TagConstants.FINGERPRINT_I_AND_II_TAG)
+                                    && getOID().compareTo(APDUConstants.CARDHOLDER_FINGERPRINTS_OID) == 0) {
 
-                            	super.setContainerName("CardholderFingerprints");
+                                super.setContainerName("CardholderFingerprints");
                                 m_biometricData = value;
                                 m_content.put(tag, value);
                                 if (m_biometricData != null)
-                                	signedContentOutputStream.write(APDUUtils.getTLV(TagConstants.FINGERPRINT_I_AND_II_TAG, m_biometricData));
+                                    signedContentOutputStream.write(
+                                            APDUUtils.getTLV(TagConstants.FINGERPRINT_I_AND_II_TAG, m_biometricData));
 
-                            } else if (Arrays.equals(tag.bytes, TagConstants.IMAGE_FOR_VISUAL_VERIFICATION_TAG) && getOID().compareTo(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID) == 0) {
+                            } else if (Arrays.equals(tag.bytes, TagConstants.IMAGE_FOR_VISUAL_VERIFICATION_TAG)
+                                    && getOID().compareTo(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID) == 0) {
 
-                            	setContainerName("CardholderFacialImage");
-                                m_biometricData = value;
-                                m_content.put(tag, value);
-                               if (m_biometricData != null)
-                            	   signedContentOutputStream.write(APDUUtils.getTLV(TagConstants.IMAGE_FOR_VISUAL_VERIFICATION_TAG, m_biometricData));
-
-                            } else if (Arrays.equals(tag.bytes, TagConstants.IMAGES_FOR_IRIS_TAG) && getOID().compareTo(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID) == 0) {
-
-                            	setContainerName("CardholderIrisImages");
+                                setContainerName("CardholderFacialImage");
                                 m_biometricData = value;
                                 m_content.put(tag, value);
                                 if (m_biometricData != null)
-                                	signedContentOutputStream.write(APDUUtils.getTLV(TagConstants.IMAGES_FOR_IRIS_TAG, m_biometricData));
+                                    signedContentOutputStream.write(APDUUtils
+                                            .getTLV(TagConstants.IMAGE_FOR_VISUAL_VERIFICATION_TAG, m_biometricData));
+
+                            } else if (Arrays.equals(tag.bytes, TagConstants.IMAGES_FOR_IRIS_TAG)
+                                    && getOID().compareTo(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID) == 0) {
+
+                                setContainerName("CardholderIrisImages");
+                                m_biometricData = value;
+                                m_content.put(tag, value);
+                                if (m_biometricData != null)
+                                    signedContentOutputStream
+                                            .write(APDUUtils.getTLV(TagConstants.IMAGES_FOR_IRIS_TAG, m_biometricData));
 
                             } else if (Arrays.equals(tag.bytes, TagConstants.ERROR_DETECTION_CODE_TAG)) {
 
                                 m_errorDetectionCode = true;
                                 m_content.put(tag, value);
                                 if (m_biometricData != null)
-                                	signedContentOutputStream.write(APDUUtils.getTLV(TagConstants.ERROR_DETECTION_CODE_TAG, value));
+                                    signedContentOutputStream
+                                            .write(APDUUtils.getTLV(TagConstants.ERROR_DETECTION_CODE_TAG, value));
 
                             } else {
-                                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tag.bytes), Hex.encodeHexString(tlv2.getBytesValue()));
+                                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tag.bytes),
+                                        Hex.encodeHexString(tlv2.getBytesValue()));
                             }
                             m_cbeffContainer = signedContentOutputStream.toByteArray();
                         }
@@ -305,85 +321,89 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
                     // Break BC tag into Patron CBEFF header + BDB + SB
                     if (m_biometricData != null) {
                         s_logger.trace("m_biometricData: {}", Hex.encodeHexString(m_biometricData));
-                        //Get Biometric data block (BDB) Length
+                        // Get Biometric data block (BDB) Length
                         byte[] biometricDataBlockLengthBytes = Arrays.copyOfRange(m_biometricData, 2, 6);
-                        //Get Signature block (SB) Length
+                        // Get Signature block (SB) Length
                         byte[] signatureDataBlockLengthBytes = Arrays.copyOfRange(m_biometricData, 6, 8);
 
-                        //Get Biometric Creation Date
+                        // Get Biometric Creation Date
                         m_biometricCreationDate = BytesToDateString(Arrays.copyOfRange(m_biometricData, 12, 20));
-                        //Get Validity Period From value
+                        // Get Validity Period From value
                         m_validityPeriodFrom = BytesToDateString(Arrays.copyOfRange(m_biometricData, 20, 28));
-                        //Get Validity Period To value
+                        // Get Validity Period To value
                         m_validityPeriodTo = BytesToDateString(Arrays.copyOfRange(m_biometricData, 28, 36));
 
-                        //Convert Biometric data block (BDB) Length byte[] value to int
+                        // Convert Biometric data block (BDB) Length byte[] value to int
                         ByteBuffer wrapped = ByteBuffer.wrap(biometricDataBlockLengthBytes);
                         int biometricDataBlockLength = wrapped.getInt();
 
-                        //Convert Signature block (SB) Length byte[] value to int
+                        // Convert Signature block (SB) Length byte[] value to int
                         wrapped = ByteBuffer.wrap(signatureDataBlockLengthBytes);
                         int signatureDataBlockLength = wrapped.getShort();
 
-
                         m_biometricDataBlock = Arrays.copyOfRange(m_biometricData, 88, 88 + biometricDataBlockLength);
 
-                        m_signatureBlock = Arrays.copyOfRange(m_biometricData, 88 + biometricDataBlockLength, 88 + biometricDataBlockLength + signatureDataBlockLength);
-         			
+                        m_signatureBlock = Arrays.copyOfRange(m_biometricData, 88 + biometricDataBlockLength,
+                                88 + biometricDataBlockLength + signatureDataBlockLength);
+
                         // Decode the ContentInfo and get SignedData objects.
                         ByteArrayInputStream bIn = new ByteArrayInputStream(m_signatureBlock);
-                        ASN1InputStream      aIn = new ASN1InputStream(bIn);                      
+                        ASN1InputStream aIn = new ASN1InputStream(bIn);
                         // Set the ContentInfo structure in super class
-                        setContentInfo(ContentInfo.getInstance(aIn.readObject())); aIn.close();
+                        setContentInfo(ContentInfo.getInstance(aIn.readObject()));
+                        aIn.close();
                         // Set the CMSSignedData object
                         setAsymmetricSignature(new CMSSignedData(getContentInfo()));
                         // Finally, see if there's a separate signer cert
                         CMSSignedData cmsSignedData = getAsymmetricSignature();
-                        
-                        if(cmsSignedData != null) {
-                        	signers = cmsSignedData.getSignerInfos();
 
-                        	for (Iterator<SignerInformation> i = signers.getSigners().iterator(); i.hasNext();) {
-                        		signer = i.next();                               
-                        	}
+                        if (cmsSignedData != null) {
+                            signers = cmsSignedData.getSignerInfos();
+
+                            for (Iterator<SignerInformation> i = signers.getSigners().iterator(); i.hasNext();) {
+                                signer = i.next();
+                            }
 
                             // The biometric data block is the detached signed content
                             setSignedContent(Arrays.copyOfRange(m_biometricData, 0, 88 + biometricDataBlockLength));
                             // Grab signed digest
                             setSignedAttrsDigest(signers);
                             // Precompute digest but don't compare -- let consumers do that
-                            setComputedDigest(signer, getSignedContent());        
+                            setComputedDigest(signer, getSignedContent());
                             // Indicate this object needs a signature verification
                             setSigned(true);
-            			
-                            //Decode the ContentInfo and get SignedData object.
+
+                            // Decode the ContentInfo and get SignedData object.
                             Store<X509CertificateHolder> certs = cmsSignedData.getCertificates();
                             signers = cmsSignedData.getSignerInfos();
-                            for (Iterator<SignerInformation> i = signers.getSigners().iterator(); i.hasNext(); ) {
+                            for (Iterator<SignerInformation> i = signers.getSigners().iterator(); i.hasNext();) {
                                 signer = i.next();
                                 setDigestAlgorithmName(Algorithm.digAlgOidToNameMap.get(signer.getDigestAlgOID()));
-                                setEncryptionAlgorithmName(Algorithm.encAlgOidToNameMap.get(signer.getEncryptionAlgOID()));
+                                setEncryptionAlgorithmName(
+                                        Algorithm.encAlgOidToNameMap.get(signer.getEncryptionAlgOID()));
                                 @SuppressWarnings("unchecked")
-								Collection<X509CertificateHolder> certCollection = certs.getMatches(signer.getSID());
+                                Collection<X509CertificateHolder> certCollection = certs.getMatches(signer.getSID());
                                 Iterator<X509CertificateHolder> certIt = certCollection.iterator();
                                 if (certIt.hasNext()) {
                                     X509CertificateHolder certHolder = certIt.next();
-                                    // Note that setSignerCert internally increments a counter. If there are more than one
+                                    // Note that setSignerCert internally increments a counter. If there are more
+                                    // than one
                                     // cert in PKCS7 cert bags then the consumer class should throw an exception.
-                                    X509Certificate signerCert = new JcaX509CertificateConverter().getCertificate(certHolder);
+                                    X509Certificate signerCert = new JcaX509CertificateConverter()
+                                            .getCertificate(certHolder);
                                     if (signerCert != null) {
-                                    	setSignerCert(signerCert);
-                                    	setHasOwnSignerCert(true);
-                                    	certFound = true;
-                                    	// Extract signer's signature algorithm name and hang on to it.
-                                    	setSignatureAlgorithmName(signerCert.getSigAlgName());
+                                        setSignerCert(signerCert);
+                                        setHasOwnSignerCert(true);
+                                        certFound = true;
+                                        // Extract signer's signature algorithm name and hang on to it.
+                                        setSignatureAlgorithmName(signerCert.getSigAlgName());
                                     } else {
-                                    	s_logger.error("Can't extract signer certificate");
+                                        s_logger.error("Can't extract signer certificate");
                                     }
                                 }
                             }
                         } else {
-                        	s_logger.error("Null CMSSignedData");
+                            s_logger.error("Null CMSSignedData");
                         }
                     }
                 }
@@ -393,30 +413,30 @@ public class CardHolderBiometricData extends SignedPIVDataObject {
             return false;
         }
 
-        String message = APDUConstants.oidNameMap.get(super.getOID()) + (certFound ? " had" : " did not have") + " an embedded certificate";
+        String message = APDUConstants.oidNameMap.get(super.getOID()) + (certFound ? " had" : " did not have")
+                + " an embedded certificate";
         s_logger.trace(message);
-        
-        if(m_biometricData == null)
+
+        if (m_biometricData == null)
             return false;
 
         dump(this.getClass());
         return true;
     }
-    
 
     /**
      *
      * Helper function that converts byte array to a date string
      *
-     * @param buf  Byte array to be converted
+     * @param buf Byte array to be converted
      * @return String containing date value
      */
     private String BytesToDateString(byte[] buf) {
-        if((char)buf[buf.length-1] != 'Z') {
+        if ((char) buf[buf.length - 1] != 'Z') {
             throw new IllegalArgumentException("bcd byte array doesn't end with Z");
         }
         StringBuilder outsb = new StringBuilder();
-        for( int i = 0; i < buf.length-1; ++i ) {
+        for (int i = 0; i < buf.length - 1; ++i) {
             int digits = buf[i] & 0xFF;
             outsb.append(String.format("%02d", digits));
         }

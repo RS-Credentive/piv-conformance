@@ -24,15 +24,17 @@ public class VersionUtils {
             VersionUtils.class.getClassLoader();
             pis = VersionUtils.class.getResourceAsStream("version.properties");
             s_properties.load(pis);
-        } catch(Exception e) {
-            s_logger.debug("Unable to read version.properties file from classpath. This may only be available from jar packaged builds.", e);
+        } catch (Exception e) {
+            s_logger.debug(
+                    "Unable to read version.properties file from classpath. This may only be available from jar packaged builds.",
+                    e);
             s_properties.setProperty(PACKAGE_VERSION, "UNAVAILABLE");
             s_properties.setProperty(PACKAGE_REVISION, "UNAVAILABLE");
             s_properties.setProperty(PACKAGE_BUILD_TIME, "UNAVAILABLE");
             s_properties.setProperty(PACKAGE_REVISION_TIME, "UNAVAILABLE");
 
         }
-        if(!s_properties.containsKey(PACKAGE_VERSION)) {
+        if (!s_properties.containsKey(PACKAGE_VERSION)) {
             s_logger.error("Version.properties was read from classpath but did not contain versioning information");
             s_properties.setProperty(PACKAGE_VERSION, "ERROR");
             s_properties.setProperty(PACKAGE_REVISION, "ERROR");
@@ -43,7 +45,8 @@ public class VersionUtils {
     }
 
     public static String GetPackageVersionString() {
-        return String.format("%s.%s", s_properties.getProperty(PACKAGE_VERSION), s_properties.getProperty(PACKAGE_REVISION));
+        return String.format("%s.%s", s_properties.getProperty(PACKAGE_VERSION),
+                s_properties.getProperty(PACKAGE_REVISION));
     }
 
     public static String GetPackageBuildTime() {

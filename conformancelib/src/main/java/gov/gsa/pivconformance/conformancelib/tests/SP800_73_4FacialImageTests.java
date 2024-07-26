@@ -21,35 +21,37 @@ import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 public class SP800_73_4FacialImageTests {
     private static final Logger s_logger = LoggerFactory.getLogger(SP800_73_4FacialImageTests.class);
 
-	// Create a logger to write content to .cvs file used to generate the result .html file.
-	// Note: No asserts were found in this file that output to the result .csv file.
-	private static Logger a_actualValueLogger = LoggerFactory.getLogger("gov.gsa.pivconformance.conformancelib.testResult");
+    // Create a logger to write content to .cvs file used to generate the result
+    // .html file.
+    // Note: No asserts were found in this file that output to the result .csv file.
+    private static Logger a_actualValueLogger = LoggerFactory
+            .getLogger("gov.gsa.pivconformance.conformancelib.testResult");
 
-	//Card Holder Facial Image blob no larger than 12710 bytes
-	@DisplayName("SP800-73-4.32 test")
-	@ParameterizedTest(name = "{index} => oid = {0}")
-	//@MethodSource("sp800_73_4_FacialImageTestProvider")
+    // Card Holder Facial Image blob no larger than 12710 bytes
+    @DisplayName("SP800-73-4.32 test")
+    @ParameterizedTest(name = "{index} => oid = {0}")
+    // @MethodSource("sp800_73_4_FacialImageTestProvider")
     @ArgumentsSource(ParameterizedArgumentsProvider.class)
-	void sp800_73_4_Test_32(String oid, TestReporter reporter) {
-		try {
-			PIVDataObject o = AtomHelper.getDataObject(oid);	
-			if (!o.inBounds(oid)) {
-				String errStr = (String.format("Tag in " + o.getFriendlyName() + " failed length check"));
-				Exception e = new Exception(errStr);
-				throw(e);
-			}
-		} catch (Exception e) {
-			s_logger.info(e.getMessage());
-			fail(e);
-		}
-	}
+    void sp800_73_4_Test_32(String oid, TestReporter reporter) {
+        try {
+            PIVDataObject o = AtomHelper.getDataObject(oid);
+            if (!o.inBounds(oid)) {
+                String errStr = (String.format("Tag in " + o.getFriendlyName() + " failed length check"));
+                Exception e = new Exception(errStr);
+                throw (e);
+            }
+        } catch (Exception e) {
+            s_logger.info(e.getMessage());
+            fail(e);
+        }
+    }
 
-	
-	// this is only used to test the atom now... it is no longer operative in the conformance tester
-	@SuppressWarnings("unused")
-	private static Stream<Arguments> sp800_73_4_FacialImageTestProvider() {
+    // this is only used to test the atom now... it is no longer operative in the
+    // conformance tester
+    @SuppressWarnings("unused")
+    private static Stream<Arguments> sp800_73_4_FacialImageTestProvider() {
 
-		return Stream.of(Arguments.of(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID));
+        return Stream.of(Arguments.of(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID));
 
-	}
+    }
 }

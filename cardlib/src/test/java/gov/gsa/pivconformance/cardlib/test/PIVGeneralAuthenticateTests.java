@@ -31,33 +31,33 @@ public class PIVGeneralAuthenticateTests {
     CardHandle currentCardHandle = null;
     ConnectionDescription currentConnection = null;
 
-    //@BeforeEach
+    // @BeforeEach
     void init() {
         PCSCUtils.ConfigureUserProperties();
         TerminalFactory tf = TerminalFactory.getDefault();
         try {
             terminals = tf.terminals().list();
-            for(CardTerminal t: terminals) {
-            	if(t.isCardPresent()) {
-            		currentConnection = ConnectionDescription.createFromTerminal(t);
-            		break;
-            	}
+            for (CardTerminal t : terminals) {
+                if (t.isCardPresent()) {
+                    currentConnection = ConnectionDescription.createFromTerminal(t);
+                    break;
+                }
             }
-            if(currentConnection == null || !currentConnection.getTerminal().isCardPresent()) {
-            	fail("Unable to find a reader with a card present");
+            if (currentConnection == null || !currentConnection.getTerminal().isCardPresent()) {
+                fail("Unable to find a reader with a card present");
             }
             currentCardHandle = new CardHandle();
             MiddlewareStatus result = PIVMiddleware.pivConnect(true, currentConnection, currentCardHandle);
-            assert(result == MiddlewareStatus.PIV_OK);
+            assert (result == MiddlewareStatus.PIV_OK);
             piv = new DefaultPIVApplication();
-            ApplicationAID aid  = new ApplicationAID();
+            ApplicationAID aid = new ApplicationAID();
             ApplicationProperties cardAppProperties = new ApplicationProperties();
             result = piv.pivSelectCardApplication(currentCardHandle, aid, cardAppProperties);
-			assertEquals(MiddlewareStatus.PIV_OK, result);
-			PIVAuthenticators authenticators = new PIVAuthenticators();
-			authenticators.addApplicationPin("123456");
-			result = piv.pivLogIntoCardApplication(currentCardHandle, authenticators.getBytes());
-			assertEquals(MiddlewareStatus.PIV_OK, result);
+            assertEquals(MiddlewareStatus.PIV_OK, result);
+            PIVAuthenticators authenticators = new PIVAuthenticators();
+            authenticators.addApplicationPin("123456");
+            result = piv.pivLogIntoCardApplication(currentCardHandle, authenticators.getBytes());
+            assertEquals(MiddlewareStatus.PIV_OK, result);
         } catch (CardException e) {
             fail("Unable to establish PIV connection");
         }
@@ -67,6 +67,6 @@ public class PIVGeneralAuthenticateTests {
     @Tag("PIN")
     @DisplayName("Test GENERAL AUTHENTICATE")
     void testGeneralAuthenticate(TestReporter reporter) {
-    	assertNull(null);
+        assertNull(null);
     }
 }

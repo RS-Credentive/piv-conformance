@@ -34,11 +34,10 @@ public class PrintEnvironmentInfo {
         s_logger.info("Attempting to list card terminals");
         try {
             for (CardTerminal t : tf.terminals().list()) {
-                s_logger.info("Reader: {}: {}", t.getName(), t.isCardPresent() ? "Card present":"Card not present");
+                s_logger.info("Reader: {}: {}", t.getName(), t.isCardPresent() ? "Card present" : "Card not present");
             }
         } catch (CardException e) {
             s_logger.error("Unable to enumerate card terminals", e);
         }
     }
 }
-

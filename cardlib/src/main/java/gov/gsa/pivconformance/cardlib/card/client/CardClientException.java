@@ -6,11 +6,11 @@ package gov.gsa.pivconformance.cardlib.card.client;
 public class CardClientException extends Exception {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
+    /**
      *
      * Default constructor for CardClientException class
      *
@@ -21,7 +21,8 @@ public class CardClientException extends Exception {
 
     /**
      *
-     * Constructor for CardClientException class that takes a string with exception message
+     * Constructor for CardClientException class that takes a string with exception
+     * message
      *
      * @param message String with the exception message
      */
@@ -31,10 +32,11 @@ public class CardClientException extends Exception {
 
     /**
      *
-     * Constructor for CardClientException class that takes a string with exception message and a Throwable cause
+     * Constructor for CardClientException class that takes a string with exception
+     * message and a Throwable cause
      *
      * @param message String with the exception message
-     * @param cause Throwable cause
+     * @param cause   Throwable cause
      */
     public CardClientException(String message, Throwable cause) {
         super(message, cause);

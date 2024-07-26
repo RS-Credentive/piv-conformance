@@ -31,7 +31,7 @@ public class HexUtil {
 
         for (int si = 0, di = 0; di < dst.length; di++) {
             byte high = BYTES[src[si++] & 0x7f];
-            byte low  = BYTES[src[si++] & 0x7f];
+            byte low = BYTES[src[si++] & 0x7f];
             dst[di] = (byte) ((high << 4) + low);
         }
 
@@ -43,15 +43,15 @@ public class HexUtil {
         sb.append("[");
         sb.append(aLength);
         sb.append("] :");
-        for (int si = aOffset, di = 0; si < aOffset+aLength; si++, di++) {
+        for (int si = aOffset, di = 0; si < aOffset + aLength; si++, di++) {
             byte b = aBytes[si];
             if (di % 4 == 0) {
                 sb.append("  ");
             } else {
                 sb.append(' ');
             }
-            sb.append( CHARS_TABLES[(b & 0xf0) >>> 4] );
-            sb.append( CHARS_TABLES[(b & 0x0f)] );
+            sb.append(CHARS_TABLES[(b & 0xf0) >>> 4]);
+            sb.append(CHARS_TABLES[(b & 0x0f)]);
 
         }
 
@@ -60,9 +60,9 @@ public class HexUtil {
     }
 
     public static String toHexString(byte[] aBytes, int aOffset, int aLength) {
-        char[] dst   = new char[aLength * 2];
+        char[] dst = new char[aLength * 2];
 
-        for (int si = aOffset, di = 0; si < aOffset+aLength; si++) {
+        for (int si = aOffset, di = 0; si < aOffset + aLength; si++) {
             byte b = aBytes[si];
             dst[di++] = CHARS_TABLES[(b & 0xf0) >>> 4];
             dst[di++] = CHARS_TABLES[(b & 0x0f)];

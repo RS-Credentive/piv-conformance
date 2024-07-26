@@ -13,7 +13,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 public class ConfigGenerator {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(ConfigGenerator.class);
@@ -31,7 +30,7 @@ public class ConfigGenerator {
     public static void main(String[] args) {
         s_logger.info("main class: {}", MethodHandles.lookup().lookupClass().getSimpleName());
         s_logger.info("package version: {}", VersionUtils.GetPackageVersionString());
-        //s_logger.info("build time: {}", VersionUtils.GetPackageBuildTime());
+        // s_logger.info("build time: {}", VersionUtils.GetPackageBuildTime());
 
         CommandLineParser p = new DefaultParser();
         CommandLine cmd = null;
@@ -42,14 +41,14 @@ public class ConfigGenerator {
             PrintHelpAndExit(1);
         }
 
-        if(cmd.hasOption("help")) {
+        if (cmd.hasOption("help")) {
             PrintHelpAndExit(0);
         }
 
-        if(cmd.hasOption("database")) {
+        if (cmd.hasOption("database")) {
             String dbParam = cmd.getOptionValue("database");
             File f = new File(dbParam);
-            if(f.exists()) {
+            if (f.exists()) {
                 s_logger.error("Cowardly refusing to overwrite existing file {}", dbParam);
                 System.exit(1);
             }
@@ -66,7 +65,7 @@ public class ConfigGenerator {
             } catch (SQLException e) {
                 s_logger.error("Unable to establish JDBC connection for SQLite database", e);
             }
-            if(conn != null) {
+            if (conn != null) {
                 s_logger.debug("Created sql connection for {}", dbParam);
                 DatabaseMetaData metaData = null;
                 try {

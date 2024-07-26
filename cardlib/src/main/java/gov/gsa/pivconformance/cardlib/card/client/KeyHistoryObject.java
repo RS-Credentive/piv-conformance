@@ -11,27 +11,30 @@ import java.util.List;
 
 /**
  *
- * Encapsulates a Key History data object  as defined by SP800-73-4 Part 2 Appendix A Table 19
+ * Encapsulates a Key History data object as defined by SP800-73-4 Part 2
+ * Appendix A Table 19
  *
  */
 public class KeyHistoryObject extends PIVDataObject {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(KeyHistoryObject.class);
-    // initialize to -1 so we can differentiate between no key history and failure to decode
+    // initialize to -1 so we can differentiate between no key history and failure
+    // to decode
     private int m_keysWithOnCardCerts = -1;
     private int m_keysWithOffCardCerts = -1;
     private byte[] m_offCardCertUrl;
-    
+
     public KeyHistoryObject() {
         m_content = new HashMap<BerTag, byte[]>();
     }
-    
-    // XXX *** This should probably land in the base class, but at least for this test, it won't
+
+    // XXX *** This should probably land in the base class, but at least for this
+    // test, it won't
     private byte[] m_tlvBuf = null;
+
     public byte[] getTlvBuf() {
-    	return m_tlvBuf;
+        return m_tlvBuf;
     }
-    
 
     /**
      *
@@ -83,7 +86,6 @@ public class KeyHistoryObject extends PIVDataObject {
         return m_offCardCertUrl;
     }
 
-
     /**
      *
      * Sets the offCardCertUrl value
@@ -96,34 +98,36 @@ public class KeyHistoryObject extends PIVDataObject {
 
     /**
      *
-     * Decode function that decodes Key History Object retrieved from the card and populates various class fields.
+     * Decode function that decodes Key History Object retrieved from the card and
+     * populates various class fields.
      *
      * @return True if decode was successful, false otherwise
      */
     @Override
-	public boolean decode() {
+    public boolean decode() {
         byte[] rawBytes = this.getBytes();
         BerTlvParser tlvp = new BerTlvParser(new CCTTlvLogger(this.getClass()));
         BerTlvs outer = tlvp.parse(rawBytes);
         List<BerTlv> outerTlvs = outer.getList();
-        if(outerTlvs.size() == 1 && outerTlvs.get(0).isTag(new BerTag(0x53))) {
+        if (outerTlvs.size() == 1 && outerTlvs.get(0).isTag(new BerTag(0x53))) {
             m_tlvBuf = outerTlvs.get(0).getBytesValue();
             outer = tlvp.parse(m_tlvBuf);
         }
-        for(BerTlv tlv : outer.getList()) {
+        for (BerTlv tlv : outer.getList()) {
             byte[] tag = tlv.getTag().bytes;
-            if(Arrays.equals(tag, TagConstants.KEYS_WITH_ON_CARD_CERTS_TAG)) {
+            if (Arrays.equals(tag, TagConstants.KEYS_WITH_ON_CARD_CERTS_TAG)) {
                 m_keysWithOnCardCerts = tlv.getIntValue();
                 m_content.put(tlv.getTag(), tlv.getBytesValue());
-            } else if(Arrays.equals(tag, TagConstants.KEYS_WITH_OFF_CARD_CERTS_TAG)) {
+            } else if (Arrays.equals(tag, TagConstants.KEYS_WITH_OFF_CARD_CERTS_TAG)) {
                 m_keysWithOffCardCerts = tlv.getIntValue();
                 m_content.put(tlv.getTag(), tlv.getBytesValue());
-            } else if(Arrays.equals(tag, TagConstants.OFF_CARD_CERT_URL_TAG)) {
+            } else if (Arrays.equals(tag, TagConstants.OFF_CARD_CERT_URL_TAG)) {
                 m_offCardCertUrl = tlv.getBytesValue();
                 m_content.put(tlv.getTag(), tlv.getBytesValue());
-            } else if(!Arrays.equals(tag, TagConstants.ERROR_DETECTION_CODE_TAG) && tlv.getBytesValue().length != 0) {
+            } else if (!Arrays.equals(tag, TagConstants.ERROR_DETECTION_CODE_TAG) && tlv.getBytesValue().length != 0) {
                 m_content.put(tlv.getTag(), tlv.getBytesValue());
-                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                        Hex.encodeHexString(tlv.getBytesValue()));
             }
             s_logger.info("found tag: {}", Hex.encodeHexString(tag));
         }
@@ -131,8 +135,7 @@ public class KeyHistoryObject extends PIVDataObject {
         if (m_keysWithOnCardCerts == -1 || m_keysWithOffCardCerts == -1)
             return false;
 
-        dump(this.getClass())
-;
+        dump(this.getClass());
         return true;
     }
 }

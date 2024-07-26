@@ -1,8 +1,6 @@
 package gov.gsa.pivconformance.cardlib.tlv;
 
-
 public class BerTlvLogger {
-
 
     public static void log(String aPadding, BerTlvs aTlv, IBerTlvLogger aLogger) {
 

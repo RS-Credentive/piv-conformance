@@ -17,7 +17,6 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -44,12 +43,15 @@ public class ConformanceTestRunner {
     static {
         s_options.addOption("h", "help", false, "Print this help and exit");
         s_options.addOption("c", "config", true, "path to config file");
-        s_options.addOption("n", "configName", true, "group of system settings to use if the config database has more than one");
+        s_options.addOption("n", "configName", true,
+                "group of system settings to use if the config database has more than one");
     }
+
     private static void PrintHelpAndExit(int exitCode) {
         new HelpFormatter().printHelp("ConfigGenerator <options>", s_options);
         System.exit(exitCode);
     }
+
     public static void main(String[] args) {
         s_logger.info("main class: {}", MethodHandles.lookup().lookupClass().getSimpleName());
         s_logger.info("package version: {}", VersionUtils.GetPackageVersionString());
@@ -200,6 +202,7 @@ public class ConformanceTestRunner {
         summary.printTo(new PrintWriter(System.out));
 
     }
+
     private static SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {
         SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
         launcher.registerTestExecutionListeners(summaryListener);
@@ -208,8 +211,8 @@ public class ConformanceTestRunner {
     }
 
     private static TestExecutionListener createDetailsPrintingListener(PrintWriter out) {
-        boolean disableAnsiColors = false;//options.isAnsiColorOutputDisabled();
-        Theme theme = Theme.valueOf(Charset.defaultCharset());//options.getTheme();
+        boolean disableAnsiColors = false;// options.isAnsiColorOutputDisabled();
+        Theme theme = Theme.valueOf(Charset.defaultCharset());// options.getTheme();
         return new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme);
     }
 }

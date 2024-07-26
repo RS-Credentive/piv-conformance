@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class PIVConnectTests {
     List<CardTerminal> terminals = null;
+
     @BeforeEach
     void init() {
         TerminalFactory tf = TerminalFactory.getDefault();
@@ -32,38 +33,42 @@ public class PIVConnectTests {
         }
     }
 
-    @Test @DisplayName("Ensure readers")
+    @Test
+    @DisplayName("Ensure readers")
     void testReaderList() {
-        assert(terminals.size() > 0);
+        assert (terminals.size() > 0);
     }
 
-    @Test @DisplayName("Test reader descriptor")
+    @Test
+    @DisplayName("Test reader descriptor")
     void testConnectionDescription() {
         ConnectionDescription cd = ConnectionDescription.createFromTerminal(terminals.get(0));
-        assert(cd != null);
+        assert (cd != null);
         byte[] cdbytes = cd.getBytes();
-        assert(cdbytes.length > 1);
+        assert (cdbytes.length > 1);
     }
 
-    @Test @DisplayName("Test connection")
+    @Test
+    @DisplayName("Test connection")
     void testConnection() {
         ConnectionDescription cd = ConnectionDescription.createFromTerminal(terminals.get(0));
         try {
             assert (terminals.get(0).isCardPresent());
-        }catch(CardException ce) {
+        } catch (CardException ce) {
             fail(ce);
         }
         CardHandle ch = new CardHandle();
         MiddlewareStatus result = PIVMiddleware.pivConnect(true, cd, ch);
-        assert(result == MiddlewareStatus.PIV_OK);
+        assert (result == MiddlewareStatus.PIV_OK);
     }
 
-    @Test @DisplayName("Test app selection")
+    @Test
+    @DisplayName("Test app selection")
     void testSelect(TestReporter reporter) {
         ConnectionDescription cd = ConnectionDescription.createFromTerminal(terminals.get(0));
         try {
             assert (terminals.get(0).isCardPresent());
-        }catch(CardException ce) {
+        } catch (CardException ce) {
             fail(ce);
         }
         CardHandle ch = new CardHandle();
@@ -71,7 +76,7 @@ public class PIVConnectTests {
         assertEquals(result, MiddlewareStatus.PIV_OK);
         reporter.publishEntry("Reader", cd.getTerminal().getName());
         DefaultPIVApplication piv = new DefaultPIVApplication();
-        ApplicationAID aid  = new ApplicationAID();
+        ApplicationAID aid = new ApplicationAID();
         ApplicationProperties cardAppProperties = new ApplicationProperties();
         result = piv.pivSelectCardApplication(ch, aid, cardAppProperties);
         assertEquals(MiddlewareStatus.PIV_OK, result);

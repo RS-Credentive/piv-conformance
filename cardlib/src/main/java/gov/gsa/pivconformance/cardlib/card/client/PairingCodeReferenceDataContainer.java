@@ -11,7 +11,8 @@ import java.util.List;
 
 /**
  *
- * Encapsulates a Pairing Code Reference Data Container data object  as defined by SP800-73-4 Part 2 Appendix A Table 43
+ * Encapsulates a Pairing Code Reference Data Container data object as defined
+ * by SP800-73-4 Part 2 Appendix A Table 43
  *
  */
 public class PairingCodeReferenceDataContainer extends PIVDataObject {
@@ -22,7 +23,8 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
     private boolean m_errorDetectionCode;
 
     /**
-     * PairingCodeReferenceDataContainer class constructor, initializes all the class fields.
+     * PairingCodeReferenceDataContainer class constructor, initializes all the
+     * class fields.
      */
     public PairingCodeReferenceDataContainer() {
         m_pairingCode = "";
@@ -57,7 +59,7 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
      * @return True if error Error Detection Code is present, false otherwise
      */
     @Override
-	public boolean getErrorDetectionCode() {
+    public boolean getErrorDetectionCode() {
         return m_errorDetectionCode;
     }
 
@@ -65,26 +67,28 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
      *
      * Sets if error Error Detection Code is present
      *
-     * @param errorDetectionCode True if error Error Detection Code is present, false otherwise
+     * @param errorDetectionCode True if error Error Detection Code is present,
+     *                           false otherwise
      */
     @Override
-	public void setErrorDetectionCode(boolean errorDetectionCode) {
+    public void setErrorDetectionCode(boolean errorDetectionCode) {
         m_errorDetectionCode = errorDetectionCode;
     }
 
     /**
      *
-     * Decode function that decodes Pairing Code Reference Data Container object retrieved from the card and populates various class fields.
+     * Decode function that decodes Pairing Code Reference Data Container object
+     * retrieved from the card and populates various class fields.
      *
      * @return True if decode was successful, false otherwise
      */
     @Override
-	public boolean decode() {
+    public boolean decode() {
 
-        try{
+        try {
             byte[] rawBytes = this.getBytes();
 
-            if(rawBytes == null){
+            if (rawBytes == null) {
                 s_logger.error("No buffer to decode for {}.", APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
@@ -92,20 +96,23 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
             BerTlvParser tlvp = new BerTlvParser(new CCTTlvLogger(this.getClass()));
             BerTlvs outer = tlvp.parse(rawBytes);
 
-            if(outer == null){
-                s_logger.error("Error parsing {}, unable to parse TLV value.", APDUConstants.oidNameMap.get(super.getOID()));
+            if (outer == null) {
+                s_logger.error("Error parsing {}, unable to parse TLV value.",
+                        APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
 
             List<BerTlv> values = outer.getList();
-            for(BerTlv tlv : values) {
-                if(tlv.isPrimitive()) {
-                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+            for (BerTlv tlv : values) {
+                if (tlv.isPrimitive()) {
+                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                            Hex.encodeHexString(tlv.getBytesValue()));
 
                     BerTlvs outer2 = tlvp.parse(tlv.getBytesValue());
 
                     if (outer2 == null) {
-                        s_logger.error("Error parsing {}, unable to parse TLV value.", APDUConstants.oidNameMap.get(super.getOID()));
+                        s_logger.error("Error parsing {}, unable to parse TLV value.",
+                                APDUConstants.oidNameMap.get(super.getOID()));
                         return false;
                     }
 
@@ -117,8 +124,10 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
                                 m_pairingCode = new String(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
 
-                            } else{
-                                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv2.getTag().bytes), Hex.encodeHexString(tlv2.getBytesValue()));
+                            } else {
+                                s_logger.warn("Unexpected tag: {} with value: {}",
+                                        Hex.encodeHexString(tlv2.getTag().bytes),
+                                        Hex.encodeHexString(tlv2.getBytesValue()));
                             }
                         } else {
                             if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ERROR_DETECTION_CODE_TAG)) {
@@ -127,13 +136,15 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
 
                             } else {
-                                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv2.getTag().bytes), Hex.encodeHexString(tlv2.getBytesValue()));
+                                s_logger.warn("Unexpected tag: {} with value: {}",
+                                        Hex.encodeHexString(tlv2.getTag().bytes),
+                                        Hex.encodeHexString(tlv2.getBytesValue()));
                             }
                         }
                     }
                 }
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
 
             s_logger.error("Error parsing {}: {}", APDUConstants.oidNameMap.get(super.getOID()), ex.getMessage());
             return false;
@@ -142,8 +153,7 @@ public class PairingCodeReferenceDataContainer extends PIVDataObject {
         if (m_pairingCode == "")
             return false;
 
-        dump(this.getClass())
-;
+        dump(this.getClass());
         return true;
     }
 }

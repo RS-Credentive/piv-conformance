@@ -44,88 +44,88 @@ import gov.gsa.pivconformance.conformancelib.junitoptions.CommandLineOptions;
  */
 class DiscoveryRequestCreator {
 
-	LauncherDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
-		LauncherDiscoveryRequestBuilder requestBuilder = request();
-		requestBuilder.selectors(createDiscoverySelectors(options));
-		addFilters(requestBuilder, options);
-		requestBuilder.configurationParameters(options.getConfigurationParameters());
-		return requestBuilder.build();
-	}
+    LauncherDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
+        LauncherDiscoveryRequestBuilder requestBuilder = request();
+        requestBuilder.selectors(createDiscoverySelectors(options));
+        addFilters(requestBuilder, options);
+        requestBuilder.configurationParameters(options.getConfigurationParameters());
+        return requestBuilder.build();
+    }
 
-	private List<? extends DiscoverySelector> createDiscoverySelectors(CommandLineOptions options) {
-		if (options.isScanClasspath()) {
-			Preconditions.condition(!options.hasExplicitSelectors(),
-				"Scanning the classpath and using explicit selectors at the same time is not supported");
-			return createClasspathRootSelectors(options);
-		}
-		if (options.isScanModulepath()) {
-			Preconditions.condition(!options.hasExplicitSelectors(),
-				"Scanning the module-path and using explicit selectors at the same time is not supported");
-			return selectModules(ModuleUtils.findAllNonSystemBootModuleNames());
-		}
-		return createExplicitDiscoverySelectors(options);
-	}
+    private List<? extends DiscoverySelector> createDiscoverySelectors(CommandLineOptions options) {
+        if (options.isScanClasspath()) {
+            Preconditions.condition(!options.hasExplicitSelectors(),
+                    "Scanning the classpath and using explicit selectors at the same time is not supported");
+            return createClasspathRootSelectors(options);
+        }
+        if (options.isScanModulepath()) {
+            Preconditions.condition(!options.hasExplicitSelectors(),
+                    "Scanning the module-path and using explicit selectors at the same time is not supported");
+            return selectModules(ModuleUtils.findAllNonSystemBootModuleNames());
+        }
+        return createExplicitDiscoverySelectors(options);
+    }
 
-	private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
-		Set<Path> classpathRoots = determineClasspathRoots(options);
-		return selectClasspathRoots(classpathRoots);
-	}
+    private List<ClasspathRootSelector> createClasspathRootSelectors(CommandLineOptions options) {
+        Set<Path> classpathRoots = determineClasspathRoots(options);
+        return selectClasspathRoots(classpathRoots);
+    }
 
-	private Set<Path> determineClasspathRoots(CommandLineOptions options) {
-		if (options.getSelectedClasspathEntries().isEmpty()) {
-			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
-			rootDirs.addAll(options.getAdditionalClasspathEntries());
-			return rootDirs;
-		}
-		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
-	}
+    private Set<Path> determineClasspathRoots(CommandLineOptions options) {
+        if (options.getSelectedClasspathEntries().isEmpty()) {
+            Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
+            rootDirs.addAll(options.getAdditionalClasspathEntries());
+            return rootDirs;
+        }
+        return new LinkedHashSet<>(options.getSelectedClasspathEntries());
+    }
 
-	private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
-		List<DiscoverySelector> selectors = new ArrayList<>();
-		options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
-		options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
-		options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
-		options.getSelectedModules().stream().map(DiscoverySelectors::selectModule).forEach(selectors::add);
-		options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
-		options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
-		options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);
-		options.getSelectedClasspathResources().stream().map(DiscoverySelectors::selectClasspathResource).forEach(
-			selectors::add);
-		Preconditions.notEmpty(selectors, "No arguments were supplied to the ConsoleLauncher");
-		return selectors;
-	}
+    private List<DiscoverySelector> createExplicitDiscoverySelectors(CommandLineOptions options) {
+        List<DiscoverySelector> selectors = new ArrayList<>();
+        options.getSelectedUris().stream().map(DiscoverySelectors::selectUri).forEach(selectors::add);
+        options.getSelectedFiles().stream().map(DiscoverySelectors::selectFile).forEach(selectors::add);
+        options.getSelectedDirectories().stream().map(DiscoverySelectors::selectDirectory).forEach(selectors::add);
+        options.getSelectedModules().stream().map(DiscoverySelectors::selectModule).forEach(selectors::add);
+        options.getSelectedPackages().stream().map(DiscoverySelectors::selectPackage).forEach(selectors::add);
+        options.getSelectedClasses().stream().map(DiscoverySelectors::selectClass).forEach(selectors::add);
+        options.getSelectedMethods().stream().map(DiscoverySelectors::selectMethod).forEach(selectors::add);
+        options.getSelectedClasspathResources().stream().map(DiscoverySelectors::selectClasspathResource)
+                .forEach(selectors::add);
+        Preconditions.notEmpty(selectors, "No arguments were supplied to the ConsoleLauncher");
+        return selectors;
+    }
 
-	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
-		requestBuilder.filters(includeClassNamePatterns(options.getIncludedClassNamePatterns().toArray(new String[0])));
+    private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
+        requestBuilder.filters(includeClassNamePatterns(options.getIncludedClassNamePatterns().toArray(new String[0])));
 
-		if (!options.getExcludedClassNamePatterns().isEmpty()) {
-			requestBuilder.filters(
-				excludeClassNamePatterns(options.getExcludedClassNamePatterns().toArray(new String[0])));
-		}
+        if (!options.getExcludedClassNamePatterns().isEmpty()) {
+            requestBuilder
+                    .filters(excludeClassNamePatterns(options.getExcludedClassNamePatterns().toArray(new String[0])));
+        }
 
-		if (!options.getIncludedPackages().isEmpty()) {
-			requestBuilder.filters(includePackageNames(options.getIncludedPackages()));
-		}
+        if (!options.getIncludedPackages().isEmpty()) {
+            requestBuilder.filters(includePackageNames(options.getIncludedPackages()));
+        }
 
-		if (!options.getExcludedPackages().isEmpty()) {
-			requestBuilder.filters(excludePackageNames(options.getExcludedPackages()));
-		}
+        if (!options.getExcludedPackages().isEmpty()) {
+            requestBuilder.filters(excludePackageNames(options.getExcludedPackages()));
+        }
 
-		if (!options.getIncludedTagExpressions().isEmpty()) {
-			requestBuilder.filters(includeTags(options.getIncludedTagExpressions()));
-		}
+        if (!options.getIncludedTagExpressions().isEmpty()) {
+            requestBuilder.filters(includeTags(options.getIncludedTagExpressions()));
+        }
 
-		if (!options.getExcludedTagExpressions().isEmpty()) {
-			requestBuilder.filters(excludeTags(options.getExcludedTagExpressions()));
-		}
+        if (!options.getExcludedTagExpressions().isEmpty()) {
+            requestBuilder.filters(excludeTags(options.getExcludedTagExpressions()));
+        }
 
-		if (!options.getIncludedEngines().isEmpty()) {
-			requestBuilder.filters(includeEngines(options.getIncludedEngines()));
-		}
+        if (!options.getIncludedEngines().isEmpty()) {
+            requestBuilder.filters(includeEngines(options.getIncludedEngines()));
+        }
 
-		if (!options.getExcludedEngines().isEmpty()) {
-			requestBuilder.filters(excludeEngines(options.getExcludedEngines()));
-		}
-	}
+        if (!options.getExcludedEngines().isEmpty()) {
+            requestBuilder.filters(excludeEngines(options.getExcludedEngines()));
+        }
+    }
 
 }

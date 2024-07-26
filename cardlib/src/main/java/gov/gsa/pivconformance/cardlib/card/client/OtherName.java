@@ -16,15 +16,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The OtherName object.
+ * 
  * <pre>
  * OtherName ::= SEQUENCE {
  *      type-id    OBJECT IDENTIFIER,
  *      value      [0] EXPLICIT ANY DEFINED BY type-id }
  * </pre>
  */
-public class OtherName
-    extends ASN1Object
-{
+public class OtherName extends ASN1Object {
     private static final Logger s_logger = LoggerFactory.getLogger(OtherName.class);
 
     private final ASN1ObjectIdentifier typeID;
@@ -32,25 +31,24 @@ public class OtherName
 
     /**
      * OtherName factory method.
+     * 
      * @param obj the object used to construct an instance of <code>
      * OtherName</code>. It must be an instance of <code>OtherName
      * </code> or <code>ASN1Sequence</code>.
-     * @return the instance of <code>OtherName</code> built from the
-     * supplied object.
-     * @throws java.lang.IllegalArgumentException if the object passed
-     * to the factory is not an instance of <code>OtherName</code> or something that
-     * can be converted into an appropriate <code>ASN1Sequence</code>.
+     * @return the instance of <code>OtherName</code> built from the supplied
+     *         object.
+     * @throws java.lang.IllegalArgumentException if the object passed to the
+     *                                            factory is not an instance of
+     *                                            <code>OtherName</code> or
+     *                                            something that can be converted
+     *                                            into an appropriate
+     *                                            <code>ASN1Sequence</code>.
      */
-    public static OtherName getInstance(
-        Object obj)
-    {
+    public static OtherName getInstance(Object obj) {
 
-        if (obj instanceof OtherName)
-        {
-            return (OtherName)obj;
-        }
-        else if (obj != null)
-        {
+        if (obj instanceof OtherName) {
+            return (OtherName) obj;
+        } else if (obj != null) {
             return new OtherName(ASN1Sequence.getInstance(obj));
         }
 
@@ -59,36 +57,30 @@ public class OtherName
 
     /**
      * Base constructor.
+     * 
      * @param typeID the type of the other name.
-     * @param value the ANY object that represents the value.
+     * @param value  the ANY object that represents the value.
      */
-    public OtherName(
-        ASN1ObjectIdentifier typeID,
-        ASN1Encodable value)
-    {
+    public OtherName(ASN1ObjectIdentifier typeID, ASN1Encodable value) {
         this.typeID = typeID;
-        this.value  = value;
+        this.value = value;
     }
 
-    private OtherName(ASN1Sequence seq)
-    {
+    private OtherName(ASN1Sequence seq) {
         this.typeID = ASN1ObjectIdentifier.getInstance(seq.getObjectAt(0));
         this.value = ASN1TaggedObject.getInstance(seq.getObjectAt(1)).getObject(); // explicitly tagged
     }
 
-    public ASN1ObjectIdentifier getTypeID()
-    {
+    public ASN1ObjectIdentifier getTypeID() {
         return typeID;
     }
 
-    public ASN1Encodable getValue()
-    {
+    public ASN1Encodable getValue() {
         return value;
     }
 
     @Override
-	public ASN1Primitive toASN1Primitive()
-    {
+    public ASN1Primitive toASN1Primitive() {
         ASN1EncodableVector v = new ASN1EncodableVector();
 
         v.add(typeID);

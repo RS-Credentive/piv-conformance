@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class ValidatorHelper {
 
     private static final Logger s_logger = LoggerFactory.getLogger(ValidatorHelper.class);
+
     public static X509Certificate getX509CertificateFromPath(String fullPathName) throws ConformanceTestException {
         String v_fullPathName = TestRunLogController.pathFixup(fullPathName);
         s_logger.debug("getX509CertificateFromPath(" + v_fullPathName + ")");
@@ -45,6 +46,7 @@ public class ValidatorHelper {
 
     /**
      * Read properties from a file
+     * 
      * @param fileName Property file name
      * @return Properties object
      * @throws Exception
@@ -91,14 +93,17 @@ public class ValidatorHelper {
     }
 
     /**
-     * Gets the trust anchor associated with the end-entity certificate based on Subject CN
+     * Gets the trust anchor associated with the end-entity certificate based on
+     * Subject CN
+     * 
      * @param keyStore keyStore object previously opened
-     * @param eeCert end-entity certificate
+     * @param eeCert   end-entity certificate
      * @return X509Certificate of the trust anchor
      * @throws ConformanceTestException
      */
 
-    public static X509Certificate getTrustAnchorForGivenCertificate(KeyStore keyStore, X509Certificate eeCert, String defaultAlias) throws ConformanceTestException {
+    public static X509Certificate getTrustAnchorForGivenCertificate(KeyStore keyStore, X509Certificate eeCert,
+            String defaultAlias) throws ConformanceTestException {
         if (keyStore == null) {
             s_logger.error("keyStore is null");
             return null;
@@ -164,8 +169,9 @@ public class ValidatorHelper {
 
     /**
      * Get a certificate from the specified keystore using the given alias
+     * 
      * @param keyStore keytore object
-     * @param alias certificate alias
+     * @param alias    certificate alias
      * @return X509Certificate object of the given certificate or null
      */
 
@@ -196,8 +202,9 @@ public class ValidatorHelper {
     }
 
     /**
-     * Scrubs a common name of special characters that would otherwise be illegal
-     * or ambiguous in a file name.
+     * Scrubs a common name of special characters that would otherwise be illegal or
+     * ambiguous in a file name.
+     * 
      * @param name the name to be scrubbed
      * @return a clean name
      */
@@ -207,33 +214,32 @@ public class ValidatorHelper {
         String rv = name.replaceAll(",.*", ""); // failsafe
         for (String n : names) {
             String n1 = n.replaceAll("[ ]+", "_");
-            if (n1.startsWith("CN=") || n1.startsWith("SERIALNUMBER=") | n1.startsWith("OU=")  | n1.startsWith("O=")) {
-                rv =  n1.replaceAll("CN=", "")
-                .replaceAll("SERIALNUMBER=", "")
-                .replaceAll("OU=", "")
-                .replaceAll("O=", "")
-                .replaceAll("[^A-Za-z0-9\\.\\-]", "_")
-                .replaceAll("_-_", "-")
-                .replaceAll("__", "_")
-                .toLowerCase();
+            if (n1.startsWith("CN=") || n1.startsWith("SERIALNUMBER=") | n1.startsWith("OU=") | n1.startsWith("O=")) {
+                rv = n1.replaceAll("CN=", "").replaceAll("SERIALNUMBER=", "").replaceAll("OU=", "").replaceAll("O=", "")
+                        .replaceAll("[^A-Za-z0-9\\.\\-]", "_").replaceAll("_-_", "-").replaceAll("__", "_")
+                        .toLowerCase();
             }
         }
         return rv;
     }
 
     /**
-     * Generates a certificate's full file name given a resourceDir, subject, and issuer
+     * Generates a certificate's full file name given a resourceDir, subject, and
+     * issuer
+     * 
      * @param resourceDir string representing the resource directory
-     * @param subject X.509 certificate Subject
-     * @param issuer X.509 certificate issuer
+     * @param subject     X.509 certificate Subject
+     * @param issuer      X.509 certificate issuer
      * @return the full file name to the certificate file
      * @throws FileNotFoundException
      */
 
-    public static String genCertFileName(String resourceDir, String subject, String issuer) throws FileNotFoundException {
+    public static String genCertFileName(String resourceDir, String subject, String issuer)
+            throws FileNotFoundException {
         TestRunLogController trlc = TestRunLogController.getInstance();
         String identifier = "unknown";
-        // It is only a guess as to whether this is a PIV-I or not. We just need one of the two
+        // It is only a guess as to whether this is a PIV-I or not. We just need one of
+        // the two
         // for our file name.
         if (trlc.getGuid() != null && trlc.getFascn() != null && trlc.getFascn().startsWith("99999999999999")) {
             // Use the GUID
