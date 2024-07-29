@@ -14,10 +14,11 @@ import javax.swing.UIManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpec;
-import com.jgoodies.forms.layout.RowSpec;
+// This library no longer appears to be available.
+// import com.jgoodies.forms.layout.ColumnSpec;
+// import com.jgoodies.forms.layout.FormLayout;
+// import com.jgoodies.forms.layout.FormSpec;
+// import com.jgoodies.forms.layout.RowSpec;
 
 import gov.gsa.pivconformance.conformancelib.configuration.ConfigurationException;
 import gov.gsa.pivconformance.conformancelib.configuration.ConformanceTestDatabase;
