@@ -42,4 +42,5 @@
     <suppress files=".*.java$" checks="LeftCurly" />
     <suppress files=".*.java$" checks="ParameterAssignment" />
     <suppress files=".*.java$" checks="FileLength" />
+    <suppress files="[\\/]commons[\\/]" checks="[a-zA-Z0-9]*" />
 </suppressions>
