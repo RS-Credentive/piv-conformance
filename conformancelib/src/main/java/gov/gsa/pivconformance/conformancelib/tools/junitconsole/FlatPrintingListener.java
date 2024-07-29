@@ -15,7 +15,7 @@ import static gov.gsa.pivconformance.conformancelib.tools.junitconsole.Color.NON
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
-import org.junit.platform.commons.util.ExceptionUtils;
+// import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -83,9 +83,9 @@ class FlatPrintingListener implements TestExecutionListener {
         println(color, "%-10s   %s (%s)", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
     }
 
-    private void printlnException(Color color, Throwable throwable) {
-        printlnMessage(color, "Exception", ExceptionUtils.readStackTrace(throwable));
-    }
+    // private void printlnException(Color color, Throwable throwable) {
+    // printlnMessage(color, "Exception", ExceptionUtils.readStackTrace(throwable));
+    // }
 
     private void printlnMessage(Color color, String message, String detail) {
         println(color, INDENTATION + "=> " + message + ": %s", indented(detail));
@@ -108,8 +108,7 @@ class FlatPrintingListener implements TestExecutionListener {
      * Indent the given message if it is a multi-line string.
      *
      * <p>
-     * {@link #INDENTATION} is used to prefix the start of each new line except the
-     * first one.
+     * {@link #INDENTATION} is used to prefix the start of each new line except the first one.
      *
      * @param message the message to indent
      * @return indented message
