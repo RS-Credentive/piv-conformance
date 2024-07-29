@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
-import org.junit.platform.commons.util.ExceptionUtils;
+// import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
@@ -70,8 +70,10 @@ public class XmlReportData {
     void markFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
         this.endInstants.put(testIdentifier, this.clock.instant());
         if (result.getStatus() == ABORTED) {
-            String reason = result.getThrowable().map(ExceptionUtils::readStackTrace).orElse("");
-            this.skippedTests.put(testIdentifier, reason);
+            // TODO: Fix this
+            this.skippedTests.put(testIdentifier, "Currently working out a bug with the code calling this function");
+            // String reason = result.getThrowable().map(ExceptionUtils::readStackTrace).orElse("");
+            // this.skippedTests.put(testIdentifier, reason);
         } else {
             this.finishedTests.put(testIdentifier, result);
         }

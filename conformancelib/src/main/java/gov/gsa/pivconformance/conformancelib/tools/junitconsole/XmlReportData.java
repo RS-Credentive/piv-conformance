@@ -70,6 +70,8 @@ public class XmlReportData {
     void markFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
         this.endInstants.put(testIdentifier, this.clock.instant());
         if (result.getStatus() == ABORTED) {
+            // TODO: Fix this
+            this.skippedTests.put(testIdentifier, "Currently working out a bug with the code calling this function");
             // String reason = result.getThrowable().map(ExceptionUtils::readStackTrace).orElse("");
             // this.skippedTests.put(testIdentifier, reason);
         } else {
