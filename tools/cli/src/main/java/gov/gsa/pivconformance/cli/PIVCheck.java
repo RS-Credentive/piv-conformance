@@ -1,9 +1,9 @@
 package gov.gsa.pivconformance.cli;
 
 import gov.gsa.pivconformance.cardlib.card.client.*;
-import gov.gsa.pivconformance.tlv.*;
-import gov.gsa.pivconformance.utils.PCSCUtils;
-import gov.gsa.pivconformance.utils.VersionUtils;
+import gov.gsa.pivconformance.cardlib.tlv.*;
+import gov.gsa.pivconformance.cardlib.utils.PCSCUtils;
+import gov.gsa.pivconformance.cardlib.utils.VersionUtils;
 import org.apache.commons.cli.*;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.cms.CMSSignedData;

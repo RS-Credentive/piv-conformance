@@ -70,7 +70,7 @@ class FlatPrintingListener implements TestExecutionListener {
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
         Color color = Color.valueOf(testExecutionResult);
         printlnTestDescriptor(color, "Finished:", testIdentifier);
-        testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
+        // testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
     }
 
     @Override

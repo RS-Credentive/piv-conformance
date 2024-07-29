@@ -10,8 +10,8 @@
 
 package gov.gsa.pivconformance.cli.junitconsole;
 
-import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
-import static gov.gsa.pivconformancetools.junitconsole.Color.NONE;
+// import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
+import static gov.gsa.pivconformance.cli.junitconsole.Color.NONE;
 
 import java.io.PrintWriter;
 import java.util.ArrayDeque;
@@ -95,7 +95,7 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
 
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-        testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.FAILED, "caught", readStackTrace(t)));
+        // testExecutionResult.getThrowable().ifPresent(t -> printDetail(Color.FAILED, "caught", readStackTrace(t)));
         if (testIdentifier.isContainer()) {
             Long creationMillis = frames.pop();
             printVerticals(theme.end());

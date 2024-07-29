@@ -1,11 +1,11 @@
 package gov.gsa.pivconformance.cli;
 
-import gov.gsa.conformancelib.configuration.CardSettingsSingleton;
-import gov.gsa.conformancelib.tests.SignedObjectVerificationTests;
-import gov.gsa.pivconformance.utils.PCSCUtils;
-import gov.gsa.pivconformance.utils.VersionUtils;
-import gov.gsa.pivconformancetools.junitconsole.Theme;
-import gov.gsa.pivconformancetools.junitconsole.VerboseTreePrintingListener;
+import gov.gsa.pivconformance.conformancelib.configuration.CardSettingsSingleton;
+// import gov.gsa.pivconformance.conformancelib.tests.SignedObjectVerificationTests; //Does not exist?
+import gov.gsa.pivconformance.cardlib.utils.PCSCUtils;
+import gov.gsa.pivconformance.cardlib.utils.VersionUtils;
+import gov.gsa.pivconformance.conformancelib.tools.junitconsole.Theme;
+import gov.gsa.pivconformance.conformancelib.tools.junitconsole.VerboseTreePrintingListener;
 import org.apache.commons.cli.*;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.launcher.*;

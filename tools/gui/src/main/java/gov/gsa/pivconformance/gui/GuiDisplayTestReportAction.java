@@ -88,8 +88,7 @@ public class GuiDisplayTestReportAction extends AbstractAction {
     }
 
     /**
-     * Gets the last known log file from a persistent file,
-     * .lastlog-{appendername}.toLowerCase()
+     * Gets the last known log file from a persistent file, .lastlog-{appendername}.toLowerCase()
      *
      * @param name
      * @return

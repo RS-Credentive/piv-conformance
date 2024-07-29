@@ -16,7 +16,7 @@ import org.junit.platform.launcher.TestIdentifier;
 /**
  * @since 1.0
  */
-enum Color {
+public enum Color {
 
     NONE(0),
 

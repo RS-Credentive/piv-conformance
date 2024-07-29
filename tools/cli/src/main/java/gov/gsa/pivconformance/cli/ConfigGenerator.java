@@ -1,6 +1,6 @@
 package gov.gsa.pivconformance.cli;
 
-import gov.gsa.pivconformance.utils.VersionUtils;
+import gov.gsa.pivconformance.cardlib.utils.VersionUtils;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

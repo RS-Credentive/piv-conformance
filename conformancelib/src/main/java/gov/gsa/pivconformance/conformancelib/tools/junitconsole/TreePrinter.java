@@ -16,14 +16,14 @@ import static gov.gsa.pivconformance.conformancelib.tools.junitconsole.Color.GRE
 import static gov.gsa.pivconformance.conformancelib.tools.junitconsole.Color.NONE;
 import static gov.gsa.pivconformance.conformancelib.tools.junitconsole.Color.SKIPPED;
 import static gov.gsa.pivconformance.conformancelib.tools.junitconsole.Color.YELLOW;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+// import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.platform.commons.util.StringUtils;
+// import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -127,9 +127,9 @@ class TreePrinter {
         }
         Throwable throwable = result.getThrowable().get();
         String message = throwable.getMessage();
-        if (StringUtils.isBlank(message)) {
-            message = throwable.toString();
-        }
+        // if (StringUtils.isBlank(message)) {
+        // message = throwable.toString();
+        // }
         printMessage(FAILED, indent, message);
     }
 
@@ -138,10 +138,10 @@ class TreePrinter {
         out.print(indent);
         out.print(reportEntry.getTimestamp());
         Set<Map.Entry<String, String>> entries = reportEntry.getKeyValuePairs().entrySet();
-        if (entries.size() == 1) {
-            printReportEntry(" ", getOnlyElement(entries));
-            return;
-        }
+        // if (entries.size() == 1) {
+        // printReportEntry(" ", getOnlyElement(entries));
+        // return;
+        // }
         for (Map.Entry<String, String> entry : entries) {
             out.println();
             printReportEntry(indent + theme.blank(), entry);
@@ -164,10 +164,10 @@ class TreePrinter {
             for (int i = 1; i < lines.length; i++) {
                 out.println();
                 out.print(indent);
-                if (StringUtils.isNotBlank(lines[i])) {
-                    String extra = theme.blank();
-                    out.print(color(color, extra + lines[i]));
-                }
+                // if (StringUtils.isNotBlank(lines[i])) {
+                // String extra = theme.blank();
+                // out.print(color(color, extra + lines[i]));
+                // }
             }
         }
     }

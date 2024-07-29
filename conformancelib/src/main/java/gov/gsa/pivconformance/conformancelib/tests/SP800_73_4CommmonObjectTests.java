@@ -22,34 +22,25 @@ import gov.gsa.pivconformance.conformancelib.configuration.ParameterizedArgument
 import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 
 /**
- * This class is a collector that allows maintainers to collapse like atoms and
- * reduce code maintenance. :1,$s/56/57/g
+ * This class is a collector that allows maintainers to collapse like atoms and reduce code maintenance. :1,$s/56/57/g
  *
  * 10-step data-driven design approach to code reduction:
  *
- * 1. Add 1 to this number right here: [ 56 ] 2. On the Steps Overview tab of
- * the .xlsx sheet, locate the two rows with atoms that perform the same
- * function and change the description to <match the description of the atoms>.
- * Change the atom to: 73-4.56. Change them to 3. To the .csv file corresponding
- * to the SP800-73-4 tab of the .xlsx sheet, import (append) a row with these
- * values:
- * "73-4.56","gov.gsa.pivconformance.conformancelib.tests.SP800_73_4CommmonObjectTests","sp800_73_4_Test_56","<The
- * test description>","<unit tested? (Yes/No)>" 4. Copy the template method at
- * the top of this class, pasting it at the end. 5. Merge the two atoms. Fewer
- * assertions is better so long as the main assertion does the intended
- * assertion. 6. Copy and paste the inside of the merged atom into method
- * sp800_73_4_Test_56(). If the method already uses AtomHelper, just overwrite
- * the template method. 7. JUnit test and comment test fixture code within 8. To
- * prove out that the collapse works: a. refactor collapsed methods, then
- * rebuild and/or adjust database (parameterize, if necessary), and repeat Step
- * 7 and 8 until the two old test cases fails and the new case passes per the
- * requirement. The trick is make the test runner fail with a graceful popup at
- * runtime or a Python KeyError: '73-4.xx' during mk_db.sh until correctly
- * merged. 9. On the SP800-73-4 tab, locate the old atom rows, removed them,
- * save, and rebuild the database. The next test should run with no unexpected
- * failures and no popups. If either occurs, investigate, fix, and repeat 7-9.
- * 10. The old atoms can be removed from the appropriate test class and the
- * system can be rebuilt.
+ * 1. Add 1 to this number right here: [ 56 ] 2. On the Steps Overview tab of the .xlsx sheet, locate the two rows with
+ * atoms that perform the same function and change the description to <match the description of the atoms>. Change the
+ * atom to: 73-4.56. Change them to 3. To the .csv file corresponding to the SP800-73-4 tab of the .xlsx sheet, import
+ * (append) a row with these values:
+ * "73-4.56","gov.gsa.pivconformance.conformancelib.tests.SP800_73_4CommmonObjectTests","sp800_73_4_Test_56","<The test
+ * description>","<unit tested? (Yes/No)>" 4. Copy the template method at the top of this class, pasting it at the end.
+ * 5. Merge the two atoms. Fewer assertions is better so long as the main assertion does the intended assertion. 6. Copy
+ * and paste the inside of the merged atom into method sp800_73_4_Test_56(). If the method already uses AtomHelper, just
+ * overwrite the template method. 7. JUnit test and comment test fixture code within 8. To prove out that the collapse
+ * works: a. refactor collapsed methods, then rebuild and/or adjust database (parameterize, if necessary), and repeat
+ * Step 7 and 8 until the two old test cases fails and the new case passes per the requirement. The trick is make the
+ * test runner fail with a graceful popup at runtime or a Python KeyError: '73-4.xx' during mk_db.sh until correctly
+ * merged. 9. On the SP800-73-4 tab, locate the old atom rows, removed them, save, and rebuild the database. The next
+ * test should run with no unexpected failures and no popups. If either occurs, investigate, fix, and repeat 7-9. 10.
+ * The old atoms can be removed from the appropriate test class and the system can be rebuilt.
  *
  *
  */
