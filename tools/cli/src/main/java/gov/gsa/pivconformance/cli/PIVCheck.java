@@ -148,7 +148,7 @@ public class PIVCheck {
                                         PIVDataObject dataObject = PIVDataObjectFactory
                                                         .createDataObjectForOid(containerOID);
                                         s_logger.info("Attempting to read data object for OID {} ({})", containerOID,
-                                                        APDUConstants.oidNameMAP.get(containerOID));
+                                                        APDUConstants.oidNameMap.get(containerOID));
                                         result = piv.pivGetData(c, containerOID, dataObject);
                                         if (result != MiddlewareStatus.PIV_OK)
                                                 continue;
@@ -323,20 +323,20 @@ public class PIVCheck {
 
                                                 s_logger.info("Fingerprint I & II: {}",
                                                                 Hex.encodeHexString(
-                                                                                ((CardholderBiometricData) dataObject)
+                                                                                ((CardHolderBiometricData) dataObject)
                                                                                                 .getBiometricData()));
 
                                                 s_logger.info("Biometric Creation Date: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getBiometricCreationDate());
                                                 s_logger.info("Validity Period From: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getValidityPeriodFrom());
                                                 s_logger.info("Validity Period To: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getValidityPeriodTo());
 
-                                                CMSSignedData sd = ((CardholderBiometricData) dataObject)
+                                                CMSSignedData sd = ((CardHolderBiometricData) dataObject)
                                                                 .getSignedData();
                                                 SignerInformationStore signers = sd.getSignerInfos();
                                                 Collection collection = signers.getSigners();
@@ -362,18 +362,18 @@ public class PIVCheck {
                                                 }
                                                 if (signingCertificate != null)
                                                         s_logger.info("Is signatue valid: {}",
-                                                                        ((CardholderBiometricData) dataObject)
+                                                                        ((CardHolderBiometricData) dataObject)
                                                                                         .verifySignature(
                                                                                                         signingCertificate));
                                                 else
                                                         s_logger.info("Missing signing certificate to verify signature.");
 
                                                 s_logger.info("Error Detection Code Tag Present: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getErrorDetectionCode());
 
                                                 soDataElements.put(APDUConstants.CARDHOLDER_FINGERPRINTS_OID,
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getCceffContainer());
 
                                         }
@@ -391,7 +391,7 @@ public class PIVCheck {
                                                 for (HashMap.Entry<Integer, String> entry : idMap.entrySet()) {
                                                         s_logger.info("Container ID: {}, Container Name: {}, Container OID: {}",
                                                                         entry.getKey(), entry.getValue(),
-                                                                        APDUConstants.oidNameMAP.get(entry.getValue()));
+                                                                        APDUConstants.oidNameMap.get(entry.getValue()));
                                                 }
 
                                                 CMSSignedData sd = ((SecurityObject) dataObject).getSignedData();
@@ -432,20 +432,20 @@ public class PIVCheck {
                                         if (containerOID.equals(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID)) {
                                                 s_logger.info("Image for Visual Verification: {}",
                                                                 Hex.encodeHexString(
-                                                                                ((CardholderBiometricData) dataObject)
+                                                                                ((CardHolderBiometricData) dataObject)
                                                                                                 .getBiometricData()));
 
                                                 s_logger.info("Biometric Creation Date: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getBiometricCreationDate());
                                                 s_logger.info("Validity Period From: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getValidityPeriodFrom());
                                                 s_logger.info("Validity Period To: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getValidityPeriodTo());
 
-                                                CMSSignedData sd = ((CardholderBiometricData) dataObject)
+                                                CMSSignedData sd = ((CardHolderBiometricData) dataObject)
                                                                 .getSignedData();
                                                 SignerInformationStore signers = sd.getSignerInfos();
                                                 Collection collection = signers.getSigners();
@@ -472,18 +472,18 @@ public class PIVCheck {
 
                                                 if (signingCertificate != null)
                                                         s_logger.info("Is signatue valid: {}",
-                                                                        ((CardholderBiometricData) dataObject)
+                                                                        ((CardHolderBiometricData) dataObject)
                                                                                         .verifySignature(
                                                                                                         signingCertificate));
                                                 else
                                                         s_logger.info("Missing signing certificate to verify signature.");
 
                                                 s_logger.info("Error Detection Code Tag Present: {}",
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getErrorDetectionCode());
 
                                                 soDataElements.put(APDUConstants.CARDHOLDER_FACIAL_IMAGE_OID,
-                                                                ((CardholderBiometricData) dataObject)
+                                                                ((CardHolderBiometricData) dataObject)
                                                                                 .getCceffContainer());
                                         }
 
@@ -534,7 +534,7 @@ public class PIVCheck {
                                 result = piv.pivGetData(c, APDUConstants.PRINTED_INFORMATION_OID, printedInformation);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
-                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMAP
+                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap
                                                         .get(APDUConstants.PRINTED_INFORMATION_OID), result);
                                         boolean decoded = printedInformation.decode();
                                         s_logger.info("{} {}", printedInformation.getFriendlyName(),
@@ -579,7 +579,7 @@ public class PIVCheck {
                                 // printedInformation);
                                 // if(result != MiddlewareStatus.PIV_OK) {
                                 // s_logger.error("Attempted to write {} to the card failed.",
-                                // APDUConstants.oidNameMAP.get(APDUConstants.PRINTED_INFORMATION_OID));
+                                // APDUConstants.oidNameMap.get(APDUConstants.PRINTED_INFORMATION_OID));
                                 // }
 
                                 boolean decoded = false;
@@ -604,7 +604,7 @@ public class PIVCheck {
 
                                 if (result == MiddlewareStatus.PIV_OK) {
                                         s_logger.info("Attempted to read {} object: {}",
-                                                        APDUConstants.oidNameMAP
+                                                        APDUConstants.oidNameMap
                                                                         .get(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID),
                                                         result);
                                         decoded = cardholderIrisImages.decode();
@@ -612,23 +612,23 @@ public class PIVCheck {
                                                         decoded ? "decoded successfully" : "failed to decode");
 
                                         if (decoded) {
-                                                if (((CardholderBiometricData) cardholderIrisImages)
+                                                if (((CardHolderBiometricData) cardholderIrisImages)
                                                                 .getBiometricData() != null) {
                                                         s_logger.info("Images for Iris: {}", Hex.encodeHexString(
-                                                                        ((CardholderBiometricData) cardholderIrisImages)
+                                                                        ((CardHolderBiometricData) cardholderIrisImages)
                                                                                         .getBiometricData()));
 
                                                         s_logger.info("Biometric Creation Date: {}",
-                                                                        ((CardholderBiometricData) cardholderIrisImages)
+                                                                        ((CardHolderBiometricData) cardholderIrisImages)
                                                                                         .getBiometricCreationDate());
                                                         s_logger.info("Validity Period From: {}",
-                                                                        ((CardholderBiometricData) cardholderIrisImages)
+                                                                        ((CardHolderBiometricData) cardholderIrisImages)
                                                                                         .getValidityPeriodFrom());
                                                         s_logger.info("Validity Period To: {}",
-                                                                        ((CardholderBiometricData) cardholderIrisImages)
+                                                                        ((CardHolderBiometricData) cardholderIrisImages)
                                                                                         .getValidityPeriodTo());
 
-                                                        CMSSignedData sd = ((CardholderBiometricData) cardholderIrisImages)
+                                                        CMSSignedData sd = ((CardHolderBiometricData) cardholderIrisImages)
                                                                         .getSignedData();
                                                         SignerInformationStore signers = sd.getSignerInfos();
                                                         Collection collection = signers.getSigners();
@@ -656,14 +656,14 @@ public class PIVCheck {
 
                                                         if (signingCertificate != null)
                                                                 s_logger.info("Is signatue valid: {}",
-                                                                                ((CardholderBiometricData) cardholderIrisImages)
+                                                                                ((CardHolderBiometricData) cardholderIrisImages)
                                                                                                 .verifySignature(
                                                                                                                 signingCertificate));
                                                         else
                                                                 s_logger.info("Missing signing certificate to verify signature.");
                                                 }
                                                 s_logger.info("Error Detection Code Tag Present: {}",
-                                                                ((CardholderBiometricData) cardholderIrisImages)
+                                                                ((CardHolderBiometricData) cardholderIrisImages)
                                                                                 .getErrorDetectionCode());
 
                                         }
@@ -689,7 +689,7 @@ public class PIVCheck {
                                                 biometricInformationTemplatesGroupTemplate);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
-                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMAP.get(
+                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap.get(
                                                         APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID),
                                                         result);
                                         decoded = biometricInformationTemplatesGroupTemplate.decode();
@@ -723,7 +723,7 @@ public class PIVCheck {
                                                 secureMessagingCertificateSigner);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
-                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMAP.get(
+                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap.get(
                                                         APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID), result);
                                         decoded = secureMessagingCertificateSigner.decode();
                                         s_logger.info("{} {}", secureMessagingCertificateSigner.getFriendlyName(),
@@ -758,7 +758,7 @@ public class PIVCheck {
                                                 pairingCodeReferenceDataContainer);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
-                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMAP
+                                        s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap
                                                         .get(APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID),
                                                         result);
                                         decoded = pairingCodeReferenceDataContainer.decode();
