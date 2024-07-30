@@ -34,7 +34,7 @@ public class LogThresholdFilter extends Filter<ILoggingEvent> {
     }
 
     @Override
-	public void start() {
+    public void start() {
         if (this.level != null && this.logger != null) {
             super.start();
         }

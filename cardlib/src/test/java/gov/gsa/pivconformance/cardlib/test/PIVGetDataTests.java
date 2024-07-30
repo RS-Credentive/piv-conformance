@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class PIVGetDataTests {
     List<CardTerminal> terminals = null;
     DefaultPIVApplication piv = null;
+
     @BeforeEach
     void init() {
         PCSCUtils.ConfigureUserProperties();
@@ -43,7 +44,7 @@ public class PIVGetDataTests {
     @Test
     @DisplayName("Ensure readers")
     void testReaderList() {
-        assert(terminals.size() > 0);
+        assert (terminals.size() > 0);
     }
 
     @Test
@@ -52,12 +53,12 @@ public class PIVGetDataTests {
         ConnectionDescription cd = ConnectionDescription.createFromTerminal(terminals.get(0));
         try {
             assert (terminals.get(0).isCardPresent());
-        }catch(CardException ce) {
+        } catch (CardException ce) {
             fail(ce);
         }
         CardHandle ch = new CardHandle();
         MiddlewareStatus result = PIVMiddleware.pivConnect(true, cd, ch);
-        assert(result == MiddlewareStatus.PIV_OK);
+        assert (result == MiddlewareStatus.PIV_OK);
     }
 
     @Test
@@ -66,7 +67,7 @@ public class PIVGetDataTests {
         ConnectionDescription cd = ConnectionDescription.createFromTerminal(terminals.get(0));
         try {
             assert (terminals.get(0).isCardPresent());
-        }catch(CardException ce) {
+        } catch (CardException ce) {
             fail(ce);
         }
         CardHandle ch = new CardHandle();
@@ -74,7 +75,7 @@ public class PIVGetDataTests {
         assertEquals(result, MiddlewareStatus.PIV_OK);
         reporter.publishEntry("Reader", cd.getTerminal().getName());
         piv = new DefaultPIVApplication();
-        ApplicationAID aid  = new ApplicationAID();
+        ApplicationAID aid = new ApplicationAID();
         ApplicationProperties cardAppProperties = new ApplicationProperties();
         result = piv.pivSelectCardApplication(ch, aid, cardAppProperties);
         assertEquals(MiddlewareStatus.PIV_OK, result);
@@ -87,14 +88,14 @@ public class PIVGetDataTests {
         ConnectionDescription cd = ConnectionDescription.createFromTerminal(terminals.get(0));
         try {
             assert (terminals.get(0).isCardPresent());
-        }catch(CardException ce) {
+        } catch (CardException ce) {
             fail(ce);
         }
         CardHandle ch = new CardHandle();
         MiddlewareStatus result = PIVMiddleware.pivConnect(true, cd, ch);
         assertEquals(result, MiddlewareStatus.PIV_OK);
         piv = new DefaultPIVApplication();
-        ApplicationAID aid  = new ApplicationAID();
+        ApplicationAID aid = new ApplicationAID();
         ApplicationProperties cardAppProperties = new ApplicationProperties();
         result = piv.pivSelectCardApplication(ch, aid, cardAppProperties);
         assertEquals(MiddlewareStatus.PIV_OK, result);
@@ -111,14 +112,14 @@ public class PIVGetDataTests {
         ConnectionDescription cd = ConnectionDescription.createFromTerminal(terminals.get(0));
         try {
             assert (terminals.get(0).isCardPresent());
-        }catch(CardException ce) {
+        } catch (CardException ce) {
             fail(ce);
         }
         CardHandle ch = new CardHandle();
         MiddlewareStatus result = PIVMiddleware.pivConnect(true, cd, ch);
         assertEquals(result, MiddlewareStatus.PIV_OK);
         piv = new DefaultPIVApplication();
-        ApplicationAID aid  = new ApplicationAID();
+        ApplicationAID aid = new ApplicationAID();
         ApplicationProperties cardAppProperties = new ApplicationProperties();
         result = piv.pivSelectCardApplication(ch, aid, cardAppProperties);
         assertEquals(MiddlewareStatus.PIV_OK, result);
@@ -127,7 +128,7 @@ public class PIVGetDataTests {
         result = piv.pivLogIntoCardApplication(ch, authenticators.getBytes());
         assertEquals(MiddlewareStatus.PIV_OK, result);
 
-        for(String containerOID : APDUConstants.MandatoryContainers()) {
+        for (String containerOID : APDUConstants.MandatoryContainers()) {
             PIVDataObject dataObject = PIVDataObjectFactory.createDataObjectForOid(containerOID);
 
             result = piv.pivGetData(ch, containerOID, dataObject);

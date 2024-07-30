@@ -1,6 +1,5 @@
 package gov.gsa.pivconformance.cardlib.tlv;
 
-
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -17,30 +16,29 @@ public class BerTlvBuilder {
     private static final int DEFAULT_SIZE = 24 * 1024;
 
     public BerTlvBuilder() {
-        this((BerTag)null);
+        this((BerTag) null);
     }
 
     public BerTlvBuilder(BerTag aTemplate) {
         this(aTemplate, new byte[DEFAULT_SIZE], 0, DEFAULT_SIZE);
     }
 
-
     public BerTlvBuilder(BerTlvs tlvs) {
-        this((BerTag)null);
+        this((BerTag) null);
         for (BerTlv tlv : tlvs.getList()) {
             addBerTlv(tlv);
         }
     }
 
     public BerTlvBuilder(BerTag aTemplate, byte[] aBuffer, int aOffset, int aLength) {
-        theTemplate  = aTemplate;
+        theTemplate = aTemplate;
         theBuffer = aBuffer;
         thePos = aOffset;
         theBufferOffset = aOffset;
     }
 
     public static BerTlvBuilder from(BerTlv aTlv) {
-        if(aTlv.isConstructed()) {
+        if (aTlv.isConstructed()) {
             BerTlvBuilder builder = template(aTlv.getTag());
             for (BerTlv tlv : aTlv.theList) {
                 builder.addBerTlv(tlv);
@@ -56,14 +54,14 @@ public class BerTlvBuilder {
     }
 
     public BerTlvBuilder addEmpty(BerTag aObject) {
-        return addBytes(aObject, new byte[]{}, 0, 0);
+        return addBytes(aObject, new byte[] {}, 0, 0);
     }
 
     public BerTlvBuilder addByte(BerTag aObject, byte aByte) {
         // type
         int len = aObject.bytes.length;
         System.arraycopy(aObject.bytes, 0, theBuffer, thePos, len);
-        thePos+=len;
+        thePos += len;
 
         // len
         theBuffer[thePos++] = 1;
@@ -77,7 +75,7 @@ public class BerTlvBuilder {
         BigDecimal numeric = aAmount.multiply(HUNDRED);
         StringBuilder sb = new StringBuilder(12);
         sb.append(numeric.longValue());
-        while(sb.length() < 12) {
+        while (sb.length() < 12) {
             sb.insert(0, '0');
         }
         return addHex(aObject, sb.toString());
@@ -115,41 +113,41 @@ public class BerTlvBuilder {
 
     private void fillLength(byte[] aBuffer, int aOffset, int aLength) {
 
-        if(aLength < 0x80) {
+        if (aLength < 0x80) {
             aBuffer[aOffset] = (byte) aLength;
 
-        } else if (aLength <0x100) {
+        } else if (aLength < 0x100) {
             aBuffer[aOffset] = (byte) 0x81;
-            aBuffer[aOffset+1] = (byte) aLength;
+            aBuffer[aOffset + 1] = (byte) aLength;
 
-        } else if( aLength < 0x10000) {
+        } else if (aLength < 0x10000) {
 
-            aBuffer[aOffset]   = (byte) 0x82;
-            aBuffer[aOffset+1] = (byte) (aLength / 0x100);
-            aBuffer[aOffset+2] = (byte) (aLength % 0x100);
+            aBuffer[aOffset] = (byte) 0x82;
+            aBuffer[aOffset + 1] = (byte) (aLength / 0x100);
+            aBuffer[aOffset + 2] = (byte) (aLength % 0x100);
 
-        } else if( aLength < 0x1000000 ) {
-            aBuffer[aOffset]   = (byte) 0x83;
-            aBuffer[aOffset+1] = (byte) (aLength / 0x10000);
-            aBuffer[aOffset+2] = (byte) (aLength / 0x100);
-            aBuffer[aOffset+3] = (byte) (aLength % 0x100);
+        } else if (aLength < 0x1000000) {
+            aBuffer[aOffset] = (byte) 0x83;
+            aBuffer[aOffset + 1] = (byte) (aLength / 0x10000);
+            aBuffer[aOffset + 2] = (byte) (aLength / 0x100);
+            aBuffer[aOffset + 3] = (byte) (aLength % 0x100);
         } else {
-            throw new IllegalStateException("length ["+aLength+"] out of range (0x1000000)");
+            throw new IllegalStateException("length [" + aLength + "] out of range (0x1000000)");
         }
     }
 
     private int calculateBytesCountForLength(int aLength) {
         int ret;
-        if(aLength < 0x80) {
+        if (aLength < 0x80) {
             ret = 1;
-        } else if (aLength <0x100) {
+        } else if (aLength < 0x100) {
             ret = 2;
-        } else if( aLength < 0x10000) {
+        } else if (aLength < 0x10000) {
             ret = 3;
-        } else if( aLength < 0x1000000 ) {
+        } else if (aLength < 0x1000000) {
             ret = 4;
         } else {
-            throw new IllegalStateException("length ["+aLength+"] out of range (0x1000000)");
+            throw new IllegalStateException("length [" + aLength + "] out of range (0x1000000)");
         }
         return ret;
     }
@@ -164,12 +162,12 @@ public class BerTlvBuilder {
     }
 
     public BerTlvBuilder addBytes(BerTag aTag, byte[] aBytes, int aFrom, int aLength) {
-        int tagLength        = aTag.bytes.length;
+        int tagLength = aTag.bytes.length;
         int lengthBytesCount = calculateBytesCountForLength(aLength);
 
         // TAG
         System.arraycopy(aTag.bytes, 0, theBuffer, thePos, tagLength);
-        thePos+=tagLength;
+        thePos += tagLength;
 
         // LENGTH
         fillLength(theBuffer, thePos, aLength);
@@ -177,7 +175,7 @@ public class BerTlvBuilder {
 
         // VALUE
         System.arraycopy(aBytes, aFrom, theBuffer, thePos, aLength);
-        thePos+=aLength;
+        thePos += aLength;
 
         return this;
     }
@@ -185,13 +183,12 @@ public class BerTlvBuilder {
     public BerTlvBuilder add(BerTlvBuilder aBuilder) {
         byte[] array = aBuilder.buildArray();
         System.arraycopy(array, 0, theBuffer, thePos, array.length);
-        thePos+=array.length;
+        thePos += array.length;
         return this;
     }
 
-
     public BerTlvBuilder addBerTlv(BerTlv aTlv) {
-        if(aTlv.isConstructed()) {
+        if (aTlv.isConstructed()) {
             return add(from(aTlv));
         } else {
             return addBytes(aTlv.getTag(), aTlv.getBytesValue());
@@ -201,8 +198,8 @@ public class BerTlvBuilder {
     /**
      * Add ASCII text
      *
-     * @param aTag   tag
-     * @param aText  text
+     * @param aTag  tag
+     * @param aText text
      * @return builder
      */
     public BerTlvBuilder addText(BerTag aTag, String aText) {
@@ -212,8 +209,8 @@ public class BerTlvBuilder {
     /**
      * Add ASCII text
      *
-     * @param aTag   tag
-     * @param aText  text
+     * @param aTag  tag
+     * @param aText text
      * @return builder
      */
     public BerTlvBuilder addText(BerTag aTag, String aText, Charset aCharset) {
@@ -222,9 +219,9 @@ public class BerTlvBuilder {
     }
 
     public BerTlvBuilder addIntAsHex(BerTag aObject, int aCode, int aLength) {
-        StringBuilder sb = new StringBuilder(aLength*2);
+        StringBuilder sb = new StringBuilder(aLength * 2);
         sb.append(aCode);
-        while(sb.length()<aLength*2) {
+        while (sb.length() < aLength * 2) {
             sb.insert(0, '0');
         }
         return addHex(aObject, sb.toString());
@@ -252,4 +249,3 @@ public class BerTlvBuilder {
     private final byte[] theBuffer;
     private final BerTag theTemplate;
 }
-

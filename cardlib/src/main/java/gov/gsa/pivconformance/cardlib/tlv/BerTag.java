@@ -6,8 +6,8 @@ public class BerTag {
     public final byte[] bytes;
 
     /**
-     * Creates a new tag from given byte array. Similar {@link BerTag#BerTag(byte[], int, int)} but using
-     * the full array.
+     * Creates a new tag from given byte array. Similar
+     * {@link BerTag#BerTag(byte[], int, int)} but using the full array.
      *
      * @param aBuf to create the tag
      */
@@ -22,15 +22,15 @@ public class BerTag {
     }
 
     public BerTag(int aFirstByte, int aSecondByte) {
-        bytes = new byte[]{(byte) (aFirstByte), (byte) aSecondByte};
+        bytes = new byte[] { (byte) (aFirstByte), (byte) aSecondByte };
     }
 
     public BerTag(int aFirstByte, int aSecondByte, int aFirth) {
-        bytes = new byte[]{(byte) (aFirstByte), (byte) aSecondByte, (byte) aFirth};
+        bytes = new byte[] { (byte) (aFirstByte), (byte) aSecondByte, (byte) aFirth };
     }
 
     public BerTag(int aFirstByte) {
-        bytes = new byte[]{(byte) aFirstByte};
+        bytes = new byte[] { (byte) aFirstByte };
     }
 
     public boolean isConstructed() {
@@ -39,8 +39,10 @@ public class BerTag {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         BerTag berTag = (BerTag) o;
 
@@ -58,4 +60,3 @@ public class BerTag {
         return (isConstructed() ? "+ " : "- ") + HexUtil.toHexString(bytes, 0, bytes.length);
     }
 }
-

@@ -1,0 +1,9 @@
+{
+    "maven.view": "hierarchical",
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "Workspace_Formatter.includePattern": [
+        "*.java"
+    ]
+}

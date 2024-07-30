@@ -24,199 +24,212 @@ import gov.gsa.pivconformance.cardlib.tlv.TagConstants;
 public class X509DataObjectTests {
     private static final Logger s_logger = LoggerFactory.getLogger(X509DataObjectTests.class);
 
-	// Create a logger to write content to .cvs file used to generate the result .html file.
-	private static Logger a_actualValueLogger = LoggerFactory.getLogger("gov.gsa.pivconformance.conformancelib.testResult");
-	
-	//Cert container value lengths comply with Table 10, 15, 16, 17, 20-39, 42 of SP 800-73-4
+    // Create a logger to write content to .cvs file used to generate the result
+    // .html file.
+    private static Logger a_actualValueLogger = LoggerFactory
+            .getLogger("gov.gsa.pivconformance.conformancelib.testResult");
+
+    // Cert container value lengths comply with Table 10, 15, 16, 17, 20-39, 42 of
+    // SP 800-73-4
     @DisplayName("SP800-73-4.18 test")
     @ParameterizedTest(name = "{index} => oid = {0}")
-    //@MethodSource("sp800_73_4_x509TestProvider")
+    // @MethodSource("sp800_73_4_x509TestProvider")
     @ArgumentsSource(ParameterizedArgumentsProvider.class)
     void sp800_73_4_Test_18(String oid, TestReporter reporter) {
-    	assertTrue(false);  // Abbreviated to make sure we don't fire this - remove entire atom if we don't
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Return false for SP800-73-4.18 test","FALSE",false,"");
+        assertTrue(false); // Abbreviated to make sure we don't fire this - remove entire atom if we don't
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "Return false for SP800-73-4.18 test", "FALSE", false, "");
     }
-    
-	//Tags 0x70 and 0x71 are present in that order
+
+    // Tags 0x70 and 0x71 are present in that order
     @DisplayName("SP800-73-4.19 test")
     @ParameterizedTest(name = "{index} => oid = {0}")
-    //@MethodSource("sp800_73_4_x509TestProvider")
+    // @MethodSource("sp800_73_4_x509TestProvider")
     @ArgumentsSource(ParameterizedArgumentsProvider.class)
     void sp800_73_4_Test_19(String oid, TestReporter reporter) {
-		boolean isMandatory = APDUConstants.isContainerMandatory(oid);
-		// if the object is not mandatory and is not present, the test is done
-		if(!isMandatory && !AtomHelper.isDataObjectPresent(oid, true)) {
-			s_logger.info("Optional container {} is absent from the card.", oid);
-			return;
-		} else {
-			s_logger.info("Optional container {} is present on the card. Proceeding with test.", oid);
-		}		
-		PIVDataObject o = AtomHelper.getDataObject(oid);
-          
-		List<BerTag> tagList = o.getTagList();
-		
-		BerTag berCertTag = new BerTag(TagConstants.CERTIFICATE_TAG);
-		BerTag berCertInfoTag = new BerTag(TagConstants.CERTINFO_TAG);
-		
-		assertTrue(tagList.contains(berCertTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ",berCertTag + " contained in Tag List","TRUE",tagList.contains(berCertTag),"");
+        boolean isMandatory = APDUConstants.isContainerMandatory(oid);
+        // if the object is not mandatory and is not present, the test is done
+        if (!isMandatory && !AtomHelper.isDataObjectPresent(oid, true)) {
+            s_logger.info("Optional container {} is absent from the card.", oid);
+            return;
+        } else {
+            s_logger.info("Optional container {} is present on the card. Proceeding with test.", oid);
+        }
+        PIVDataObject o = AtomHelper.getDataObject(oid);
 
-		assertTrue(tagList.contains(berCertInfoTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ",berCertInfoTag + " contained in Tag List","TRUE",tagList.contains(berCertInfoTag),"");
-		
-		int tagIndex = tagList.indexOf(berCertTag);
-		
-		assertTrue(Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTIFICATE_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG),"");
+        List<BerTag> tagList = o.getTagList();
 
-		assertTrue(Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTINFO_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG),"");
+        BerTag berCertTag = new BerTag(TagConstants.CERTIFICATE_TAG);
+        BerTag berCertInfoTag = new BerTag(TagConstants.CERTINFO_TAG);
+
+        assertTrue(tagList.contains(berCertTag));
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", berCertTag + " contained in Tag List", "TRUE",
+                tagList.contains(berCertTag), "");
+
+        assertTrue(tagList.contains(berCertInfoTag));
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", berCertInfoTag + " contained in Tag List", "TRUE",
+                tagList.contains(berCertInfoTag), "");
+
+        int tagIndex = tagList.indexOf(berCertTag);
+
+        assertTrue(Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG));
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTIFICATE_TAG equals Tag List", "TRUE",
+                Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG), "");
+
+        assertTrue(Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG));
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTINFO_TAG equals Tag List", "TRUE",
+                Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG), "");
     }
-    
-	//Tag 0x72 is optionally present and follows tags from 73-4.19
+
+    // Tag 0x72 is optionally present and follows tags from 73-4.19
     @DisplayName("SP800-73-4.20 test")
     @ParameterizedTest(name = "{index} => oid = {0}")
-    //@MethodSource("sp800_73_4_x509TestProvider")
+    // @MethodSource("sp800_73_4_x509TestProvider")
     @ArgumentsSource(ParameterizedArgumentsProvider.class)
     void sp800_73_4_Test_20(String oid, TestReporter reporter) {
-		
-		PIVDataObject o = AtomHelper.getDataObject(oid);
-        
-        
-		List<BerTag> tagList = o.getTagList();
-		
-		BerTag berCertTag = new BerTag(TagConstants.CERTIFICATE_TAG);
-		BerTag berMSCUIDTag = new BerTag(TagConstants.MSCUID_TAG);
-		
-		if(tagList.contains(berMSCUIDTag)) {
-			
-			int tagIndex = tagList.indexOf(berCertTag);
-			
-			assertTrue(Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTIFICATE_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG),"");
 
-			assertTrue(Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTINFO_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG),"");
+        PIVDataObject o = AtomHelper.getDataObject(oid);
 
-			assertTrue(Arrays.equals(tagList.get(tagIndex+2).bytes,TagConstants.MSCUID_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","MSCUID_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+2).bytes,TagConstants.MSCUID_TAG),"");
-		}		       
-        
+        List<BerTag> tagList = o.getTagList();
+
+        BerTag berCertTag = new BerTag(TagConstants.CERTIFICATE_TAG);
+        BerTag berMSCUIDTag = new BerTag(TagConstants.MSCUID_TAG);
+
+        if (tagList.contains(berMSCUIDTag)) {
+
+            int tagIndex = tagList.indexOf(berCertTag);
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTIFICATE_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG), "");
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTINFO_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG), "");
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex + 2).bytes, TagConstants.MSCUID_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "MSCUID_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex + 2).bytes, TagConstants.MSCUID_TAG), "");
+        }
+
     }
-    
-	//Tag 0xFE is present and follows tags from 73-4.19, 73-4.20
+
+    // Tag 0xFE is present and follows tags from 73-4.19, 73-4.20
     @DisplayName("SP800-73-4.21 test")
     @ParameterizedTest(name = "{index} => oid = {0}")
-    //@MethodSource("sp800_73_4_x509TestProvider")
+    // @MethodSource("sp800_73_4_x509TestProvider")
     @ArgumentsSource(ParameterizedArgumentsProvider.class)
     void sp800_73_4_Test_21(String oid, TestReporter reporter) {
-		
-		PIVDataObject o = AtomHelper.getDataObject(oid);
-        
-        
-		List<BerTag> tagList = o.getTagList();
-		
-		BerTag berCertTag = new BerTag(TagConstants.CERTIFICATE_TAG);
-		BerTag berMSCUIDTag = new BerTag(TagConstants.MSCUID_TAG);
-		BerTag berEDCTag = new BerTag(TagConstants.ERROR_DETECTION_CODE_TAG);
-		
-		assertTrue(tagList.contains(berEDCTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Tag List contains Ber Error Detection Code Tag","TRUE",tagList.contains(berEDCTag),"");
 
-		int tagIndex = tagList.indexOf(berCertTag);
-		
-		if(tagList.contains(berMSCUIDTag)) {
-					
-			assertTrue(Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTIFICATE_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG),"");
+        PIVDataObject o = AtomHelper.getDataObject(oid);
 
-			assertTrue(Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTINFO_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG),"");
+        List<BerTag> tagList = o.getTagList();
 
-			assertTrue(Arrays.equals(tagList.get(tagIndex+2).bytes,TagConstants.MSCUID_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","MSCUID_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+2).bytes,TagConstants.MSCUID_TAG),"");
+        BerTag berCertTag = new BerTag(TagConstants.CERTIFICATE_TAG);
+        BerTag berMSCUIDTag = new BerTag(TagConstants.MSCUID_TAG);
+        BerTag berEDCTag = new BerTag(TagConstants.ERROR_DETECTION_CODE_TAG);
 
-			assertTrue(Arrays.equals(tagList.get(tagIndex+3).bytes,TagConstants.ERROR_DETECTION_CODE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","ERROR_DETECTION_CODE_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+3).bytes,TagConstants.ERROR_DETECTION_CODE_TAG),"");
-			
-		}else {
-			
-			assertTrue(Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTIFICATE_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex).bytes,TagConstants.CERTIFICATE_TAG),"");
+        assertTrue(tagList.contains(berEDCTag));
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "Tag List contains Ber Error Detection Code Tag", "TRUE",
+                tagList.contains(berEDCTag), "");
 
-			assertTrue(Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","CERTINFO_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+1).bytes,TagConstants.CERTINFO_TAG),"");
+        int tagIndex = tagList.indexOf(berCertTag);
 
-			assertTrue(Arrays.equals(tagList.get(tagIndex+2).bytes,TagConstants.ERROR_DETECTION_CODE_TAG));
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","ERROR_DETECTION_CODE_TAG equals Tag List","TRUE",Arrays.equals(tagList.get(tagIndex+2).bytes,TagConstants.ERROR_DETECTION_CODE_TAG),"");
+        if (tagList.contains(berMSCUIDTag)) {
 
-		}
-        
+            assertTrue(Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTIFICATE_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG), "");
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTINFO_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG), "");
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex + 2).bytes, TagConstants.MSCUID_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "MSCUID_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex + 2).bytes, TagConstants.MSCUID_TAG), "");
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex + 3).bytes, TagConstants.ERROR_DETECTION_CODE_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "ERROR_DETECTION_CODE_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex + 3).bytes, TagConstants.ERROR_DETECTION_CODE_TAG), "");
+
+        } else {
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTIFICATE_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex).bytes, TagConstants.CERTIFICATE_TAG), "");
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "CERTINFO_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex + 1).bytes, TagConstants.CERTINFO_TAG), "");
+
+            assertTrue(Arrays.equals(tagList.get(tagIndex + 2).bytes, TagConstants.ERROR_DETECTION_CODE_TAG));
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "ERROR_DETECTION_CODE_TAG equals Tag List", "TRUE",
+                    Arrays.equals(tagList.get(tagIndex + 2).bytes, TagConstants.ERROR_DETECTION_CODE_TAG), "");
+
+        }
+
     }
-    
-	//No tags other than (0x70, 0x71, 0x72, 0xFE) are present
+
+    // No tags other than (0x70, 0x71, 0x72, 0xFE) are present
     @DisplayName("SP800-73-4.22 test")
     @ParameterizedTest(name = "{index} => oid = {0}")
-    //@MethodSource("sp800_73_4_x509TestProvider")
+    // @MethodSource("sp800_73_4_x509TestProvider")
     @ArgumentsSource(ParameterizedArgumentsProvider.class)
     void sp800_73_4_Test_22(String oid, TestReporter reporter) {
-		
-		PIVDataObject o = AtomHelper.getDataObject(oid);
-        
-        
-		List<BerTag> tagList = o.getTagList();
-		
-		List<byte[]> allx509Tags = TagConstants.Allx509Tags();
-		for(BerTag tag : tagList) {
 
-			//Check that the tag is present in the all CCC tags list
-			boolean present = false;
-			for (int i = 0; i < allx509Tags.size(); i++) {
-				
-				if(Arrays.equals(allx509Tags.get(i), tag.bytes)) {
-					present = true;
-					break;
-				}
-			}
-			assertTrue(present);
-			a_actualValueLogger.info("{},{},{},{},{}","  --  ","Check that the tag is present in the all CCC tags list","TRUE",present,"");
-		}
+        PIVDataObject o = AtomHelper.getDataObject(oid);
+
+        List<BerTag> tagList = o.getTagList();
+
+        List<byte[]> allx509Tags = TagConstants.Allx509Tags();
+        for (BerTag tag : tagList) {
+
+            // Check that the tag is present in the all CCC tags list
+            boolean present = false;
+            for (int i = 0; i < allx509Tags.size(); i++) {
+
+                if (Arrays.equals(allx509Tags.get(i), tag.bytes)) {
+                    present = true;
+                    break;
+                }
+            }
+            assertTrue(present);
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ",
+                    "Check that the tag is present in the all CCC tags list", "TRUE", present, "");
+        }
     }
 
-    
-	//Confirm that tag 0xFE has length of 0
+    // Confirm that tag 0xFE has length of 0
     @DisplayName("SP800-73-4.23 test")
     @ParameterizedTest(name = "{index} => oid = {0}")
-    //@MethodSource("sp800_73_4_x509TestProvider")
+    // @MethodSource("sp800_73_4_x509TestProvider")
     @ArgumentsSource(ParameterizedArgumentsProvider.class)
     void sp800_73_4_Test_23(String oid, TestReporter reporter) {
-		
-		PIVDataObject o = AtomHelper.getDataObject(oid);
-        
-        
-		List<BerTag> tagList = o.getTagList();
-		
-		BerTag berEDCTag = new BerTag(TagConstants.ERROR_DETECTION_CODE_TAG);
-		
-		assertTrue(tagList.contains(berEDCTag));
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Check that the tag is present in the all CCC tags list","TRUE",tagList.contains(berEDCTag),"");
-		
 
-		boolean ecHasData =  o.getErrorDetectionCodeHasData();
-		
-		assertTrue(ecHasData == false);
-		a_actualValueLogger.info("{},{},{},{},{}","  --  ","Error Detction Code has data","FALSE",(ecHasData == false),"");
+        PIVDataObject o = AtomHelper.getDataObject(oid);
+
+        List<BerTag> tagList = o.getTagList();
+
+        BerTag berEDCTag = new BerTag(TagConstants.ERROR_DETECTION_CODE_TAG);
+
+        assertTrue(tagList.contains(berEDCTag));
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "Check that the tag is present in the all CCC tags list",
+                "TRUE", tagList.contains(berEDCTag), "");
+
+        boolean ecHasData = o.getErrorDetectionCodeHasData();
+
+        assertTrue(ecHasData == false);
+        a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "Error Detction Code has data", "FALSE",
+                (ecHasData == false), "");
     }
-    
+
     @SuppressWarnings("unused")
-	private static Stream<Arguments> sp800_73_4_x509TestProvider() {
-    	
-    	return Stream.of(
-                Arguments.of(APDUConstants.X509_CERTIFICATE_FOR_PIV_AUTHENTICATION_OID),
+    private static Stream<Arguments> sp800_73_4_x509TestProvider() {
+
+        return Stream.of(Arguments.of(APDUConstants.X509_CERTIFICATE_FOR_PIV_AUTHENTICATION_OID),
                 Arguments.of(APDUConstants.X509_CERTIFICATE_FOR_DIGITAL_SIGNATURE_OID),
                 Arguments.of(APDUConstants.X509_CERTIFICATE_FOR_KEY_MANAGEMENT_OID),
-                Arguments.of(APDUConstants.X509_CERTIFICATE_FOR_CARD_AUTHENTICATION_OID)
-                );
+                Arguments.of(APDUConstants.X509_CERTIFICATE_FOR_CARD_AUTHENTICATION_OID));
 
     }
 }

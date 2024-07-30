@@ -18,14 +18,14 @@ public class ApplicationAID {
 
     /**
      *
-     * ApplicationAID class constructor, sets the app ID value bassed on the passed in buffer
+     * ApplicationAID class constructor, sets the app ID value bassed on the passed
+     * in buffer
      *
      * @param appIDBytes
      */
     public ApplicationAID(byte[] appIDBytes) {
         m_appIDBytes = appIDBytes;
     }
-
 
     private byte[] m_appIDBytes;
 
@@ -45,5 +45,7 @@ public class ApplicationAID {
      *
      * @return Byte array with app id value
      */
-    public byte[] getBytes() { return m_appIDBytes; }
+    public byte[] getBytes() {
+        return m_appIDBytes;
+    }
 }

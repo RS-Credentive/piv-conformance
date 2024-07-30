@@ -18,11 +18,11 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 public class SQLiteDBGenerator {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(SQLiteDBGenerator.class);
     private static final Options s_options = new Options();
+
     static {
         s_options.addOption("h", "help", false, "Print this help and exit");
         s_options.addOption("d", "database", true, "path to database file");
@@ -37,7 +37,7 @@ public class SQLiteDBGenerator {
     public static void main(String[] args) {
         s_logger.info("main class: {}", MethodHandles.lookup().lookupClass().getSimpleName());
         s_logger.info("package version: {}", VersionUtils.GetPackageVersionString());
-        //s_logger.info("build time: {}", VersionUtils.GetPackageBuildTime());
+        // s_logger.info("build time: {}", VersionUtils.GetPackageBuildTime());
 
         CommandLineParser p = new DefaultParser();
         CommandLine cmd = null;
@@ -48,14 +48,14 @@ public class SQLiteDBGenerator {
             PrintHelpAndExit(1);
         }
 
-        if(cmd.hasOption("help")) {
+        if (cmd.hasOption("help")) {
             PrintHelpAndExit(0);
         }
 
-        if(cmd.hasOption("database")) {
+        if (cmd.hasOption("database")) {
             String dbParam = cmd.getOptionValue("database");
             File f = new File(dbParam);
-            if(f.exists()) {
+            if (f.exists()) {
                 s_logger.error("Cowardly refusing to overwrite existing file {}", dbParam);
                 System.exit(1);
             }
@@ -72,7 +72,7 @@ public class SQLiteDBGenerator {
             } catch (SQLException e) {
                 s_logger.error("Unable to establish JDBC connection for SQLite database", e);
             }
-            if(conn != null) {
+            if (conn != null) {
                 s_logger.debug("Created sql connection for {}", dbParam);
                 DatabaseMetaData metaData = null;
                 try {
@@ -84,48 +84,50 @@ public class SQLiteDBGenerator {
             }
             ConformanceTestDatabase cdb = new ConformanceTestDatabase(conn);
             try {
-				cdb.populateDefault();
-			} catch (ConfigurationException e) {
-				s_logger.error("Caught configuration exception", e);
-			}
-            
-            if(cmd.hasOption("csv")) {
+                cdb.populateDefault();
+            } catch (ConfigurationException e) {
+                s_logger.error("Caught configuration exception", e);
+            }
+
+            if (cmd.hasOption("csv")) {
                 String csvParam = cmd.getOptionValue("csv");
-                
+
                 FileReader fr = null;
-                
+
                 try {
-    	            fr = new FileReader(csvParam);
+                    fr = new FileReader(csvParam);
                 } catch (FileNotFoundException e) {
-    				s_logger.error("CSV file {} does not exist", csvParam);
+                    s_logger.error("CSV file {} does not exist", csvParam);
                     System.exit(1);
-    			}            
-                
+                }
+
                 BufferedReader br = null;
                 String line = "";
                 String cvsSplitBy = ",";
                 try {
 
-                	s_logger.debug("Starting to add test cases from {}", csvParam);
+                    s_logger.debug("Starting to add test cases from {}", csvParam);
                     br = new BufferedReader(fr);
-                    //read the column headers
+                    // read the column headers
                     line = br.readLine();
-                    //Iterate over the rest
+                    // Iterate over the rest
                     while ((line = br.readLine()) != null) {
 
-                        String[] testCase = line.split(cvsSplitBy);                        
-                        
-                        if(testCase.length != 2) {
-                        	s_logger.error("Test Case defenition must contain both \"Test Case\" and \"Test Defenition\", ", csvParam);
+                        String[] testCase = line.split(cvsSplitBy);
+
+                        if (testCase.length != 2) {
+                            s_logger.error(
+                                    "Test Case defenition must contain both \"Test Case\" and \"Test Defenition\", ",
+                                    csvParam);
                         }
-                        	
+
                         try {
-                        	cdb.addTestCase(testCase);
-            			} catch (ConfigurationException e) {
-            				s_logger.error("Caught configuration exception", e);
-            			}                        
+                            cdb.addTestCase(testCase);
+                        } catch (ConfigurationException e) {
+                            s_logger.error("Caught configuration exception", e);
+                        }
                     }
-                    
+
                     s_logger.debug("Finished adding test cases from {}", csvParam);
 
                 } catch (FileNotFoundException e) {
@@ -143,7 +145,6 @@ public class SQLiteDBGenerator {
                 }
             }
         }
-        
 
     }
 }

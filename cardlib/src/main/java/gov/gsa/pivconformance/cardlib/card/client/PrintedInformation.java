@@ -12,7 +12,8 @@ import java.util.List;
 
 /**
  *
- * Encapsulates a Printed Information data object  as defined by SP800-73-4 Part 2 Appendix A Table 9
+ * Encapsulates a Printed Information data object as defined by SP800-73-4 Part
+ * 2 Appendix A Table 9
  *
  */
 public class PrintedInformation extends PIVDataObject {
@@ -28,7 +29,6 @@ public class PrintedInformation extends PIVDataObject {
     private String m_organizationAffiliation2;
     private boolean m_errorDetectionCode;
     private byte[] m_signedContent;
-
 
     /**
      * PrintedInformation class constructor, initializes all the class fields.
@@ -66,7 +66,6 @@ public class PrintedInformation extends PIVDataObject {
         m_signedContent = signedContent;
     }
 
-
     /**
      *
      * Returns the Name value as String
@@ -76,7 +75,6 @@ public class PrintedInformation extends PIVDataObject {
     public String getName() {
         return m_name;
     }
-
 
     /**
      *
@@ -182,7 +180,8 @@ public class PrintedInformation extends PIVDataObject {
      *
      * Sets the Organization Affiliation1 value
      *
-     * @param organizationAffiliation1 String with the Organization Affiliation1 value
+     * @param organizationAffiliation1 String with the Organization Affiliation1
+     *                                 value
      */
     public void setOrganizationAffiliation1(String organizationAffiliation1) {
         m_organizationAffiliation1 = organizationAffiliation1;
@@ -202,7 +201,8 @@ public class PrintedInformation extends PIVDataObject {
      *
      * Sets the Organization Affiliation2 value
      *
-     * @param organizationAffiliation2 String with the Organization Affiliation2 value
+     * @param organizationAffiliation2 String with the Organization Affiliation2
+     *                                 value
      */
     public void setOrganizationAffiliation2(String organizationAffiliation2) {
         m_organizationAffiliation2 = organizationAffiliation2;
@@ -215,7 +215,7 @@ public class PrintedInformation extends PIVDataObject {
      * @return True if error Error Detection Code is present, false otherwise
      */
     @Override
-	public boolean getErrorDetectionCode() {
+    public boolean getErrorDetectionCode() {
         return m_errorDetectionCode;
     }
 
@@ -223,26 +223,28 @@ public class PrintedInformation extends PIVDataObject {
      *
      * Sets if error Error Detection Code is present
      *
-     * @param errorDetectionCode True if error Error Detection Code is present, false otherwise
+     * @param errorDetectionCode True if error Error Detection Code is present,
+     *                           false otherwise
      */
     @Override
-	public void setErrorDetectionCode(boolean errorDetectionCode) {
+    public void setErrorDetectionCode(boolean errorDetectionCode) {
         m_errorDetectionCode = errorDetectionCode;
     }
 
     /**
      *
-     * Decode function that decodes Printed Information object retrieved from the card and populates various class fields.
+     * Decode function that decodes Printed Information object retrieved from the
+     * card and populates various class fields.
      *
      * @return True if decode was successful, false otherwise
      */
     @Override
-	public boolean decode() {
+    public boolean decode() {
 
-        try{
+        try {
             byte[] rawBytes = this.getBytes();
 
-            if(rawBytes == null){
+            if (rawBytes == null) {
                 s_logger.error("No buffer to decode for {}.", APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
@@ -250,20 +252,23 @@ public class PrintedInformation extends PIVDataObject {
             BerTlvParser tlvp = new BerTlvParser(new CCTTlvLogger(this.getClass()));
             BerTlvs outer = tlvp.parse(rawBytes);
 
-            if(outer == null){
-                s_logger.error("Error parsing {}, unable to parse TLV value.", APDUConstants.oidNameMap.get(super.getOID()));
+            if (outer == null) {
+                s_logger.error("Error parsing {}, unable to parse TLV value.",
+                        APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
 
             List<BerTlv> values = outer.getList();
-            for(BerTlv tlv : values) {
-                if(tlv.isPrimitive()) {
-                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+            for (BerTlv tlv : values) {
+                if (tlv.isPrimitive()) {
+                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                            Hex.encodeHexString(tlv.getBytesValue()));
 
                     BerTlvs outer2 = tlvp.parse(tlv.getBytesValue());
 
                     if (outer2 == null) {
-                        s_logger.error("Error parsing {}, unable to parse TLV value.", APDUConstants.oidNameMap.get(super.getOID()));
+                        s_logger.error("Error parsing {}, unable to parse TLV value.",
+                                APDUConstants.oidNameMap.get(super.getOID()));
                         return false;
                     }
 
@@ -273,7 +278,7 @@ public class PrintedInformation extends PIVDataObject {
                     for (BerTlv tlv2 : values2) {
                         if (tlv2.isPrimitive()) {
 
-                        	super.m_tagList.add(tlv2.getTag());
+                            super.m_tagList.add(tlv2.getTag());
                             if (Arrays.equals(tlv2.getTag().bytes, TagConstants.NAME_TAG)) {
 
                                 m_name = new String(tlv2.getBytesValue());
@@ -284,43 +289,54 @@ public class PrintedInformation extends PIVDataObject {
 
                                 m_employeeAffiliation = new String(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.EMPLOYEE_AFFILIATION_TAG, tlv2.getBytesValue()));
+                                scos.write(
+                                        APDUUtils.getTLV(TagConstants.EMPLOYEE_AFFILIATION_TAG, tlv2.getBytesValue()));
 
-                            } else if (Arrays.equals(tlv2.getTag().bytes, TagConstants.PRINTED_INFORMATION_EXPIRATION_DATE_TAG)) {
+                            } else if (Arrays.equals(tlv2.getTag().bytes,
+                                    TagConstants.PRINTED_INFORMATION_EXPIRATION_DATE_TAG)) {
 
                                 m_expirationDate = new String(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.PRINTED_INFORMATION_EXPIRATION_DATE_TAG, tlv2.getBytesValue()));
+                                scos.write(APDUUtils.getTLV(TagConstants.PRINTED_INFORMATION_EXPIRATION_DATE_TAG,
+                                        tlv2.getBytesValue()));
 
                             } else if (Arrays.equals(tlv2.getTag().bytes, TagConstants.AGENCY_CARD_SERIAL_NUMBER_TAG)) {
 
                                 m_agencyCardSerialNumber = new String(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.AGENCY_CARD_SERIAL_NUMBER_TAG, tlv2.getBytesValue()));
+                                scos.write(APDUUtils.getTLV(TagConstants.AGENCY_CARD_SERIAL_NUMBER_TAG,
+                                        tlv2.getBytesValue()));
 
                             } else if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ISSUER_IDENTIFICATION_TAG)) {
 
                                 m_issuerIdentification = new String(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.ISSUER_IDENTIFICATION_TAG, tlv2.getBytesValue()));
+                                scos.write(
+                                        APDUUtils.getTLV(TagConstants.ISSUER_IDENTIFICATION_TAG, tlv2.getBytesValue()));
 
-                            } else if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ORGANIZATIONAL_AFFILIATION_L1_TAG)) {
+                            } else if (Arrays.equals(tlv2.getTag().bytes,
+                                    TagConstants.ORGANIZATIONAL_AFFILIATION_L1_TAG)) {
 
                                 m_organizationAffiliation1 = new String(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.ORGANIZATIONAL_AFFILIATION_L1_TAG, tlv2.getBytesValue()));
+                                scos.write(APDUUtils.getTLV(TagConstants.ORGANIZATIONAL_AFFILIATION_L1_TAG,
+                                        tlv2.getBytesValue()));
 
-                            } else if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ORGANIZATIONAL_AFFILIATION_L2_TAG)) {
+                            } else if (Arrays.equals(tlv2.getTag().bytes,
+                                    TagConstants.ORGANIZATIONAL_AFFILIATION_L2_TAG)) {
 
                                 m_organizationAffiliation2 = new String(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.ORGANIZATIONAL_AFFILIATION_L2_TAG, tlv2.getBytesValue()));
+                                scos.write(APDUUtils.getTLV(TagConstants.ORGANIZATIONAL_AFFILIATION_L2_TAG,
+                                        tlv2.getBytesValue()));
 
-                            }else{
-                                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv2.getTag().bytes), Hex.encodeHexString(tlv2.getBytesValue()));
+                            } else {
+                                s_logger.warn("Unexpected tag: {} with value: {}",
+                                        Hex.encodeHexString(tlv2.getTag().bytes),
+                                        Hex.encodeHexString(tlv2.getBytesValue()));
                             }
                         } else {
-                        	super.m_tagList.add(tlv2.getTag());
+                            super.m_tagList.add(tlv2.getTag());
                             if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ERROR_DETECTION_CODE_TAG)) {
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
                                 m_errorDetectionCode = true;
@@ -329,7 +345,9 @@ public class PrintedInformation extends PIVDataObject {
                                 scos.write((byte) 0x00);
 
                             } else {
-                                s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv2.getTag().bytes), Hex.encodeHexString(tlv2.getBytesValue()));
+                                s_logger.warn("Unexpected tag: {} with value: {}",
+                                        Hex.encodeHexString(tlv2.getTag().bytes),
+                                        Hex.encodeHexString(tlv2.getBytesValue()));
                             }
                         }
                     }
@@ -343,14 +361,13 @@ public class PrintedInformation extends PIVDataObject {
             return false;
         }
 
-        if (m_name == "" || m_employeeAffiliation == "" || m_expirationDate == "" ||
-                m_agencyCardSerialNumber == "" || m_issuerIdentification == "")
+        if (m_name == "" || m_employeeAffiliation == "" || m_expirationDate == "" || m_agencyCardSerialNumber == ""
+                || m_issuerIdentification == "")
             return false;
-        
+
         super.setRequiresPin(true);
-        
-        dump(this.getClass())
-;
+
+        dump(this.getClass());
         return true;
     }
 }

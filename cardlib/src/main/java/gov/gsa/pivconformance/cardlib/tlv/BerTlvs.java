@@ -12,7 +12,7 @@ public class BerTlvs {
     public BerTlv find(BerTag aTag) {
         for (BerTlv tlv : tlvs) {
             BerTlv found = tlv.find(aTag);
-            if(found!=null) {
+            if (found != null) {
                 return found;
             }
         }
@@ -27,7 +27,6 @@ public class BerTlvs {
         return list;
     }
 
-
     public List<BerTlv> getList() {
         return tlvs;
     }
@@ -36,8 +35,10 @@ public class BerTlvs {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         BerTlvs berTlvs = (BerTlvs) o;
 
@@ -51,8 +52,6 @@ public class BerTlvs {
 
     @Override
     public String toString() {
-        return "BerTlvs{" +
-                "tlvs=" + tlvs +
-                '}';
+        return "BerTlvs{" + "tlvs=" + tlvs + '}';
     }
 }

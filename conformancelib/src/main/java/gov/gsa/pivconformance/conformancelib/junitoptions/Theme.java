@@ -24,117 +24,122 @@ import org.junit.platform.engine.TestExecutionResult;
 @API(status = INTERNAL, since = "1.0")
 public enum Theme {
 
-	/**
-	 * ASCII 7-bit characters form the tree branch.
-	 *
-	 * <p>Example test plan execution tree:
-	 * <pre class="code">
-	 * +-- engine alpha
-	 * | '-- container BEGIN
-	 * |   +-- test 00 [OK]
-	 * |   '-- test 01 [OK]
-	 * '-- engine omega
-	 *   +-- container END
-	 *   | +-- test 10 [OK]
-	 *   | '-- test 11 [A] aborted
-	 *   '-- container FINAL
-	 *     +-- skipped [S] because
-	 *     '-- failing [X] BäMM
-	 * </pre>
-	 */
-	ASCII(".", "| ", "+--", "'--", "[OK]", "[A]", "[X]", "[S]"),
+    /**
+     * ASCII 7-bit characters form the tree branch.
+     *
+     * <p>
+     * Example test plan execution tree:
+     *
+     * <pre class="code">
+     * +-- engine alpha
+     * | '-- container BEGIN
+     * |   +-- test 00 [OK]
+     * |   '-- test 01 [OK]
+     * '-- engine omega
+     *   +-- container END
+     *   | +-- test 10 [OK]
+     *   | '-- test 11 [A] aborted
+     *   '-- container FINAL
+     *     +-- skipped [S] because
+     *     '-- failing [X] BäMM
+     * </pre>
+     */
+    ASCII(".", "| ", "+--", "'--", "[OK]", "[A]", "[X]", "[S]"),
 
-	/**
-	 * Unicode (extended ASCII) characters are used to display the test execution tree.
-	 *
-	 * <p>Example test plan execution tree:
-	 * <pre class="code">
-	 * ├─ engine alpha ✔
-	 * │  └─ container BEGIN ✔
-	 * │     ├─ test 00 ✔
-	 * │     └─ test 01 ✔
-	 * └─ engine omega ✔
-	 *    ├─ container END ✔
-	 *    │  ├─ test 10 ✔
-	 *    │  └─ test 11 ■ aborted
-	 *    └─ container FINAL ✔
-	 *       ├─ skipped ↷ because
-	 *       └─ failing ✘ BäMM
-	 * </pre>
-	 */
-	UNICODE("╷", "│  ", "├─", "└─", "✔", "■", "✘", "↷");
+    /**
+     * Unicode (extended ASCII) characters are used to display the test execution
+     * tree.
+     *
+     * <p>
+     * Example test plan execution tree:
+     *
+     * <pre class="code">
+     * ├─ engine alpha ✔
+     * │  └─ container BEGIN ✔
+     * │     ├─ test 00 ✔
+     * │     └─ test 01 ✔
+     * └─ engine omega ✔
+     *    ├─ container END ✔
+     *    │  ├─ test 10 ✔
+     *    │  └─ test 11 ■ aborted
+     *    └─ container FINAL ✔
+     *       ├─ skipped ↷ because
+     *       └─ failing ✘ BäMM
+     * </pre>
+     */
+    UNICODE("╷", "│  ", "├─", "└─", "✔", "■", "✘", "↷");
 
-	public static Theme valueOf(Charset charset) {
-		if (StandardCharsets.UTF_8.equals(charset)) {
-			return UNICODE;
-		}
-		return ASCII;
-	}
+    public static Theme valueOf(Charset charset) {
+        if (StandardCharsets.UTF_8.equals(charset)) {
+            return UNICODE;
+        }
+        return ASCII;
+    }
 
-	private final String[] tiles;
-	private final String blank;
+    private final String[] tiles;
+    private final String blank;
 
-	Theme(String... tiles) {
-		this.tiles = tiles;
-		this.blank = new String(new char[vertical().length()]).replace('\0', ' ');
-	}
+    Theme(String... tiles) {
+        this.tiles = tiles;
+        this.blank = new String(new char[vertical().length()]).replace('\0', ' ');
+    }
 
-	public final String root() {
-		return tiles[0];
-	}
+    public final String root() {
+        return tiles[0];
+    }
 
-	public final String vertical() {
-		return tiles[1];
-	}
+    public final String vertical() {
+        return tiles[1];
+    }
 
-	public final String blank() {
-		return blank;
-	}
+    public final String blank() {
+        return blank;
+    }
 
-	public final String entry() {
-		return tiles[2];
-	}
+    public final String entry() {
+        return tiles[2];
+    }
 
-	public final String end() {
-		return tiles[3];
-	}
+    public final String end() {
+        return tiles[3];
+    }
 
-	public final String successful() {
-		return tiles[4];
-	}
+    public final String successful() {
+        return tiles[4];
+    }
 
-	public final String aborted() {
-		return tiles[5];
-	}
+    public final String aborted() {
+        return tiles[5];
+    }
 
-	public final String failed() {
-		return tiles[6];
-	}
+    public final String failed() {
+        return tiles[6];
+    }
 
-	public final String skipped() {
-		return tiles[7];
-	}
+    public final String skipped() {
+        return tiles[7];
+    }
 
-	public final String status(TestExecutionResult result) {
-		switch (result.getStatus()) {
-			case SUCCESSFUL:
-				return successful();
-			case ABORTED:
-				return aborted();
-			case FAILED:
-				return failed();
-			default:
-				return result.getStatus().name();
-		}
-	}
+    public final String status(TestExecutionResult result) {
+        switch (result.getStatus()) {
+        case SUCCESSFUL:
+            return successful();
+        case ABORTED:
+            return aborted();
+        case FAILED:
+            return failed();
+        default:
+            return result.getStatus().name();
+        }
+    }
 
-	/**
-	 * Return lower case {@link #name} for easier usage in help text for
-	 * available options.
-	 */
-	@Override
-	public final String toString() {
-		return name().toLowerCase();
-	}
+    /**
+     * Return lower case {@link #name} for easier usage in help text for available
+     * options.
+     */
+    @Override
+    public final String toString() {
+        return name().toLowerCase();
+    }
 
 }

@@ -28,17 +28,17 @@ public class APDUUtils {
      * @return Byte array with SELECT APDU
      */
     public static byte[] PIVSelectAPDU() {
-        if(s_pivSelect == null) {
+        if (s_pivSelect == null) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(APDUConstants.COMMAND);
                 baos.write(APDUConstants.SELECT);
-                byte[] p1p2 = {0x04, 0x00};
+                byte[] p1p2 = { 0x04, 0x00 };
                 baos.write(p1p2);
                 baos.write((byte) APDUConstants.PIV_APPID.length);
                 baos.write(APDUConstants.PIV_APPID);
                 s_pivSelect = baos.toByteArray();
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 // if we ever hit this, OOM is coming soon
                 s_logger.error("Unable to populate static PIV select APDU field.", ioe);
                 s_pivSelect = new byte[0];
@@ -56,19 +56,19 @@ public class APDUUtils {
      */
     public static byte[] PIVSelectAPDU(byte[] appid) {
         byte[] rv_pivSelect = null;
-        if(rv_pivSelect == null) {
+        if (rv_pivSelect == null) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(APDUConstants.COMMAND);
                 baos.write(APDUConstants.SELECT);
-                byte[] p1p2 = {0x04, 0x00};
+                byte[] p1p2 = { 0x04, 0x00 };
                 baos.write(p1p2);
                 baos.write(appid.length);
                 baos.write(appid);
-                byte[] Le = {0x00};
+                byte[] Le = { 0x00 };
                 baos.write(Le);
                 rv_pivSelect = baos.toByteArray();
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 // if we ever hit this, OOM is coming soon
                 s_logger.error("Unable to populate static PIV select APDU field.", ioe);
                 rv_pivSelect = new byte[0];
@@ -81,38 +81,43 @@ public class APDUUtils {
      *
      * Return APDU value for GENERAL AUTHENTICATE
      *
-     * @param keyReference Byte value identifying key reference of the generated key pair
-     * @param algorithmIdentifier Byte value identifying algorithm to be performed on card
-     * @param parameter Byte array containing the parameter value
+     * @param keyReference        Byte value identifying key reference of the
+     *                            generated key pair
+     * @param algorithmIdentifier Byte value identifying algorithm to be performed
+     *                            on card
+     * @param parameter           Byte array containing the parameter value
      * @return Byte array with GENERATE APDU
      */
     public static byte[] PIVGeneralAuthenticateAPDU(byte keyReference, byte algorithmIdentifier, byte[] parameter) {
         byte[] rv_pivGeneralAuthenticate = null;
-        if(rv_pivGeneralAuthenticate == null) {
+        if (rv_pivGeneralAuthenticate == null) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(APDUConstants.COMMAND);
                 baos.write(APDUConstants.GENERAL_AUTHENTICATE);
-                byte[] p1 = {algorithmIdentifier};
+                byte[] p1 = { algorithmIdentifier };
                 baos.write(p1);
                 baos.write(keyReference);
 
-                //If parameter is present data length will be 1 (Tag 'AC') + length + 1 (cryptographic mechanism tag) + 1 (length) + 1 (cryptographic mechanism) + 1 (parameter tag) + parameter length length+ parameter length .
-                //If parameter is absent data length will be 1 (Tag 'AC') + length + 1 (cryptographic mechanism tag) + 1 (cryptographic mechanism length) + 1 (cryptographic mechanism)
-                if(parameter != null) {
+                // If parameter is present data length will be 1 (Tag 'AC') + length + 1
+                // (cryptographic mechanism tag) + 1 (length) + 1 (cryptographic mechanism) + 1
+                // (parameter tag) + parameter length length+ parameter length .
+                // If parameter is absent data length will be 1 (Tag 'AC') + length + 1
+                // (cryptographic mechanism tag) + 1 (cryptographic mechanism length) + 1
+                // (cryptographic mechanism)
+                if (parameter != null) {
                     baos.write(parameter.length);
-                }
-                else {
+                } else {
                     baos.write(0);
                 }
 
-                if(parameter != null)  {
+                if (parameter != null) {
                     baos.write(parameter);
                 }
-                byte[] Le = {0x00};
+                byte[] Le = { 0x00 };
                 baos.write(Le);
                 rv_pivGeneralAuthenticate = baos.toByteArray();
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 // if we ever hit this, OOM is coming soon
                 s_logger.error("Unable to populate static PIV Generate APDU field.", ioe);
                 rv_pivGeneralAuthenticate = new byte[0];
@@ -123,64 +128,69 @@ public class APDUUtils {
 
     /**
      *
-     * Return APDU value for GENERATE card operation based on a specific APP ID value
+     * Return APDU value for GENERATE card operation based on a specific APP ID
+     * value
      *
-     * @param keyReference Byte value identifying key reference of the generated key pair
-     * @param cryptoMechanism Byte value identifying the type of key pair to be generated
-     * @param parameter Byte array containing the parameter value
+     * @param keyReference    Byte value identifying key reference of the generated
+     *                        key pair
+     * @param cryptoMechanism Byte value identifying the type of key pair to be
+     *                        generated
+     * @param parameter       Byte array containing the parameter value
      * @return Byte array with GENERATE APDU
      */
     public static byte[] PIVGenerateKeyPairAPDU(byte keyReference, byte cryptoMechanism, byte[] parameter) {
         byte[] rv_pivGenerate = null;
-        if(rv_pivGenerate == null) {
+        if (rv_pivGenerate == null) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(APDUConstants.COMMAND);
                 baos.write(APDUConstants.GENERATE);
-                byte[] p1 = {0x00};
+                byte[] p1 = { 0x00 };
                 baos.write(p1);
                 baos.write(keyReference);
 
-                //If parameter is present data length will be 1 (Tag 'AC') + length + 1 (cryptographic mechanism tag) + 1 (length) + 1 (cryptographic mechanism) + 1 (parameter tag) + parameter length length+ parameter length .
-                //If parameter is absent data length will be 1 (Tag 'AC') + length + 1 (cryptographic mechanism tag) + 1 (cryptographic mechanism length) + 1 (cryptographic mechanism)
-                if(parameter != null) {
+                // If parameter is present data length will be 1 (Tag 'AC') + length + 1
+                // (cryptographic mechanism tag) + 1 (length) + 1 (cryptographic mechanism) + 1
+                // (parameter tag) + parameter length length+ parameter length .
+                // If parameter is absent data length will be 1 (Tag 'AC') + length + 1
+                // (cryptographic mechanism tag) + 1 (cryptographic mechanism length) + 1
+                // (cryptographic mechanism)
+                if (parameter != null) {
                     baos.write(1 + 1 + 1 + 1 + 1 + 1 + 1 + parameter.length);
-                }
-                else {
+                } else {
                     baos.write(1 + 1 + 1 + 1 + 1);
                 }
 
-                //Write Control reference template tag
+                // Write Control reference template tag
                 baos.write(APDUConstants.CONTROL_REFERENCE_TEMPLATE_TAG);
 
-                //Write length value for Control reference template
+                // Write length value for Control reference template
 
-                if(parameter != null)  {
+                if (parameter != null) {
 
-                    //Add length of Crypto Mechanism TLV
+                    // Add length of Crypto Mechanism TLV
                     baos.write(3 + 2 + parameter.length);
 
-                }
-                else {
+                } else {
 
-                    //Add length of Crypto Mechanism TLV
+                    // Add length of Crypto Mechanism TLV
                     baos.write(3);
                 }
 
                 baos.write(TagConstants.CRYPTO_MECHANISM_TAG);
-                //Add length of crypto mechanism which will be 1
+                // Add length of crypto mechanism which will be 1
                 baos.write(1);
                 baos.write(cryptoMechanism);
-                if(parameter != null)  {
-                    byte[] parameterTag = {TagConstants.PARAMETER_TAG};
+                if (parameter != null) {
+                    byte[] parameterTag = { TagConstants.PARAMETER_TAG };
                     baos.write(parameterTag);
                     baos.write(parameter.length);
                     baos.write(parameter);
                 }
-                byte[] Le = {0x00};
+                byte[] Le = { 0x00 };
                 baos.write(Le);
                 rv_pivGenerate = baos.toByteArray();
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 // if we ever hit this, OOM is coming soon
                 s_logger.error("Unable to populate static PIV Generate APDU field.", ioe);
                 rv_pivGenerate = new byte[0];
@@ -202,15 +212,15 @@ public class APDUUtils {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             baos.write(APDUConstants.COMMAND);
             baos.write(APDUConstants.GET);
-            byte[] p1p2 = {0x3f, (byte) 0xff};
+            byte[] p1p2 = { 0x3f, (byte) 0xff };
             baos.write(p1p2);
-            byte[] Lc = {(byte)(data.length & 0xff)};
+            byte[] Lc = { (byte) (data.length & 0xff) };
             baos.write(Lc);
             baos.write(data);
-            byte[] Le = {0x00};
+            byte[] Le = { 0x00 };
             baos.write(Le);
             rv_pivGetData = baos.toByteArray();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             // if we ever hit this, OOM is coming soon
             s_logger.error("Unable to populate PIV get data APDU field.", ioe);
             rv_pivGetData = new byte[0];
@@ -218,8 +228,9 @@ public class APDUUtils {
 
         return rv_pivGetData;
     }
+
     /**
-     * 
+     *
      * @param data
      * @return
      */
@@ -231,15 +242,15 @@ public class APDUUtils {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             baos.write(APDUConstants.COMMAND);
             baos.write(APDUConstants.GET);
-            byte[] p1p2 = {0x3f, (byte) 0xff};
+            byte[] p1p2 = { 0x3f, (byte) 0xff };
             baos.write(p1p2);
-            byte[] Lc = {(byte)(data.length & 0xff)};
+            byte[] Lc = { (byte) (data.length & 0xff) };
             baos.write(Lc);
             baos.write(data);
-            byte[] Le = {0x08};
+            byte[] Le = { 0x08 };
             baos.write(Le);
             rv_pivGetData = baos.toByteArray();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             // if we ever hit this, OOM is coming soon
             s_logger.error("Unable to populate PIV get data APDU field.", ioe);
             rv_pivGetData = new byte[0];
@@ -257,7 +268,7 @@ public class APDUUtils {
      */
     public static final int bytesToInt(byte[] b) {
 
-        if(b.length != 2){
+        if (b.length != 2) {
             throw new IllegalArgumentException("Invalid buffer length passed in.");
         }
 
@@ -270,15 +281,16 @@ public class APDUUtils {
 
     /**
      *
-     * Helper function that constructs a TLV buffer based on passed in tag and value buffer
+     * Helper function that constructs a TLV buffer based on passed in tag and value
+     * buffer
      *
-     * @param tag  Byte array with tag info
+     * @param tag   Byte array with tag info
      * @param value Byte array with value
      * @return Byte array with resulting TLV value
      */
     public static final byte[] getTLV(byte[] tag, byte[] value) {
 
-        if(tag == null || value == null)
+        if (tag == null || value == null)
             throw new IllegalArgumentException("Null buffer passed into getTLV().");
         byte[] rv = null;
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -299,7 +311,7 @@ public class APDUUtils {
                 os.write(0x00);
             }
         } catch (IOException e) {
-            s_logger.error("Failed to create TLV value: {}" , e.getMessage());
+            s_logger.error("Failed to create TLV value: {}", e.getMessage());
             return rv;
         }
 
@@ -309,10 +321,11 @@ public class APDUUtils {
 
     /**
      *
-     * Helper function that creates ASN1ObjectIdentifier object based on OID value and a service name
+     * Helper function that creates ASN1ObjectIdentifier object based on OID value
+     * and a service name
      *
      * @param serviceName String value identifying the service
-     * @param name String value identifying OID by name
+     * @param name        String value identifying OID by name
      * @return
      */
     public static ASN1ObjectIdentifier getAlgorithmIdentifier(String serviceName, String name) {

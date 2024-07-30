@@ -13,11 +13,11 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
 public class SQLiteDBGenerator {
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(SQLiteDBGenerator.class);
     private static final Options s_options = new Options();
+
     static {
         s_options.addOption("h", "help", false, "Print this help and exit");
         s_options.addOption("d", "database", true, "path to database file");
@@ -42,14 +42,14 @@ public class SQLiteDBGenerator {
             PrintHelpAndExit(1);
         }
 
-        if(cmd.hasOption("help")) {
+        if (cmd.hasOption("help")) {
             PrintHelpAndExit(0);
         }
 
-        if(cmd.hasOption("database")) {
+        if (cmd.hasOption("database")) {
             String dbParam = cmd.getOptionValue("database");
             File f = new File(dbParam);
-            if(f.exists()) {
+            if (f.exists()) {
                 s_logger.error("Cowardly refusing to overwrite existing file {}", dbParam);
                 System.exit(1);
             }
@@ -66,7 +66,7 @@ public class SQLiteDBGenerator {
             } catch (SQLException e) {
                 s_logger.error("Unable to establish JDBC connection for SQLite database", e);
             }
-            if(conn != null) {
+            if (conn != null) {
                 s_logger.debug("Created sql connection for {}", dbParam);
                 DatabaseMetaData metaData = null;
                 try {

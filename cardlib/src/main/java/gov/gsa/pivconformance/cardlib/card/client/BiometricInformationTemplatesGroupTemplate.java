@@ -9,7 +9,8 @@ import java.util.Arrays;
 
 /**
  *
- * Encapsulates a Biometric Information Templates Group Template data object  as defined by SP800-73-4 Part 2 Appendix A Table 41
+ * Encapsulates a Biometric Information Templates Group Template data object as
+ * defined by SP800-73-4 Part 2 Appendix A Table 41
  *
  */
 public class BiometricInformationTemplatesGroupTemplate extends PIVDataObject {
@@ -20,9 +21,9 @@ public class BiometricInformationTemplatesGroupTemplate extends PIVDataObject {
     private byte[] m_bITForFirstFinger;
     private byte[] m_bITForSecondFinger;
 
-
     /**
-     * BiometricInformationTemplatesGroupTemplate class constructor, initializes all the class fields.
+     * BiometricInformationTemplatesGroupTemplate class constructor, initializes all
+     * the class fields.
      */
     public BiometricInformationTemplatesGroupTemplate() {
         m_numberOfFingers = null;
@@ -64,7 +65,8 @@ public class BiometricInformationTemplatesGroupTemplate extends PIVDataObject {
      *
      * Sets the BIT information for the first finger
      *
-     * @param bITForFirstFinger Byte array containing BIT information for the first finger
+     * @param bITForFirstFinger Byte array containing BIT information for the first
+     *                          finger
      */
     public void setbITForFirstFinger(byte[] bITForFirstFinger) {
         m_bITForFirstFinger = bITForFirstFinger;
@@ -84,7 +86,8 @@ public class BiometricInformationTemplatesGroupTemplate extends PIVDataObject {
      *
      * Sets the BIT information for the second finger
      *
-     * @param bITForSecondFinger Byte array containing BIT information for the second finger
+     * @param bITForSecondFinger Byte array containing BIT information for the
+     *                           second finger
      */
     public void setbITForSecondFinger(byte[] bITForSecondFinger) {
         m_bITForSecondFinger = bITForSecondFinger;
@@ -92,17 +95,18 @@ public class BiometricInformationTemplatesGroupTemplate extends PIVDataObject {
 
     /**
      *
-     * Decode function that decodes Biometric Information Templates Group Template object retrieved from the card and populates various class fields.
+     * Decode function that decodes Biometric Information Templates Group Template
+     * object retrieved from the card and populates various class fields.
      *
      * @return True if decode was successful, false otherwise
      */
     @Override
-	public boolean decode() {
+    public boolean decode() {
 
-        try{
+        try {
             byte[] rawBytes = this.getBytes();
 
-            if(rawBytes == null){
+            if (rawBytes == null) {
                 s_logger.error("No buffer to decode for {}.", APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
@@ -110,36 +114,37 @@ public class BiometricInformationTemplatesGroupTemplate extends PIVDataObject {
             BerTlvParser tlvp = new BerTlvParser(new CCTTlvLogger(this.getClass()));
             BerTlv outer = tlvp.parseConstructed(rawBytes);
 
-            if(outer == null){
-                s_logger.error("Error parsing {}, unable to parse TLV value.", APDUConstants.oidNameMap.get(super.getOID()));
+            if (outer == null) {
+                s_logger.error("Error parsing {}, unable to parse TLV value.",
+                        APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
 
-            for(BerTlv tlv : outer.getValues()) {
+            for (BerTlv tlv : outer.getValues()) {
                 byte[] tag = tlv.getTag().bytes;
-                if(Arrays.equals(tag, TagConstants.NUMBER_OF_FINGERS_TAG)) {
+                if (Arrays.equals(tag, TagConstants.NUMBER_OF_FINGERS_TAG)) {
                     m_numberOfFingers = tlv.getBytesValue();
-                } else if(Arrays.equals(tag, TagConstants.BIT_FOR_FIRST_FINGER_TAG)) {
+                } else if (Arrays.equals(tag, TagConstants.BIT_FOR_FIRST_FINGER_TAG)) {
 
-                    if(m_bITForFirstFinger == null)
+                    if (m_bITForFirstFinger == null)
                         m_bITForFirstFinger = tlv.getBytesValue();
                     else
                         m_bITForSecondFinger = tlv.getBytesValue();
 
                 } else {
-                    s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+                    s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                            Hex.encodeHexString(tlv.getBytesValue()));
                 }
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
 
             s_logger.error("Error parsing {}: {}", APDUConstants.oidNameMap.get(super.getOID()), ex.getMessage());
         }
 
-        if(m_numberOfFingers == null || m_bITForFirstFinger == null)
+        if (m_numberOfFingers == null || m_bITForFirstFinger == null)
             return false;
 
-        dump(this.getClass())
-;
+        dump(this.getClass());
         return true;
     }
 }

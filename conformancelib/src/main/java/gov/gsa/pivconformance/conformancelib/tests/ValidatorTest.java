@@ -31,8 +31,10 @@ public class ValidatorTest {
     static Logger s_logger = LoggerFactory.getLogger(ValidatorTest.class);
     private static Validator m_validator;
 
-	// Create a logger to write content to .cvs file used to generate the result .html file.
-	private static Logger a_actualValueLogger = LoggerFactory.getLogger("gov.gsa.pivconformance.conformancelib.testResult");
+    // Create a logger to write content to .cvs file used to generate the result
+    // .html file.
+    private static Logger a_actualValueLogger = LoggerFactory
+            .getLogger("gov.gsa.pivconformance.conformancelib.testResult");
 
     static {
         try {
@@ -63,22 +65,25 @@ public class ValidatorTest {
         try {
             m_validator = new Validator("Sun");
             CertificateFactory fac = CertificateFactory.getInstance("X509");
-            InputStream fis = ValidatorHelper.getStreamFromResourceFile(System.getProperty("user.dir") + File.separator + "x509-certs/valid" + File.separator + endEntityCertFile);
+            InputStream fis = ValidatorHelper.getStreamFromResourceFile(System.getProperty("user.dir") + File.separator
+                    + "x509-certs/valid" + File.separator + endEntityCertFile);
             X509Certificate eeCert = (X509Certificate) fac.generateCertificate(fis);
-            X509Certificate trustAnchorCert = getTrustAnchorForGivenCertificate(m_validator.getKeyStore(), eeCert, null);
+            X509Certificate trustAnchorCert = getTrustAnchorForGivenCertificate(m_validator.getKeyStore(), eeCert,
+                    null);
             s_logger.debug("Validating " + eeCert.getSubjectDN().getName());
-            boolean result = m_validator.isValid(eeCert, oid, trustAnchorCert); //(eeCert, oid, trustAnchorCert;
-            
+            boolean result = m_validator.isValid(eeCert, oid, trustAnchorCert); // (eeCert, oid, trustAnchorCert;
+
             s_logger.debug("m_validator.isValid(): " + result);
             reporter.publishEntry(oid, String.valueOf(result));
             Assertions.assertTrue(result, "Failed for eeCert " + eeCert);
-            a_actualValueLogger.info("{},{},{},{},{}","  --  ","Passed for eeCert " + eeCert,"TRUE",result,"");
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "Passed for eeCert " + eeCert, "TRUE", result, "");
 
         } catch (Exception e) {
             s_logger.debug(e.getMessage());
             e.printStackTrace();
         }
     }
+
     @Tag("BC")
     @DisplayName("Certificate Path Validation BouncyCastle")
     @ParameterizedTest(name = "{index} => oid = {0}, file = {1}")
@@ -92,16 +97,18 @@ public class ValidatorTest {
             m_validator = new Validator("BC");
             s_logger.debug("m_validator: " + m_validator.toString());
             CertificateFactory fac = CertificateFactory.getInstance("X509");
-            InputStream fis = ValidatorHelper.getStreamFromResourceFile(System.getProperty("user.dir") + File.separator + "x509-certs/valid" + File.separator + endEntityCertFile);
+            InputStream fis = ValidatorHelper.getStreamFromResourceFile(System.getProperty("user.dir") + File.separator
+                    + "x509-certs/valid" + File.separator + endEntityCertFile);
             X509Certificate eeCert = (X509Certificate) fac.generateCertificate(fis);
-            X509Certificate trustAnchorCert = getTrustAnchorForGivenCertificate(m_validator.getKeyStore(), eeCert, null);
+            X509Certificate trustAnchorCert = getTrustAnchorForGivenCertificate(m_validator.getKeyStore(), eeCert,
+                    null);
             s_logger.debug("Validating " + eeCert.getSubjectDN().getName());
-            boolean result = m_validator.isValid(eeCert, oid, trustAnchorCert); //(eeCert, oid, trustAnchorCert;
+            boolean result = m_validator.isValid(eeCert, oid, trustAnchorCert); // (eeCert, oid, trustAnchorCert;
             s_logger.debug("m_validator.isValid(): " + result);
             reporter.publishEntry(oid, String.valueOf(result));
             Assertions.assertTrue(result, "Failed for eeCert " + eeCert);
-            a_actualValueLogger.info("{},{},{},{},{}","  --  ","Passed for eeCert " + eeCert,"TRUE",result,"");
-            
+            a_actualValueLogger.info("{},{},{},{},{}", "  --  ", "Passed for eeCert " + eeCert, "TRUE", result, "");
+
         } catch (Exception e) {
             s_logger.debug(e.getMessage());
             e.printStackTrace();
@@ -113,10 +120,12 @@ public class ValidatorTest {
         String estr = pathFixup(System.getProperty("user.dir") + File.separator + policyFileName);
         s_logger.debug(estr);
         try {
-//            String userDirFile = new URL(System.getProperty("user.dir") + File.separator + policyFileName).getFile();
-//            s_logger.debug("userDirFile: " + userDirFile);
-//            String userDirPath = new URL(System.getProperty("user.dir") + File.separator + policyFileName).getPath();
-//            s_logger.debug("userDirPath: " + userDirPath);
+            // String userDirFile = new URL(System.getProperty("user.dir") + File.separator
+            // + policyFileName).getFile();
+            // s_logger.debug("userDirFile: " + userDirFile);
+            // String userDirPath = new URL(System.getProperty("user.dir") + File.separator
+            // + policyFileName).getPath();
+            // s_logger.debug("userDirPath: " + userDirPath);
 
             InputStream inputStream = ValidatorHelper.getStreamFromResourceFile(estr);
             Properties properties = new Properties();

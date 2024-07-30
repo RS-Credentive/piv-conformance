@@ -12,7 +12,8 @@ import java.util.HashMap;
 
 /**
  *
- * Encapsulates a Discovery Object data object  as defined by SP800-73-4 Part 2 Appendix A Table 18
+ * Encapsulates a Discovery Object data object as defined by SP800-73-4 Part 2
+ * Appendix A Table 18
  *
  */
 public class DiscoveryObject extends PIVDataObject {
@@ -98,7 +99,6 @@ public class DiscoveryObject extends PIVDataObject {
         m_pinPolicy = pinPolicy;
     }
 
-
     /**
      *
      * Returns true if Global PIN satisfies the PIV ACRs, false otherwise
@@ -113,7 +113,8 @@ public class DiscoveryObject extends PIVDataObject {
      *
      * Sets if Global PIN satisfies the PIV ACRs, false otherwise
      *
-     * @param globalPINSatisfiesACR True if Global PIN satisfies the PIV ACRs, false otherwise
+     * @param globalPINSatisfiesACR True if Global PIN satisfies the PIV ACRs, false
+     *                              otherwise
      */
     public void setGlobalPINSatisfiesACR(boolean globalPINSatisfiesACR) {
         m_globalPINSatisfiesACR = globalPINSatisfiesACR;
@@ -145,7 +146,7 @@ public class DiscoveryObject extends PIVDataObject {
      *
      * Helper function to determine if byte if set at a given position
      *
-     * @param field Byte value
+     * @param field    Byte value
      * @param position Integer specifying the position to check
      * @return True if set, false otherwise
      */
@@ -167,7 +168,8 @@ public class DiscoveryObject extends PIVDataObject {
      *
      * Sets if App PIN satisfies the PIV ACRs
      *
-     * @param appPINSatisfiesACR True if App PIN satisfies the PIV ACRs, false otherwise
+     * @param appPINSatisfiesACR True if App PIN satisfies the PIV ACRs, false
+     *                           otherwise
      */
     public void setAppPINSatisfiesACR(boolean appPINSatisfiesACR) {
         m_appPINSatisfiesACR = appPINSatisfiesACR;
@@ -195,15 +197,16 @@ public class DiscoveryObject extends PIVDataObject {
 
     /**
      *
-     * Decode function that decodes Discovery Object object retrieved from the card and populates various class fields.
+     * Decode function that decodes Discovery Object object retrieved from the card
+     * and populates various class fields.
      *
      * @return True if decode was successful, false otherwise
      */
     @Override
-	public boolean decode() {
+    public boolean decode() {
         byte[] rawBytes = this.getBytes();
         s_logger.trace("rawBytes: {}", Hex.encodeHexString(rawBytes));
-        if(rawBytes.length == 0) {
+        if (rawBytes.length == 0) {
             s_logger.info("DiscoveryObject.decode() called for empty discovery object.");
             return false;
         }
@@ -215,25 +218,25 @@ public class DiscoveryObject extends PIVDataObject {
             ByteArrayOutputStream scos = new ByteArrayOutputStream();
             for (BerTlv tlv : outer.getValues()) {
                 byte[] tag = tlv.getTag().bytes;
-            	super.m_tagList.add(tlv.getTag());
+                super.m_tagList.add(tlv.getTag());
                 if (Arrays.equals(tag, TagConstants.PIV_CARD_APPLICATION_AID_TAG)) {
-                   
-                	m_aid = tlv.getBytesValue();
+
+                    m_aid = tlv.getBytesValue();
                     m_content.put(tlv.getTag(), tlv.getBytesValue());
-                    
+
                     scos.write(APDUUtils.getTLV(TagConstants.PIV_CARD_APPLICATION_AID_TAG, m_aid));
                 } else if (Arrays.equals(tag, TagConstants.PIN_USAGE_POLICY_TAG)) {
-                    
-                	m_pinPolicy = tlv.getBytesValue();
+
+                    m_pinPolicy = tlv.getBytesValue();
                     m_content.put(tlv.getTag(), tlv.getBytesValue());
-                    
+
                     scos.write(APDUUtils.getTLV(TagConstants.PIN_USAGE_POLICY_TAG, m_pinPolicy));
 
                     m_globalPINisPrimary = false;
                     m_globalPINSatisfiesACR = false;
                     m_appPINSatisfiesACR = false;
                     m_occSatisfiesACR = false;
-                    
+
                     if (is_set(m_pinPolicy[0], 8)) {
                         s_logger.error("PIN Policy bit 8 was set");
                     }
@@ -251,7 +254,8 @@ public class DiscoveryObject extends PIVDataObject {
                     }
 
                 } else {
-                    s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+                    s_logger.warn("Unexpected tag: {} with value: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                            Hex.encodeHexString(tlv.getBytesValue()));
                 }
             }
 
@@ -263,11 +267,10 @@ public class DiscoveryObject extends PIVDataObject {
             return false;
         }
 
-        if(m_aid == null || m_pinPolicy == null)
+        if (m_aid == null || m_pinPolicy == null)
             return false;
 
-        dump(this.getClass())
-;
+        dump(this.getClass());
         return true;
     }
 }

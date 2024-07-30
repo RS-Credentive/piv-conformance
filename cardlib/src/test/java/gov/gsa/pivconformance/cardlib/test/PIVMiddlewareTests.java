@@ -28,5 +28,4 @@ public class PIVMiddlewareTests {
         reporter.publishEntry("Version", v.getVersion());
     }
 
-
 }

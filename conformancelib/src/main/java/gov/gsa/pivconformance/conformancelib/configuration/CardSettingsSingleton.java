@@ -26,79 +26,77 @@ public final class CardSettingsSingleton {
     }
 
     public String getGlobalPin() {
-		return m_globalPin;
-	}
+        return m_globalPin;
+    }
 
-	public void setGlobalPin(String globalPin) {
-		m_globalPin = globalPin;
-	}
+    public void setGlobalPin(String globalPin) {
+        m_globalPin = globalPin;
+    }
 
-	public CardTerminal getTerminal() {
-		return m_terminal;
-	}
+    public CardTerminal getTerminal() {
+        return m_terminal;
+    }
 
-	public void setTerminal(CardTerminal terminal) {
-		m_terminal = terminal;
-	}
+    public void setTerminal(CardTerminal terminal) {
+        m_terminal = terminal;
+    }
 
-	public CardHandle getCardHandle() {
-		return m_cardHandle;
-	}
+    public CardHandle getCardHandle() {
+        return m_cardHandle;
+    }
 
-	public void setCardHandle(CardHandle cardHandle) {
-		m_cardHandle = cardHandle;
-	}
-	
-	public LOGIN_STATUS getLastLoginStatus() {
-		return m_lastLoginStatus;
-	}
+    public void setCardHandle(CardHandle cardHandle) {
+        m_cardHandle = cardHandle;
+    }
 
-	public void setLastLoginStatus(LOGIN_STATUS lastLoginStatus) {
-		m_lastLoginStatus = lastLoginStatus;
-	}
+    public LOGIN_STATUS getLastLoginStatus() {
+        return m_lastLoginStatus;
+    }
 
-	public AbstractPIVApplication getPivHandle() {
-		return m_pivHandle;
-	}
+    public void setLastLoginStatus(LOGIN_STATUS lastLoginStatus) {
+        m_lastLoginStatus = lastLoginStatus;
+    }
 
-	public void setPivHandle(AbstractPIVApplication pivHandle) {
-		m_pivHandle = pivHandle;
-	}
+    public AbstractPIVApplication getPivHandle() {
+        return m_pivHandle;
+    }
 
-	public enum LOGIN_STATUS {
-		LOGIN_SUCCESS,
-		LOGIN_FAIL,
-		LOGIN_NOT_TRIED
-	}
+    public void setPivHandle(AbstractPIVApplication pivHandle) {
+        m_pivHandle = pivHandle;
+    }
 
-	private String m_applicationPin = null;
+    public enum LOGIN_STATUS {
+        LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_NOT_TRIED
+    }
+
+    private String m_applicationPin = null;
     private String m_globalPin = null;
-    
+
     private CardTerminal m_terminal = null;
     private CardHandle m_cardHandle = null;
     private AbstractPIVApplication m_pivHandle = null;
-    
+
     private LOGIN_STATUS m_lastLoginStatus;
 
     private CardSettingsSingleton() {
-    	reset();
-    }
-    private static final CardSettingsSingleton INSTANCE = new CardSettingsSingleton();
-    public static CardSettingsSingleton getInstance()
-    {
-        return INSTANCE;
-    }
-    
-    // clear all saved status. should only be called when a card is changed
-    public void reset() {
-		m_readerIndex = -1;
-    	m_applicationPin = null;
-    	m_globalPin = null;
-    	m_terminal = null;
-    	m_pivHandle = null;
-    	m_cardHandle = null;
-    	m_lastLoginStatus = LOGIN_STATUS.LOGIN_NOT_TRIED;
+        reset();
     }
 
+    private static final CardSettingsSingleton INSTANCE = new CardSettingsSingleton();
+
+    public static CardSettingsSingleton getInstance() {
+        return INSTANCE;
+    }
+
+    // clear all saved status. should only be called when a card is changed
+    public void reset() {
+        m_readerIndex = -1;
+        m_applicationPin = null;
+        m_globalPin = null;
+        m_terminal = null;
+        m_pivHandle = null;
+        m_cardHandle = null;
+        m_lastLoginStatus = LOGIN_STATUS.LOGIN_NOT_TRIED;
+    }
 
 }

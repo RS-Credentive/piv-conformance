@@ -13,7 +13,8 @@ import java.util.HashMap;
 
 /**
  *
- * Encapsulates a Card Capability Container data object  as defined by SP800-73-4 Part 2 Appendix A Table 8
+ * Encapsulates a Card Capability Container data object as defined by SP800-73-4
+ * Part 2 Appendix A Table 8
  *
  */
 public class CardCapabilityContainer extends PIVDataObject {
@@ -35,10 +36,9 @@ public class CardCapabilityContainer extends PIVDataObject {
     private List<byte[]> m_extendedApplicationCardURL;
     private byte[] m_securityObjectBuffer;
     private byte[] m_signedContent;
-    //private HashMap<BerTag, byte[]> m_content;
+    // private HashMap<BerTag, byte[]> m_content;
 
-
-	/**
+    /**
      * CardCapabilityContainer class constructor, initializes all the class fields.
      */
     public CardCapabilityContainer() {
@@ -95,7 +95,7 @@ public class CardCapabilityContainer extends PIVDataObject {
 
     /**
      *
-     *  Returns capability container version number
+     * Returns capability container version number
      *
      * @return Byte array containing capability container version number
      */
@@ -236,20 +236,20 @@ public class CardCapabilityContainer extends PIVDataObject {
         return m_securityObjectBuffer;
     }
 
-
     /**
      *
-     * Decode function that decodes Card Capability Container object retrieved from the card and populates various class fields.
+     * Decode function that decodes Card Capability Container object retrieved from
+     * the card and populates various class fields.
      *
      * @return True if decode was successful, false otherwise
      */
     @Override
-	public boolean decode() {
+    public boolean decode() {
 
-        try{
-            byte [] raw = super.getBytes();
+        try {
+            byte[] raw = super.getBytes();
 
-            if(raw == null){
+            if (raw == null) {
                 s_logger.error("No buffer to decode for {}.", APDUConstants.oidNameMap.get(super.getOID()));
                 return false;
             }
@@ -257,129 +257,139 @@ public class CardCapabilityContainer extends PIVDataObject {
             BerTlvParser tp = new BerTlvParser(new CCTTlvLogger(CardCapabilityContainer.class));
             BerTlvs outer = tp.parse(raw);
 
-            if(outer == null){
+            if (outer == null) {
                 s_logger.error("Error parsing CCC container, unable to parse TLV value 1.");
                 return false;
             }
 
             List<BerTlv> values = outer.getList();
-            for(BerTlv tlv : values) {
-                if(tlv.isPrimitive()) {
-                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes), Hex.encodeHexString(tlv.getBytesValue()));
+            for (BerTlv tlv : values) {
+                if (tlv.isPrimitive()) {
+                    s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv.getTag().bytes),
+                            Hex.encodeHexString(tlv.getBytesValue()));
 
                     BerTlvs outer2 = tp.parse(tlv.getBytesValue());
 
-                    if(outer2 == null){
+                    if (outer2 == null) {
                         s_logger.error("Error parsing CCC, unable to parse TLV value 2.");
                         return false;
                     }
 
                     ByteArrayOutputStream scos = new ByteArrayOutputStream();
                     List<BerTlv> values2 = outer2.getList();
-                    for(BerTlv tlv2 : values2) {
-                        if(tlv2.isPrimitive()) {
-                            s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv2.getTag().bytes), Hex.encodeHexString(tlv2.getBytesValue()));
+                    for (BerTlv tlv2 : values2) {
+                        if (tlv2.isPrimitive()) {
+                            s_logger.trace("Tag {}: {}", Hex.encodeHexString(tlv2.getTag().bytes),
+                                    Hex.encodeHexString(tlv2.getBytesValue()));
                         } else {
-                        	super.m_tagList.add(tlv2.getTag());
-                            if(Arrays.equals(tlv2.getTag().bytes,TagConstants.CARD_IDENTIFIER_TAG)) {
+                            super.m_tagList.add(tlv2.getTag());
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.CARD_IDENTIFIER_TAG)) {
                                 if (tlv2.hasRawValue()) {
                                     m_cardIdentifier = tlv2.getBytesValue();
                                     m_content.put(tlv2.getTag(), tlv2.getBytesValue());
                                     scos.write(APDUUtils.getTLV(TagConstants.CARD_IDENTIFIER_TAG, m_cardIdentifier));
                                 }
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)) {
+                            if (Arrays.equals(tlv2.getTag().bytes,
+                                    TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG)) {
                                 if (tlv2.hasRawValue()) {
                                     m_capabilityContainerVersionNumber = tlv2.getBytesValue();
                                     m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                    scos.write(APDUUtils.getTLV(TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG, m_capabilityContainerVersionNumber));
+                                    scos.write(APDUUtils.getTLV(TagConstants.CAPABILITY_CONTAINER_VERSION_NUMBER_TAG,
+                                            m_capabilityContainerVersionNumber));
                                 }
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)) {
+                            if (Arrays.equals(tlv2.getTag().bytes,
+                                    TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG)) {
                                 if (tlv2.hasRawValue()) {
                                     m_capabilityGrammarVersionNumber = tlv2.getBytesValue();
                                     m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                    scos.write(APDUUtils.getTLV(TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG, m_capabilityContainerVersionNumber));
+                                    scos.write(APDUUtils.getTLV(TagConstants.CAPABILITY_GRAMMAR_VERSION_NUMBER_TAG,
+                                            m_capabilityContainerVersionNumber));
                                 }
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.APPLICATIONS_CARDURL_TAG)) {
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.APPLICATIONS_CARDURL_TAG)) {
                                 if (tlv2.hasRawValue()) {
 
-                                    if(m_appCardURL == null)
+                                    if (m_appCardURL == null)
                                         m_appCardURL = new ArrayList<>();
                                     m_appCardURL.add(tlv2.getBytesValue());
                                     m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                    scos.write(APDUUtils.getTLV(TagConstants.APPLICATIONS_CARDURL_TAG, tlv2.getBytesValue()));
+                                    scos.write(APDUUtils.getTLV(TagConstants.APPLICATIONS_CARDURL_TAG,
+                                            tlv2.getBytesValue()));
                                 }
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.PKCS15_TAG)) {
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.PKCS15_TAG)) {
                                 if (tlv2.hasRawValue()) {
                                     m_pkcs15 = tlv2.getBytesValue();
                                     m_content.put(tlv2.getTag(), tlv2.getBytesValue());
                                     scos.write(APDUUtils.getTLV(TagConstants.PKCS15_TAG, m_pkcs15));
                                 }
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)) {
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG)) {
                                 if (tlv2.hasRawValue()) {
                                     m_registeredDataModelNumber = tlv2.getBytesValue();
                                     m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                    scos.write(APDUUtils.getTLV(TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG, m_registeredDataModelNumber));
+                                    scos.write(APDUUtils.getTLV(TagConstants.REGISTERED_DATA_MODEL_NUMBER_TAG,
+                                            m_registeredDataModelNumber));
                                 }
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)) {
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG)) {
                                 if (tlv2.hasRawValue()) {
                                     m_accessControlRuleTable = tlv2.getBytesValue();
                                     m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                    scos.write(APDUUtils.getTLV(TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG, m_accessControlRuleTable));
+                                    scos.write(APDUUtils.getTLV(TagConstants.ACCESS_CONTROL_RULE_TABLE_TAG,
+                                            m_accessControlRuleTable));
                                 }
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.CARD_APDUS_TAG)) {
-                                 m_cardAPDUs = true;
-                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());                        
-                                 scos.write(APDUUtils.getTLV(TagConstants.CARD_APDUS_TAG, tlv2.getBytesValue()));
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.CARD_APDUS_TAG)) {
+                                m_cardAPDUs = true;
+                                m_content.put(tlv2.getTag(), tlv2.getBytesValue());
+                                scos.write(APDUUtils.getTLV(TagConstants.CARD_APDUS_TAG, tlv2.getBytesValue()));
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.REDIRECTION_TAG_TAG)) {
-                                 m_redirectionTag = true;
-                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                 scos.write(APDUUtils.getTLV(TagConstants.REDIRECTION_TAG_TAG, tlv2.getBytesValue()));
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.REDIRECTION_TAG_TAG)) {
+                                m_redirectionTag = true;
+                                m_content.put(tlv2.getTag(), tlv2.getBytesValue());
+                                scos.write(APDUUtils.getTLV(TagConstants.REDIRECTION_TAG_TAG, tlv2.getBytesValue()));
 
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.CAPABILITY_TUPLES_TAG)) {
-                                 m_capabilityTuples = true;
-                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                 scos.write(APDUUtils.getTLV(TagConstants.CAPABILITY_TUPLES_TAG, tlv2.getBytesValue()));
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.CAPABILITY_TUPLES_TAG)) {
+                                m_capabilityTuples = true;
+                                m_content.put(tlv2.getTag(), tlv2.getBytesValue());
+                                scos.write(APDUUtils.getTLV(TagConstants.CAPABILITY_TUPLES_TAG, tlv2.getBytesValue()));
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.STATUS_TUPLES_TAG)) {
-                                 m_statusTuples = true;
-                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                 scos.write(APDUUtils.getTLV(TagConstants.STATUS_TUPLES_TAG, tlv2.getBytesValue()));
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.STATUS_TUPLES_TAG)) {
+                                m_statusTuples = true;
+                                m_content.put(tlv2.getTag(), tlv2.getBytesValue());
+                                scos.write(APDUUtils.getTLV(TagConstants.STATUS_TUPLES_TAG, tlv2.getBytesValue()));
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.NEXT_CCC_TAG)) {
-                                 m_nextCCC = true;
-                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                 scos.write(APDUUtils.getTLV(TagConstants.NEXT_CCC_TAG, tlv2.getBytesValue()));
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.NEXT_CCC_TAG)) {
+                                m_nextCCC = true;
+                                m_content.put(tlv2.getTag(), tlv2.getBytesValue());
+                                scos.write(APDUUtils.getTLV(TagConstants.NEXT_CCC_TAG, tlv2.getBytesValue()));
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.EXTENDED_APPLICATION_CARDURL_TAG)) {
-                                if(m_extendedApplicationCardURL == null)
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.EXTENDED_APPLICATION_CARDURL_TAG)) {
+                                if (m_extendedApplicationCardURL == null)
                                     m_extendedApplicationCardURL = new ArrayList<>();
                                 m_extendedApplicationCardURL.add(tlv2.getBytesValue());
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.EXTENDED_APPLICATION_CARDURL_TAG, tlv2.getBytesValue()));
+                                scos.write(APDUUtils.getTLV(TagConstants.EXTENDED_APPLICATION_CARDURL_TAG,
+                                        tlv2.getBytesValue()));
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.SECURITY_OBJECT_BUFFER_TAG)) {
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.SECURITY_OBJECT_BUFFER_TAG)) {
                                 m_securityObjectBuffer = tlv2.getBytesValue();
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
-                                scos.write(APDUUtils.getTLV(TagConstants.SECURITY_OBJECT_BUFFER_TAG, tlv2.getBytesValue()));
+                                scos.write(APDUUtils.getTLV(TagConstants.SECURITY_OBJECT_BUFFER_TAG,
+                                        tlv2.getBytesValue()));
                             }
-                            if(Arrays.equals(tlv2.getTag().bytes, TagConstants.ERROR_DETECTION_CODE_TAG)) {
-                            	setErrorDetectionCode(true);
+                            if (Arrays.equals(tlv2.getTag().bytes, TagConstants.ERROR_DETECTION_CODE_TAG)) {
+                                setErrorDetectionCode(true);
                                 m_content.put(tlv2.getTag(), tlv2.getBytesValue());
                                 scos.write(TagConstants.ERROR_DETECTION_CODE_TAG);
                                 scos.write((byte) 0x00);
                             }
                         }
                     }
-
 
                     m_signedContent = scos.toByteArray();
 
@@ -393,14 +403,14 @@ public class CardCapabilityContainer extends PIVDataObject {
             return false;
         }
 
-        if (m_cardIdentifier == null || m_capabilityContainerVersionNumber == null ||
-                m_capabilityGrammarVersionNumber == null || m_appCardURL == null || m_pkcs15 == null ||
-                m_registeredDataModelNumber == null || m_accessControlRuleTable == null || m_cardAPDUs == false ||
-                m_redirectionTag ==  false || m_capabilityTuples == false || m_statusTuples == false ||
-                m_nextCCC == false) {
+        if (m_cardIdentifier == null || m_capabilityContainerVersionNumber == null
+                || m_capabilityGrammarVersionNumber == null || m_appCardURL == null || m_pkcs15 == null
+                || m_registeredDataModelNumber == null || m_accessControlRuleTable == null || m_cardAPDUs == false
+                || m_redirectionTag == false || m_capabilityTuples == false || m_statusTuples == false
+                || m_nextCCC == false) {
             return false;
         }
-        
+
         dump(this.getClass());
         return true;
     }

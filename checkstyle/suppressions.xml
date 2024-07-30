@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+    "http://checkstyle.sourceforge.net/dtds/suppressions_1_0.dtd">
+<suppressions>
+    <suppress files=".*.java$" checks="JavadocVariable" />
+    <suppress files=".*.java$" checks="JavadocStyle" />
+    <suppress files=".*.java$" checks="JavadocMethod" />
+    <suppress files=".*.java$" checks="JavadocType" />
+    <suppress files=".*.java$" checks="MissingJavadocMethod" />
+    <suppress files=".*.java$" checks="MissingJavadocType" />
+    <suppress files=".*.java$" checks="Indentation" />
+    <suppress files=".*.java$" checks="NestedIfDepth" />
+    <suppress files=".*.java$" checks="LineLength" />
+    <suppress files=".*.java$" checks="NoWhitespaceAfter" />
+    <suppress files=".*.java$" checks="ConstantName" />
+    <suppress files=".*.java$" checks="MethodName" />
+    <suppress files=".*.java$" checks="MemberName" />
+    <suppress files=".*.java$" checks="StaticVariableName" />
+    <suppress files=".*.java$" checks="LocalVariableName" />
+    <suppress files=".*.java$" checks="ParameterName" />
+    <suppress files=".*.java$" checks="TypeName" />
+    <suppress files=".*.java$" checks="DeclarationOrder" />
+    <suppress files=".*.java$" checks="ImportOrder" />
+    <suppress files=".*.java$" checks="MagicNumber" />
+    <suppress files=".*.java$" checks="NeedBraces" />
+    <suppress files=".*.java$" checks="HideUtilityClassConstructor" />
+    <suppress files=".*.java$" checks="ExplicitInitialization" />
+    <suppress files=".*.java$" checks="VisibilityModifier" />
+    <suppress files=".*.java$" checks="IllegalType" />
+    <suppress files=".*.java$" checks="IllegalCatch" />
+    <suppress files=".*.java$" checks="UnnecessaryParentheses" />
+    <suppress files=".*.java$" checks="AvoidStarImport" />
+    <suppress files=".*.java$" checks="StringLiteralEquality" />
+    <suppress files=".*.java$" checks="SimplifyBooleanExpression" />
+    <suppress files=".*.java$" checks="UnusedImports" />
+    <suppress files=".*.java$" checks="MethodLength" />
+    <suppress files=".*.java$" checks="ParameterNumber" />
+    <suppress files=".*.java$" checks="AvoidNestedBlocks" />
+    <suppress files=".*.java$" checks="NestedForDepth" />
+    <suppress files=".*.java$" checks="NestedTryDepth" />
+    <suppress files=".*.java$" checks="LeftCurly" />
+    <suppress files=".*.java$" checks="ParameterAssignment" />
+    <suppress files=".*.java$" checks="FileLength" />
+    <suppress files="[\\/]commons[\\/]" checks="[a-zA-Z0-9]*" />
+</suppressions>

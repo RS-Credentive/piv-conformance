@@ -6,10 +6,16 @@ import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 
 /**
- * A class that serves the function of the handle objects passed around that encapsulate a connection to a card
- * in SP800-73
+ * A class that serves the function of the handle objects passed around that
+ * encapsulate a connection to a card in SP800-73
  */
 public class CardHandle {
+    private ConnectionDescription m_connectionDescription;
+    private boolean m_valid = false;
+    private Card m_card;
+
+    private CardChannel m_currentChannel;
+
     // slf4j will thunk this through to an appropriately configured logging library
     private static final Logger s_logger = LoggerFactory.getLogger(CardHandle.class);
 
@@ -17,7 +23,8 @@ public class CardHandle {
      *
      * Get the connection description object associated with this card handle
      *
-     * @return ConnectionDescription that includes as CardTerminal object used to access the reader
+     * @return ConnectionDescription that includes as CardTerminal object used to
+     *         access the reader
      */
     public ConnectionDescription getConnectionDescription() {
         return m_connectionDescription;
@@ -63,6 +70,16 @@ public class CardHandle {
         m_valid = false;
     }
 
+    /*
+     * Invalidate a card handle object - use this instead of the empty initializer
+     */
+    public void invalidate() {
+        m_connectionDescription = null;
+        m_card = null;
+        m_currentChannel = null;
+        m_valid = false;
+    }
+
     /**
      *
      * Get the current card channel
@@ -98,17 +115,11 @@ public class CardHandle {
      * Sets the value that indicates the status of the card handle object
      *
      * sets the boolen value that indicates the status of card handle object
+     *
      * @param valid
      */
     public void setValid(boolean valid) {
         m_valid = valid;
     }
-
-    private ConnectionDescription m_connectionDescription;
-    private boolean m_valid = false;
-    private Card m_card;
-
-
-    private CardChannel m_currentChannel;
 
 }

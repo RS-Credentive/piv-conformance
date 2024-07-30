@@ -22,8 +22,8 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public interface CommandLineOptionsParser {
 
-	CommandLineOptions parse(String... arguments);
+    CommandLineOptions parse(String... arguments);
 
-	void printHelp(Writer writer);
+    void printHelp(Writer writer);
 
 }
