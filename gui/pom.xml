@@ -5,22 +5,22 @@
   <parent>
     <groupId>gov.gsa.pivconformance</groupId>
     <artifactId>pivconformance</artifactId>
-    <version>1.0.7</version>
+    <version>${revision}</version>
   </parent>
  
   <artifactId>gui</artifactId>
-  <version>1.0.7</version>
+  <version>${revision}</version>
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>${parent.groupId}</groupId>
       <artifactId>cardlib</artifactId>
-      <version>${project.version}</version>
+      <version>${revision}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>${parent.groupId}</groupId>
       <artifactId>conformancelib</artifactId>
-      <version>${project.version}</version>
+      <version>${revision}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
