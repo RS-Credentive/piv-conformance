@@ -1,6 +1,7 @@
 package gov.gsa.pivconformance.conformancelib.tests;
 
 import gov.gsa.pivconformance.cardlib.card.client.*;
+import gov.gsa.pivconformance.cardlib.card.client.OtherName;
 import gov.gsa.pivconformance.conformancelib.configuration.CardSettingsSingleton;
 import gov.gsa.pivconformance.conformancelib.configuration.CardSettingsSingleton.LOGIN_STATUS;
 import gov.gsa.pivconformance.conformancelib.configuration.ParameterUtils;
@@ -76,8 +77,7 @@ public class PKIX_X509DataObjectTests {
     };
 
     /**
-     * Converts a boolean array to a byte array representing the bitmap in
-     * high-order first representation
+     * Converts a boolean array to a byte array representing the bitmap in high-order first representation
      *
      * @param in incoming boolean array representing bits
      * @return byte array representing the bitmap
@@ -331,18 +331,15 @@ public class PKIX_X509DataObjectTests {
     }
 
     /*
-     * ******************* Standard stuff for most all certs
-     * ************************
+     * ******************* Standard stuff for most all certs ************************
      */
 
     /**
-     * Determines whether the AIA in cert contains the prescribed AccessMethod
-     * (id-ad-ocsp or id-ad-caIssuers)
+     * Determines whether the AIA in cert contains the prescribed AccessMethod (id-ad-ocsp or id-ad-caIssuers)
      *
      * @param aia          AIA extension of certificate to be tested
      * @param accessMethod the AccessDescription corresponding the the AccessMethod
-     * @return true if the AIA in cert contains the prescribed AccessMethod, false
-     *         otherwise
+     * @return true if the AIA in cert contains the prescribed AccessMethod, false otherwise
      */
 
     private boolean aiaContainsAccessMethod(AuthorityInformationAccess aia, ASN1ObjectIdentifier accessMethod) {
@@ -362,9 +359,9 @@ public class PKIX_X509DataObjectTests {
     }
 
     /**
-     * Determines whether an access location for the specified AIA access method in
-     * cert contains a uniformResourceIdentifier GeneralName (The accessLocation for
-     * the id-ad-ocsp AccessMethod is of type uniformResourceIdentifier)
+     * Determines whether an access location for the specified AIA access method in cert contains a
+     * uniformResourceIdentifier GeneralName (The accessLocation for the id-ad-ocsp AccessMethod is of type
+     * uniformResourceIdentifier)
      *
      * @param aia          AIA extension from the certificate to be tested
      * @param accessMethod the AccessDescription corresponding the the AccessMethod
@@ -388,8 +385,7 @@ public class PKIX_X509DataObjectTests {
     }
 
     /**
-     * Confirms the URI scheme in the specified accessLocation for the specified
-     * access method is http
+     * Confirms the URI scheme in the specified accessLocation for the specified access method is http
      *
      * @param aia          certificate to be tested
      * @param accessMethod the AccessDescription corresponding the the AccessMethod
@@ -417,8 +413,7 @@ public class PKIX_X509DataObjectTests {
     }
 
     /**
-     * Determines whether the URI in the CRL Distribution Point contains an URL
-     * starting with http:
+     * Determines whether the URI in the CRL Distribution Point contains an URL starting with http:
      *
      * @param crldp CRL distribution point object
      * @return true if the URI starts with https:, false otherwise
@@ -449,8 +444,7 @@ public class PKIX_X509DataObjectTests {
     }
 
     /**
-     * Determines whether the URI in the CRL Distribution Point contains an URL
-     * ending in .crl
+     * Determines whether the URI in the CRL Distribution Point contains an URL ending in .crl
      *
      * @param crldp distribution point object
      * @return true if the URI ends in .crl, false otherwise
@@ -1613,13 +1607,12 @@ public class PKIX_X509DataObjectTests {
     }
 
     /**
-     * Attempts to match the UUID in the GeneralNames in the Subject Alternative
-     * Name extension in a certificate with the specified UUID
+     * Attempts to match the UUID in the GeneralNames in the Subject Alternative Name extension in a certificate with
+     * the specified UUID
      *
      * @param certificate the certificate to decode
      * @param identifier  the UUID to match
-     * @return true if the certificate's subject alternative name contains the UUID
-     *         represented by a Type-Id of 6
+     * @return true if the certificate's subject alternative name contains the UUID represented by a Type-Id of 6
      */
 
     private boolean matchUuid(X509Certificate certificate, byte[] identifier) {
@@ -1638,8 +1631,9 @@ public class PKIX_X509DataObjectTests {
                 GeneralNames sans = GeneralNames.getInstance(sanBytes);
                 GeneralName[] sanArray = sans.getNames();
                 for (GeneralName gn : sanArray) {
-                    if (gn.getTagNo() == 6) {
-                        DERIA5String encodedUuid = DERIA5String.getInstance(gn.getName());
+                    if (gn.getTagNo() == GeneralName.uniformResourceIdentifier) {
+                        // TODO: Some risk here - I cast this value from supertype to subtype
+                        DERIA5String encodedUuid = (DERIA5String) ASN1IA5String.getInstance(gn.getName());
                         byte[] urnUuid = encodedUuid.getString().getBytes();
                         byte[] uuid = Arrays.copyOfRange(urnUuid, "urn:uuid:".length(), urnUuid.length);
                         s_logger.debug("UUID: {}", new String(uuid));
@@ -1660,13 +1654,13 @@ public class PKIX_X509DataObjectTests {
     }
 
     /**
-     * Attempts to match the FASC-N in the GeneralNames in the Subject Alternative
-     * Name extension in a certificate with the specified FASC-N
+     * Attempts to match the FASC-N in the GeneralNames in the Subject Alternative Name extension in a certificate with
+     * the specified FASC-N
      *
      * @param certificate the certificate to decode
      * @param identifier  the FASC-N to match
-     * @return true if the certificate's subject alternative name contains the
-     *         piv-id-FASC-N represented by a Type-Id of 0
+     * @return true if the certificate's subject alternative name contains the piv-id-FASC-N represented by a Type-Id of
+     *         0
      */
     private boolean matchFascn(X509Certificate certificate, byte[] identifier, String requiredOid) {
         boolean result = false;
@@ -1684,12 +1678,14 @@ public class PKIX_X509DataObjectTests {
             GeneralName[] sanArray = sans.getNames();
             try {
                 for (GeneralName gn : sanArray) {
-                    if (gn.getTagNo() == 0) {
+                    if (gn.getTagNo() == GeneralName.otherName) {
                         ASN1Sequence seq = ASN1Sequence.getInstance(gn.getName());
                         ASN1ObjectIdentifier oID = ASN1ObjectIdentifier.getInstance(seq.getObjectAt(0));
                         if (oID.toString().equals(requiredOid)) {
                             ASN1TaggedObject onValue = ASN1TaggedObject.getInstance(seq.getObjectAt(1));
-                            byte[] encodedFascn = ASN1OctetString.getInstance(onValue.getObject()).getOctets();
+                            // .getObject() deprecated and removed
+                            // byte[] encodedFascn = ASN1OctetString.getInstance(onValue.getObject()).getOctets();
+                            byte[] encodedFascn = ASN1OctetString.getInstance(onValue.getBaseObject()).getOctets();
                             if (encodedFascn != null && (Arrays.equals(encodedFascn, identifier))) {
                                 result = Arrays.equals(encodedFascn, identifier);
                                 s_logger.debug("FASCN: {}", Hex.encodeHexString(encodedFascn));
@@ -1711,8 +1707,8 @@ public class PKIX_X509DataObjectTests {
     }
 
     /**
-     * Determines whether the subject alternative name extension contains no
-     * GeneralNames besides the types specified in a given list
+     * Determines whether the subject alternative name extension contains no GeneralNames besides the types specified in
+     * a given list
      *
      * @param certificate    to be parsed
      * @param allowedTypeIds list of allowable type IDs

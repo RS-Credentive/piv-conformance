@@ -26,8 +26,7 @@ import java.text.SimpleDateFormat;
 
 /**
  *
- * Encapsulates a Card Holder Unique Identifier data object as defined by
- * SP800-73-4 Part 2 Appendix A Table 9
+ * Encapsulates a Card Holder Unique Identifier data object as defined by SP800-73-4 Part 2 Appendix A Table 9
  *
  */
 public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
@@ -41,6 +40,7 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
     private byte[] m_gUID;
     private Date m_expirationDate;
     private byte[] m_cardholderUUID;
+    private byte[] m_issuerAsymmetricSignature;
     private boolean m_errorDetectionCode;
     private byte[] m_chuidContainer;
     private final ArtifactWriter m_x509ArtifactCache;
@@ -60,6 +60,7 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
         m_gUID = null;
         m_expirationDate = null;
         m_cardholderUUID = null;
+        m_issuerAsymmetricSignature = null;
         m_errorDetectionCode = false;
         m_chuidContainer = null;
         m_content = new HashMap<BerTag, byte[]>();
@@ -140,8 +141,7 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
      *
      * Sets Organizational Identifier value
      *
-     * @param organizationalIdentifier Byte array containing Organizational
-     *                                 Identifier value
+     * @param organizationalIdentifier Byte array containing Organizational Identifier value
      */
     public void setOrganizationalIdentifier(byte[] organizationalIdentifier) {
         m_organizationalIdentifier = organizationalIdentifier;
@@ -229,6 +229,26 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
 
     /**
      *
+     * Returns byte array containing Issuer Asymmetric Signature value
+     *
+     * @return Byte array containing Issuer Asymmetric Signature value
+     */
+    public byte[] getIssuerAsymmetricSignature() {
+        return m_cardholderUUID;
+    }
+
+    /**
+     *
+     * Sets the Issuer Asymmetric Signature value
+     *
+     * @param cardholderUUID Byte array containing Issuer Asymmetric Signature value
+     */
+    public void setIssuerAsymmetricSignature(byte[] issuerAsymmetricSignature) {
+        m_issuerAsymmetricSignature = issuerAsymmetricSignature;
+    }
+
+    /**
+     *
      * Returns True if error Error Detection Code is present, false otherwise
      *
      * @return True if error Error Detection Code is present, false otherwise
@@ -244,7 +264,6 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
      */
     public static String guid2str(byte[] guid) {
         String guidStr = null;
-        StringBuilder sb = new StringBuilder();
         String s = Hex.encodeHexString(guid);
         guidStr = s.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)",
                 "$1-$2-$3-$4-$5");
@@ -255,8 +274,7 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
      * Converts a 200-bit raw FASC-N byte array to a string of digits
      *
      * @param raw bytes of the FASC-N from the card
-     * @return a string of 32 FASC-N digits or null if an encoding error is
-     *         encountered
+     * @return a string of 32 FASC-N digits or null if an encoding error is encountered
      */
 
     public static String cook(byte[] raw) {
@@ -311,8 +329,7 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
      *
      * Sets if error Error Detection Code is present
      *
-     * @param errorDetectionCode True if error Error Detection Code is present,
-     *                           false otherwise
+     * @param errorDetectionCode True if error Error Detection Code is present, false otherwise
      */
     @Override
     public void setErrorDetectionCode(boolean errorDetectionCode) {
@@ -321,8 +338,8 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
 
     /**
      *
-     * Decode function that decodes Card Holder Unique Identifier object retrieved
-     * from the card and populates various class fields.
+     * Decode function that decodes Card Holder Unique Identifier object retrieved from the card and populates various
+     * class fields.
      *
      * @return True if decode was successful, false otherwise
      */
@@ -459,12 +476,12 @@ public class CardHolderUniqueIdentifier extends SignedPIVDataObject {
 
                             } else if (Arrays.equals(tag.bytes, TagConstants.ISSUER_ASYMMETRIC_SIGNATURE_TAG)) {
 
-                                issuerAsymmetricSignature = value;
+                                m_issuerAsymmetricSignature = value;
                                 m_content.put(tag, value);
                                 m_tagList.add(tag);
-                                if (issuerAsymmetricSignature != null) {
+                                if (m_issuerAsymmetricSignature != null) {
                                     // Decode the ContentInfo and get SignedData object.
-                                    ByteArrayInputStream bIn = new ByteArrayInputStream(issuerAsymmetricSignature);
+                                    ByteArrayInputStream bIn = new ByteArrayInputStream(m_issuerAsymmetricSignature);
                                     ASN1InputStream aIn = new ASN1InputStream(bIn);
                                     // Set the ContentInfo structure in super class
                                     setContentInfo(ContentInfo.getInstance(aIn.readObject()));

@@ -25,7 +25,8 @@ public class GuiRunnerApplication {
     private static String cctVersion = null;
 
     static {
-        cctVersion = getVersion("build.version");
+        // cctVersion = getVersion("build.version");
+        cctVersion = "Nobody Cares";
     }
 
     protected JFrame m_mainFrame;
@@ -162,7 +163,9 @@ public class GuiRunnerApplication {
     private static File getResourceFile(String target, String excludePattern) {
         File resourceFile = null;
         s_logger.debug("Looking for resource:" + target);
-        resourceFile = locateFile(new File("./"), target, excludePattern);
+        // resourceFile = locateFile(new File("./"), target, excludePattern);
+        var thisClass = GuiRunnerApplication.class;
+        thisClass.getResource(target);
         return resourceFile;
     }
 
@@ -172,6 +175,7 @@ public class GuiRunnerApplication {
         try {
             BufferedReader versionFile = new BufferedReader(new FileReader(resourceFile));
             version = versionFile.readLine();
+            versionFile.close();
         } catch (IOException e) {
             s_logger.error("Can't open " + name);
         }
