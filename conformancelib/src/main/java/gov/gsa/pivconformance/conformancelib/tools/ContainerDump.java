@@ -208,7 +208,7 @@ public class ContainerDump {
                 css.setApplicationPin(appPin);
             } else {
                 Console cons = System.console();
-                char[] passwd;
+                char[] passwd = null;
                 if (cons != null) {
                     passwd = cons.readPassword("[Enter %s]", "PIV Application Pin");
                 }

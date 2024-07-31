@@ -7,8 +7,10 @@
     <artifactId>pivconformance</artifactId>
     <version>1.0.7</version>
   </parent>
+
   <artifactId>conformancelib</artifactId>
   <version>1.0.7</version>
+  
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

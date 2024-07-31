@@ -176,7 +176,7 @@ public class CertDump {
             System.exit(1);
         }
         if (cmd.hasOption("login")) {
-            char[] appPin;
+            char[] appPin = null;
             if (cmd.hasOption("appPin")) {
                 appPin = cmd.getOptionValue("appPin").toCharArray();
                 css.setApplicationPin(new String(appPin));

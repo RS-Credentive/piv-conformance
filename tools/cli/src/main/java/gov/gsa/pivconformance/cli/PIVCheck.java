@@ -35,28 +35,29 @@ public class PIVCheck {
                 System.exit(exitCode);
         }
 
-        public static boolean TestCard(CardHandle c) {
-                if (c.isValid()) {
-                        CardTerminal t = c.getConnectionDescription().getTerminal();
+        public static boolean TestCard(CardHandle cardHandle) {
+                if (cardHandle.isValid()) {
+                        CardTerminal cardTerminal = cardHandle.getConnectionDescription().getTerminal();
                         try {
-                                if (t.isCardPresent()) {
-                                        s_logger.info("Card found in reader {}", t.getName());
+                                if (cardTerminal.isCardPresent()) {
+                                        s_logger.info("Card found in reader {}", cardTerminal.getName());
                                 } else {
-                                        s_logger.error("No card was present in reader {}", t.getName());
+                                        s_logger.error("No card was present in reader {}", cardTerminal.getName());
                                         return false;
                                 }
                         } catch (CardException e) {
                                 s_logger.error("Card communication error", e);
                         }
-                        Card conn = c.getCard();
+                        Card conn = cardHandle.getCard();
                         s_logger.info("Card connected.");
                         s_logger.info("Card protocol: {}", conn.getProtocol());
                         s_logger.info("Card ATR: {}", Hex.encodeHexString(conn.getATR().getBytes()));
                         ApplicationProperties cardAppProperties = new ApplicationProperties();
-                        DefaultPIVApplication piv = new DefaultPIVApplication();
-                        ApplicationAID aid = new ApplicationAID();
+                        DefaultPIVApplication pivApplication = new DefaultPIVApplication();
+                        ApplicationAID applicationID = new ApplicationAID();
                         s_logger.info("Attempting to select default PIV application");
-                        MiddlewareStatus result = piv.pivSelectCardApplication(c, aid, cardAppProperties);
+                        MiddlewareStatus result = pivApplication.pivSelectCardApplication(cardHandle, applicationID,
+                                        cardAppProperties);
                         s_logger.info("pivSelectCardApplication() returned {}", result);
                         if (result == MiddlewareStatus.PIV_OK) {
                                 byte[] pcap = cardAppProperties.getBytes();
@@ -149,7 +150,7 @@ public class PIVCheck {
                                                         .createDataObjectForOid(containerOID);
                                         s_logger.info("Attempting to read data object for OID {} ({})", containerOID,
                                                         APDUConstants.oidNameMap.get(containerOID));
-                                        result = piv.pivGetData(c, containerOID, dataObject);
+                                        result = pivApplication.pivGetData(cardHandle, containerOID, dataObject);
                                         if (result != MiddlewareStatus.PIV_OK)
                                                 continue;
                                         boolean decoded = dataObject.decode();
@@ -234,44 +235,36 @@ public class PIVCheck {
                                         }
 
                                         if (containerOID.equals(APDUConstants.CARD_HOLDER_UNIQUE_IDENTIFIER_OID)) {
-                                                if (((CardHolderUniqueIdentifier) dataObject)
-                                                                .getBufferLength() != null) {
+                                                CardHolderUniqueIdentifier chuidObject = (CardHolderUniqueIdentifier) dataObject;
+                                                if (chuidObject.getBufferLength() != null) {
                                                         s_logger.info("Buffer Length: {}", Hex.encodeHexString(
-                                                                        ((CardHolderUniqueIdentifier) dataObject)
-                                                                                        .getBufferLength()));
+                                                                        chuidObject.getBufferLength()));
                                                 }
-                                                s_logger.info("FASC-N: {}", Hex.encodeHexString(
-                                                                ((CardHolderUniqueIdentifier) dataObject).getfASCN()));
-                                                if (((CardHolderUniqueIdentifier) dataObject)
-                                                                .getOrganizationalIdentifier() != null) {
+                                                s_logger.info("FASC-N: {}",
+                                                                Hex.encodeHexString(chuidObject.getfASCN()));
+                                                if (chuidObject.getOrganizationalIdentifier() != null) {
                                                         s_logger.info("Organizational Identifier: {}",
-                                                                        Hex.encodeHexString(
-                                                                                        ((CardHolderUniqueIdentifier) dataObject)
-                                                                                                        .getOrganizationalIdentifier()));
+                                                                        Hex.encodeHexString(chuidObject
+                                                                                        .getOrganizationalIdentifier()));
                                                 }
-                                                if (((CardHolderUniqueIdentifier) dataObject).getdUNS() != null) {
-                                                        s_logger.info("DUNS: {}", Hex.encodeHexString(
-                                                                        ((CardHolderUniqueIdentifier) dataObject)
-                                                                                        .getdUNS()));
+                                                if (chuidObject.getdUNS() != null) {
+                                                        s_logger.info("DUNS: {}",
+                                                                        Hex.encodeHexString(chuidObject.getdUNS()));
                                                 }
-                                                s_logger.info("GUID: {}", Hex.encodeHexString(
-                                                                ((CardHolderUniqueIdentifier) dataObject).getgUID()));
+                                                s_logger.info("GUID: {}", Hex.encodeHexString(chuidObject.getgUID()));
 
                                                 SimpleDateFormat sdfmt = new SimpleDateFormat("MM/dd/yyyy");
                                                 s_logger.info("Expiration Date: {}",
-                                                                sdfmt.format(((CardHolderUniqueIdentifier) dataObject)
-                                                                                .getExpirationDate()));
+                                                                sdfmt.format(chuidObject.getExpirationDate()));
 
-                                                s_logger.info("Cardholder UUID: {}", Hex.encodeHexString(
-                                                                ((CardHolderUniqueIdentifier) dataObject)
-                                                                                .getCardholderUUID()));
+                                                s_logger.info("Cardholder UUID: {}",
+                                                                Hex.encodeHexString(chuidObject.getCardholderUUID()));
                                                 s_logger.info("Issuer Asymmetric Signature Info:");
-
-                                                CMSSignedData sd = ((CardHolderUniqueIdentifier) dataObject)
-                                                                .getIssuerAsymmetricSignature();
+                                                CMSSignedData sd = new CMSSignedData(
+                                                                chuidObject.getIssuerAsymmetricSignature());
                                                 SignerInformationStore signers = sd.getSignerInfos();
-                                                Collection collection = signers.getSigners();
-                                                Iterator it = collection.iterator();
+                                                Collection<SignerInformation> collection = signers.getSigners();
+                                                Iterator<SignerInformation> it = collection.iterator();
 
                                                 while (it.hasNext()) {
                                                         SignerInformation signer = (SignerInformation) it.next();
@@ -291,19 +284,14 @@ public class PIVCheck {
                                                                                 issuer, serial);
 
                                                 }
-                                                s_logger.info("Signature valid: {}",
-                                                                ((CardHolderUniqueIdentifier) dataObject)
-                                                                                .verifySignature());
-                                                signingCertificate = ((CardHolderUniqueIdentifier) dataObject)
-                                                                .getSigningCertificate();
+                                                s_logger.info("Signature valid: {}", chuidObject.verifySignature());
+                                                // signingCertificate = chuidObject.getSigningCertificate();
 
                                                 s_logger.info("Error Detection Code Tag Present: {}",
-                                                                ((CardHolderUniqueIdentifier) dataObject)
-                                                                                .getErrorDetectionCode());
+                                                                chuidObject.getErrorDetectionCode());
 
                                                 soDataElements.put(APDUConstants.CARD_HOLDER_UNIQUE_IDENTIFIER_OID,
-                                                                ((CardHolderUniqueIdentifier) dataObject)
-                                                                                .getChuidContainer());
+                                                                chuidObject.getChuidContainer());
                                         }
 
                                         if (containerOID.equals(
@@ -531,7 +519,8 @@ public class PIVCheck {
 
                                 PIVDataObject printedInformation = PIVDataObjectFactory
                                                 .createDataObjectForOid(APDUConstants.PRINTED_INFORMATION_OID);
-                                result = piv.pivGetData(c, APDUConstants.PRINTED_INFORMATION_OID, printedInformation);
+                                result = pivApplication.pivGetData(cardHandle, APDUConstants.PRINTED_INFORMATION_OID,
+                                                printedInformation);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
                                         s_logger.info("Attempted to read {} object: {}", APDUConstants.oidNameMap
@@ -585,7 +574,8 @@ public class PIVCheck {
                                 boolean decoded = false;
                                 PIVDataObject discoveryObject = PIVDataObjectFactory
                                                 .createDataObjectForOid(APDUConstants.DISCOVERY_OBJECT_OID);
-                                result = piv.pivGetData(c, APDUConstants.DISCOVERY_OBJECT_OID, discoveryObject);
+                                result = pivApplication.pivGetData(cardHandle, APDUConstants.DISCOVERY_OBJECT_OID,
+                                                discoveryObject);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
                                         s_logger.info("Attempted to read discovery object: {}", result);
@@ -599,7 +589,7 @@ public class PIVCheck {
 
                                 PIVDataObject cardholderIrisImages = PIVDataObjectFactory
                                                 .createDataObjectForOid(APDUConstants.CARDHOLDER_IRIS_IMAGES_OID);
-                                result = piv.pivGetData(c, APDUConstants.CARDHOLDER_IRIS_IMAGES_OID,
+                                result = pivApplication.pivGetData(cardHandle, APDUConstants.CARDHOLDER_IRIS_IMAGES_OID,
                                                 cardholderIrisImages);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
@@ -671,7 +661,8 @@ public class PIVCheck {
 
                                 PIVDataObject keyHistoryObject = PIVDataObjectFactory
                                                 .createDataObjectForOid(APDUConstants.KEY_HISTORY_OBJECT_OID);
-                                result = piv.pivGetData(c, APDUConstants.KEY_HISTORY_OBJECT_OID, keyHistoryObject);
+                                result = pivApplication.pivGetData(cardHandle, APDUConstants.KEY_HISTORY_OBJECT_OID,
+                                                keyHistoryObject);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
                                         s_logger.info("Attempted to read key history object: {}", result);
@@ -684,7 +675,7 @@ public class PIVCheck {
                                 PIVDataObject biometricInformationTemplatesGroupTemplate = PIVDataObjectFactory
                                                 .createDataObjectForOid(
                                                                 APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID);
-                                result = piv.pivGetData(c,
+                                result = pivApplication.pivGetData(cardHandle,
                                                 APDUConstants.BIOMETRIC_INFORMATION_TEMPLATES_GROUP_TEMPLATE_OID,
                                                 biometricInformationTemplatesGroupTemplate);
 
@@ -719,7 +710,8 @@ public class PIVCheck {
                                 PIVDataObject secureMessagingCertificateSigner = PIVDataObjectFactory
                                                 .createDataObjectForOid(
                                                                 APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID);
-                                result = piv.pivGetData(c, APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID,
+                                result = pivApplication.pivGetData(cardHandle,
+                                                APDUConstants.SECURE_MESSAGING_CERTIFICATE_SIGNER_OID,
                                                 secureMessagingCertificateSigner);
 
                                 if (result == MiddlewareStatus.PIV_OK) {
@@ -754,7 +746,8 @@ public class PIVCheck {
                                 PIVDataObject pairingCodeReferenceDataContainer = PIVDataObjectFactory
                                                 .createDataObjectForOid(
                                                                 APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID);
-                                result = piv.pivGetData(c, APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID,
+                                result = pivApplication.pivGetData(cardHandle,
+                                                APDUConstants.PAIRING_CODE_REFERENCE_DATA_CONTAINER_OID,
                                                 pairingCodeReferenceDataContainer);
 
                                 if (result == MiddlewareStatus.PIV_OK) {

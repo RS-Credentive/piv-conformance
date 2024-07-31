@@ -31,16 +31,16 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
 
     private final PrintWriter out;
     private final boolean disableAnsiColors;
-    private final gov.gsa.pivconformance.conformancelib.junitoptions.Theme theme;
+    private final Theme theme;
     private final Deque<Long> frames;
     private final String[] verticalsArray;
     private long executionStartedMillis;
 
     public VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel,
-            gov.gsa.pivconformance.conformancelib.junitoptions.Theme theme2) {
+            Theme theme) {
         this.out = out;
         this.disableAnsiColors = disableAnsiColors;
-        this.theme = theme2;
+        this.theme = theme;
 
         // create frame stack and push initial root frame
         this.frames = new ArrayDeque<>();
@@ -53,7 +53,7 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
         this.verticalsArray[2] = ""; // "engine" level
 
         for (int i = 3; i < verticalsArray.length; i++) {
-            verticalsArray[i] = verticalsArray[i - 1] + theme2.vertical();
+            verticalsArray[i] = verticalsArray[i - 1] + theme.vertical();
         }
     }
 

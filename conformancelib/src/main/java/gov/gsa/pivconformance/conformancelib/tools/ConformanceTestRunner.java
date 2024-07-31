@@ -8,11 +8,12 @@ import gov.gsa.pivconformance.conformancelib.configuration.ParameterUtils;
 import gov.gsa.pivconformance.conformancelib.configuration.TestCaseModel;
 import gov.gsa.pivconformance.conformancelib.configuration.TestStepModel;
 import gov.gsa.pivconformance.conformancelib.junitoptions.ConformanceTestExecutionListener;
-import gov.gsa.pivconformance.conformancelib.junitoptions.Theme;
+import gov.gsa.pivconformance.conformancelib.tools.junitconsole.Theme;
 import gov.gsa.pivconformance.conformancelib.tests.ConformanceTestException;
 import gov.gsa.pivconformance.conformancelib.utilities.CardUtils;
 import gov.gsa.pivconformance.cardlib.utils.PCSCUtils;
 import gov.gsa.pivconformance.cardlib.utils.VersionUtils;
+import gov.gsa.pivconformance.conformancelib.tools.junitconsole.VerboseTreePrintingListener;
 
 import org.apache.commons.cli.*;
 import org.junit.platform.engine.DiscoverySelector;
@@ -126,7 +127,7 @@ public class ConformanceTestRunner {
             String appPin = cmd.getOptionValue("appPin");
             css.setApplicationPin(appPin);
         } else {
-            char[] passwd;
+            char[] passwd = null;
 
             Console cons = System.console();
             if (cons != null) {
@@ -209,8 +210,8 @@ public class ConformanceTestRunner {
                 String testNameFromConfig = rs.getString("TestCaseIdentifier");
                 /*
                  * if(groupName == null || groupName.isEmpty()) { s_logger.
-                 * error("Record {} from configuration file {} contains no valid group name. This is a bug."
-                 * , rs.getInt("Id"), cmd.getOptionValue("config")); System.exit(1); }
+                 * error("Record {} from configuration file {} contains no valid group name. This is a bug." ,
+                 * rs.getInt("Id"), cmd.getOptionValue("config")); System.exit(1); }
                  */
                 if (!testCase.isEnabled()) {
                     s_logger.info("Test {} was disabled in configuration", groupName);
@@ -316,7 +317,6 @@ public class ConformanceTestRunner {
     private static TestExecutionListener createDetailsPrintingListener(PrintWriter out) {
         boolean disableAnsiColors = false; // options.isAnsiColorOutputDisabled();
         Theme theme = Theme.valueOf(Charset.defaultCharset()); // options.getTheme();
-        return new gov.gsa.pivconformance.conformancelib.tools.junitconsole.VerboseTreePrintingListener(out,
-                disableAnsiColors, 16, theme);
+        return new VerboseTreePrintingListener(out, disableAnsiColors, 16, theme);
     }
 }
