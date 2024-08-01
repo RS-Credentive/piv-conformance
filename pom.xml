@@ -269,7 +269,7 @@
         <version>${maven-resources-plugin.version}</version>
         <executions>
           <execution>
-            <id>copy-resources</id>
+            <id>resources</id>
             <phase>packaging</phase>
           </execution>
         </executions>
