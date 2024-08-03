@@ -102,22 +102,22 @@ public class TestRunLogController {
      *
      * @param ctx the logger context - one per application.
      */
-    @SuppressWarnings("unchecked")
+    // @SuppressWarnings("unchecked")
     public void initialize(LoggerContext ctx) {
         if (m_appenders == null) {
             m_appenders = new HashMap<String, TimeStampedFileAppender<?>>();
             m_filenames = new HashMap<String, String>();
             m_guid = null;
             m_fascn = null;
-            Map.Entry<String, String> me = null;
-            Iterator<?> i = m_loggers.entrySet().iterator();
+            Map.Entry<String, String> m_loggerMapEntry = null;
+            Iterator<?> m_loggerIterator = m_loggers.entrySet().iterator();
 
             Date startTime = new Date();
 
-            while (i.hasNext()) {
-                me = (Map.Entry<String, String>) i.next();
-                String loggerName = me.getKey();
-                String loggerClass = me.getValue();
+            while (m_loggerIterator.hasNext()) {
+                m_loggerMapEntry = (Map.Entry<String, String>) m_loggerIterator.next();
+                String loggerName = m_loggerMapEntry.getKey();
+                String loggerClass = m_loggerMapEntry.getValue();
 
                 Logger logger = (Logger) LoggerFactory.getLogger(loggerClass);
                 TimeStampedFileAppender<ILoggingEvent> appender = null;

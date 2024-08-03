@@ -207,9 +207,9 @@ public class GuiRunnerApplication {
             return;
         }
 
-        TestRunLogController trlc = TestRunLogController.getInstance();
+        TestRunLogController testRunLogController = TestRunLogController.getInstance();
         try {
-            trlc.bootStrapLogging(getResourceStream("/user_log_config.xml"));
+            testRunLogController.bootStrapLogging(getResourceStream("/user_log_config.xml"));
         } catch (Exception e) {
             System.err.println("Unable to form the path to user log config file");
             e.printStackTrace();
@@ -224,7 +224,7 @@ public class GuiRunnerApplication {
         }
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
-                trlc.cleanup();
+                testRunLogController.cleanup();
             }
         }));
 
@@ -255,13 +255,14 @@ public class GuiRunnerApplication {
                     if (opened) {
                         window.m_mainContent.getTestExecutionPanel().getDatabaseNameField().setText(dbFilename);
                     }
-                    GuiTestExecutionController txc = GuiTestExecutionController.getInstance();
-                    txc.setTestRunLogController(trlc);
-                    txc.setTestExecutionPanel(window.m_mainContent.getTestExecutionPanel());
-                    txc.setTestTreePanel(window.m_mainContent.getTreePanel());
-                    txc.setToolBar(window.m_toolBar);
+                    GuiTestExecutionController testExecutionController = GuiTestExecutionController.getInstance();
+                    testExecutionController.setTestRunLogController(testRunLogController);
+                    testExecutionController.setTestExecutionPanel(window.m_mainContent.getTestExecutionPanel());
+                    testExecutionController.setTestTreePanel(window.m_mainContent.getTreePanel());
+                    testExecutionController.setToolBar(window.m_toolBar);
 
-                } catch (Exception e) {
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                        | UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
                 }
             }

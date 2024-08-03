@@ -13,7 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
-import gov.gsa.pivconformance.cardlib.card.client.*;
+import gov.gsa.pivconformance.cardlib.card.client.CachingDefaultPIVApplication;
+import gov.gsa.pivconformance.cardlib.card.client.DataModelSingleton;
 import gov.gsa.pivconformance.conformancelib.configuration.TestStatus;
 import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 import org.junit.platform.engine.DiscoverySelector;
@@ -39,12 +40,12 @@ public final class GuiTestExecutionController {
     private static final GuiTestExecutionController INSTANCE = new GuiTestExecutionController();
     private static final String tag30TestId = "8.2.2.1"; // TODO: Fixme
 
-    private TestRunLogController m_trlc;
+    private TestRunLogController m_testRunLogController;
     private GuiTestTreePanel m_testTreePanel;
     private SimpleTestExecutionPanel m_testExecutionPanel;
     private GuiRunnerToolbar m_toolBar;
     private boolean m_running;
-    private LoggerContext m_ctx;
+    private LoggerContext m_loggerContext;
 
     public static GuiTestExecutionController getInstance() {
         return INSTANCE;
@@ -59,8 +60,8 @@ public final class GuiTestExecutionController {
         m_testExecutionPanel = null;
         m_running = false;
         m_toolBar = null;
-        m_trlc = TestRunLogController.getInstance();
-        m_trlc.initialize();
+        m_testRunLogController = TestRunLogController.getInstance();
+        m_testRunLogController.initialize();
     }
 
     public GuiTestTreePanel getTestTreePanel() {
@@ -80,11 +81,11 @@ public final class GuiTestExecutionController {
     }
 
     public void setTestRunLogController(TestRunLogController logController) {
-        m_trlc = logController;
+        m_testRunLogController = logController;
     }
 
     public TestRunLogController getTestRunLogController() {
-        return m_trlc;
+        return m_testRunLogController;
     }
 
     public void setToolBar(GuiRunnerToolbar toolBar) {
@@ -100,16 +101,16 @@ public final class GuiTestExecutionController {
     }
 
     public LoggerContext getLoggerContext() {
-        return m_ctx;
+        return m_loggerContext;
     }
 
-    public void setLoggerContext(LoggerContext ctx) {
-        m_ctx = ctx;
+    public void setLoggerContext(LoggerContext loggerContext) {
+        m_loggerContext = loggerContext;
     }
 
     void runAllTests(GuiTestCaseTreeNode root) {
 
-        m_trlc.setStartTimes();
+        m_testRunLogController.setStartTimes();
 
         GuiDisplayTestReportAction display = GuiRunnerAppController.getInstance().getDisplayTestReportAction();
         display.setEnabled(false);
@@ -152,9 +153,8 @@ public final class GuiTestExecutionController {
         guiListener.setProgressBar(progress);
 
         /*
-         * Workaround to ensure that the tool is primed with the CHUID cert. TODO:
-         * Create "factory" database with 8.2.2.1 as the only test, open, run, then open
-         * actual database.
+         * Workaround to ensure that the tool is primed with the CHUID cert. TODO: Create "factory" database with
+         * 8.2.2.1 as the only test, open, run, then open actual database.
          */
 
         int passes = 0;
@@ -169,7 +169,7 @@ public final class GuiTestExecutionController {
                 if (passes % 2 == 1) { // TODO: Fixme
                     runTest = true;
                 } else if (id.compareTo(GuiTestExecutionController.tag30TestId) == 0) {
-                    m_trlc.captureIdentifiers();
+                    m_testRunLogController.captureIdentifiers();
                     runTest = true;
                 }
                 if (testCase.getTestStatus().equals(TestStatus.TESTCATEGORY)) {
@@ -252,16 +252,16 @@ public final class GuiTestExecutionController {
                     }
                     suiteBuilder.selectors(discoverySelectors);
                     suiteBuilder.configurationParameter("TestCaseIdentifier", testCase.getIdentifier());
-                    LauncherDiscoveryRequest ldr = suiteBuilder.build();
-                    Launcher l = LauncherFactory.create();
+                    LauncherDiscoveryRequest launcherDiscoveryRequest = suiteBuilder.build();
+                    Launcher launcher = LauncherFactory.create();
                     guiListener.setTestCaseIdentifier(testCase.getIdentifier());
                     guiListener.setTestCaseDescription(testCase.getDescription());
                     guiListener.setTestCaseExpectedResult(testCase.getExpectedStatus() == 1);
                     List<TestExecutionListener> listeners = new ArrayList<TestExecutionListener>();
                     listeners.add(guiListener);
-                    registerListeners(l, listeners);
+                    registerListeners(launcher, listeners);
 
-                    l.execute(ldr);
+                    launcher.execute(launcherDiscoveryRequest);
                 }
                 curr = (GuiTestCaseTreeNode) curr.getNextSibling();
             }
@@ -282,8 +282,8 @@ public final class GuiTestExecutionController {
         s_logger.debug("PCSC counters - connect() was called {} times, transmit() was called {} times",
                 pcsc.getConnectCount(), pcsc.getTransmitCount());
 
-        m_trlc.setTimeStamps(); // Sets the timestamp for all of the logger files
-        m_trlc.cleanup();
+        m_testRunLogController.setTimeStamps(); // Sets the timestamp for all of the logger files
+        m_testRunLogController.cleanup();
         m_running = false;
         CardSettingsSingleton css = CardSettingsSingleton.getInstance();
         CachingDefaultPIVApplication cpiv = (CachingDefaultPIVApplication) css.getPivHandle();
