@@ -115,6 +115,7 @@ public class GuiTestListener implements TestExecutionListener {
         }
     }
 
+    // This is where we end up when a specific test fails - try to inject ourselves here for reporting.
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
         if (s_testProgressLogger == null)
@@ -127,8 +128,14 @@ public class GuiTestListener implements TestExecutionListener {
         // if(!testIdentifier.isTest()) return;
         m_testStepResults.put(testIdentifier, testExecutionResult);
         if (testExecutionResult.getStatus() == TestExecutionResult.Status.FAILED) {
+            String detail = "";
             m_atomFailed = true;
-            s_testProgressLogger.error("Test atom {}:{} failed", m_testCaseIdentifier, displayName);
+            Optional<Throwable> optExecutionResult = testExecutionResult.getThrowable();
+            if (optExecutionResult.isPresent()) {
+                Throwable executionResult = optExecutionResult.get();
+                detail = executionResult.getMessage();
+            }
+            s_testProgressLogger.error("Test atom {}:{} failed - {}", m_testCaseIdentifier, displayName, detail);
         }
         if (testExecutionResult.getStatus() == TestExecutionResult.Status.ABORTED) {
             m_atomAborted = true;
