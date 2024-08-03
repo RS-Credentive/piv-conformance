@@ -6,6 +6,8 @@ module gov.gsa.pivconformance.conformancelib {
     exports gov.gsa.pivconformance.conformancelib.tools.junitconsole;
     exports gov.gsa.pivconformance.conformancelib.utilities;
 
+    opens gov.gsa.pivconformance.conformancelib.tests;
+
     requires gov.gsa.pivconformance.cardlib;
 
     requires java.smartcardio;

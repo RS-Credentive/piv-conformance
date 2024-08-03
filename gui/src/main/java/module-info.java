@@ -1,6 +1,6 @@
 module gov.gsa.pivconformance.gui {
     requires gov.gsa.pivconformance.cardlib;
-    requires gov.gsa.pivconformance.conformancelib;
+    requires transitive gov.gsa.pivconformance.conformancelib;
     requires java.desktop;
     requires org.slf4j;
     requires ch.qos.logback.classic;

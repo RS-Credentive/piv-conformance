@@ -1,0 +1,126 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "TestFieldResolution",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.cardlib/gov.gsa.pivconformance.cardlib.card.client.TestFieldResolution",
+            "projectName": "cardlib"
+        },
+        {
+            "type": "java",
+            "name": "AuthTest",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.cardlib/gov.gsa.pivconformance.cardlib.tools.AuthTest",
+            "projectName": "cardlib"
+        },
+        {
+            "type": "java",
+            "name": "ConformanceTestRunner",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.cardlib/gov.gsa.pivconformance.cardlib.tools.ConformanceTestRunner",
+            "projectName": "cardlib"
+        },
+        {
+            "type": "java",
+            "name": "PIVRunner",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.cardlib/gov.gsa.pivconformance.cardlib.tools.PIVRunner",
+            "projectName": "cardlib"
+        },
+        {
+            "type": "java",
+            "name": "PrintEnvironmentInfo",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.cardlib/gov.gsa.pivconformance.cardlib.tools.PrintEnvironmentInfo",
+            "projectName": "cardlib"
+        },
+        {
+            "type": "java",
+            "name": "SQLiteDBGenerator",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.cardlib/gov.gsa.pivconformance.cardlib.tools.SQLiteDBGenerator",
+            "projectName": "cardlib"
+        },
+        {
+            "type": "java",
+            "name": "CardAuthTest",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.tools.CardAuthTest",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "CertDump",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.tools.CertDump",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "ConformanceTestRunner(1)",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.tools.ConformanceTestRunner",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "ContainerDump",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.tools.ContainerDump",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "PIVCheck",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.tools.PIVCheck",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "SQLiteDBGenerator(1)",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.tools.SQLiteDBGenerator",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "TestCaseRunner",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.tools.TestCaseRunner",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "Csv2Html",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.utilities.Csv2Html",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "Validator",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.conformancelib/gov.gsa.pivconformance.conformancelib.utilities.Validator",
+            "projectName": "conformancelib"
+        },
+        {
+            "type": "java",
+            "name": "GuiRunnerApplication",
+            "request": "launch",
+            "mainClass": "gov.gsa.pivconformance.gui/gov.gsa.pivconformance.gui.GuiRunnerApplication",
+            "projectName": "gui"
+        }
+    ]
+}
