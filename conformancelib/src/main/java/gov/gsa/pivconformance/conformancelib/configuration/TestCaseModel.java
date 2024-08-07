@@ -122,61 +122,61 @@ public class TestCaseModel {
 
     public void retrieveForId(int testId) {
         this.setId(testId);
-        String query = "SELECT "
+        String testCaseQuery = "SELECT "
                 + "  Id, TestCaseIdentifier, TestCaseDescription, Status, ExpectedStatus, TestGroup, Enabled " + "FROM "
                 + "  TestCases " + "WHERE " + "  TestCases.Id = ?";
 
         String containerQuery = "SELECT " + "  TestCaseContainer " + "FROM " + "  TestCases " + "WHERE "
                 + "TestCases.Id = ?";
 
-        String stepsQuery = "SELECT " + "  Id, TestStepId " + "FROM " + "  TestsToSteps " + "WHERE "
+        String testStepsQuery = "SELECT " + "  Id, TestStepId " + "FROM " + "  TestsToSteps " + "WHERE "
                 + "  TestsToSteps.TestId = ? " + "ORDER BY " + "  ExecutionOrder";
 
         try {
             Connection conn = m_db.getConnection();
-            PreparedStatement pquery = conn.prepareStatement(query);
-            pquery.setInt(1, testId);
+            PreparedStatement preparedTestCaseQuery = conn.prepareStatement(testCaseQuery);
+            preparedTestCaseQuery.setInt(1, testId);
 
-            ResultSet rs = pquery.executeQuery();
-            if (!rs.next()) {
+            ResultSet testCaseResultSet = preparedTestCaseQuery.executeQuery();
+            if (!testCaseResultSet.next()) {
                 s_logger.error("Database not configured properly: no test case for id {}", testId);
                 throw new ConfigurationException("Unable to retrieve record for test case id " + testId);
             }
-            this.setExpectedStatus(rs.getInt("ExpectedStatus"));
-            this.setDescription(rs.getString("TestCaseDescription"));
-            this.setIdentifier(rs.getString("TestCaseIdentifier"));
-            if (rs.getObject("Status") != null) {
-                this.setStatus(rs.getInt("Status"));
+            this.setExpectedStatus(testCaseResultSet.getInt("ExpectedStatus"));
+            this.setDescription(testCaseResultSet.getString("TestCaseDescription"));
+            this.setIdentifier(testCaseResultSet.getString("TestCaseIdentifier"));
+            if (testCaseResultSet.getObject("Status") != null) {
+                this.setStatus(testCaseResultSet.getInt("Status"));
             } else {
                 this.setStatus(-1);
             }
-            this.setEnabled(1 == rs.getInt("Enabled"));
-            this.setTestGroupName(rs.getString("TestGroup"));
+            this.setEnabled(1 == testCaseResultSet.getInt("Enabled"));
+            this.setTestGroupName(testCaseResultSet.getString("TestGroup"));
 
             s_logger.debug("Test case {} {} instantiated from database", this.getIdentifier(), this.getDescription());
-            PreparedStatement pstepsQuery = conn.prepareStatement(stepsQuery);
-            pstepsQuery.setInt(1, testId);
-            ResultSet prs = pstepsQuery.executeQuery();
+            PreparedStatement preparedTestStepsQuery = conn.prepareStatement(testStepsQuery);
+            preparedTestStepsQuery.setInt(1, testId);
+            ResultSet testStepsResultSet = preparedTestStepsQuery.executeQuery();
             m_steps = new ArrayList<TestStepModel>();
-            if (!prs.next()) {
+            if (!testStepsResultSet.next()) {
                 this.setStatus(TestStatus.TESTCATEGORY.getValue());
             } else {
                 do {
                     TestStepModel ts = new TestStepModel(this.getDb());
-                    ts.retrieveForId(prs.getInt("TestStepId"), testId);
+                    ts.retrieveForId(testStepsResultSet.getInt("TestStepId"), testId);
                     m_steps.add(ts);
-                } while (prs.next());
+                } while (testStepsResultSet.next());
             }
             try {
                 PreparedStatement pContainerQuery = conn.prepareStatement(containerQuery);
                 pContainerQuery.setInt(1, testId);
-                ResultSet crs = pContainerQuery.executeQuery();
-                if (!crs.next()) {
+                ResultSet containerResultSet = pContainerQuery.executeQuery();
+                if (!containerResultSet.next()) {
                     s_logger.warn(
                             "Test case database does not return anything for container. This is an old format database and should be updated.");
                     this.setContainer(null);
                 }
-                this.setContainer(crs.getString("TestCaseContainer"));
+                this.setContainer(containerResultSet.getString("TestCaseContainer"));
             } catch (SQLException e) {
                 this.setContainer(null);
                 s_logger.warn(
@@ -186,7 +186,7 @@ public class TestCaseModel {
         } catch (Exception e) {
             // XXX *** TODO: more granular exception handling
             s_logger.error("Database error {} processing parameter query for Test Step ID {}: {}", e.getMessage(),
-                    testId, query);
+                    testId, testCaseQuery);
             // rethrow here
         }
 
