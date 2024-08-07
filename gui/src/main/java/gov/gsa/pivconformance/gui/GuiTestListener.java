@@ -1,13 +1,9 @@
 package gov.gsa.pivconformance.gui;
 
 import java.lang.reflect.InvocationTargetException;
-import java.security.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
-
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeModel;
@@ -22,10 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import gov.gsa.pivconformance.conformancelib.configuration.TestCaseModel;
 import gov.gsa.pivconformance.conformancelib.configuration.TestStatus;
-import gov.gsa.pivconformance.conformancelib.configuration.TestStepModel;
-import gov.gsa.pivconformance.conformancelib.tests.BER_TLVTests;
-import gov.gsa.pivconformance.conformancelib.tools.TestCaseRunner;
-import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 
 public class GuiTestListener implements TestExecutionListener {
 
