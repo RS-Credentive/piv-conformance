@@ -102,7 +102,7 @@ public class ConformanceTestDatabase {
             s_logger.error("getTestCases() called without any database");
             throw new ConfigurationException("getTestCases() called without any database.");
         }
-        ArrayList<TestCaseModel> rv = new ArrayList<TestCaseModel>();
+        ArrayList<TestCaseModel> testCaseModels = new ArrayList<TestCaseModel>();
         int count = 0;
         try (Statement testStatement = m_conn.createStatement()) {
             ResultSet rs = testStatement.executeQuery(TEST_SET);
@@ -113,14 +113,14 @@ public class ConformanceTestDatabase {
                     // If it's not a test category, then its a test we have to run
                     count++;
                 }
-                rv.add(testCase);
+                testCaseModels.add(testCase);
             }
             // m_conn.close();
         } catch (SQLException e) {
             s_logger.error("Failed to retrieve test cases from database: {}", e.getMessage());
         }
         setTestCaseCount(count);
-        return rv;
+        return testCaseModels;
     }
 
     public void populateDefault() throws ConfigurationException {
