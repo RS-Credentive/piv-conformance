@@ -3,10 +3,10 @@ package gov.gsa.pivconformance.gui;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -16,7 +16,6 @@ import javax.swing.SwingUtilities;
 import gov.gsa.pivconformance.cardlib.card.client.CachingDefaultPIVApplication;
 import gov.gsa.pivconformance.cardlib.card.client.DataModelSingleton;
 import gov.gsa.pivconformance.conformancelib.configuration.TestStatus;
-import gov.gsa.pivconformance.conformancelib.utilities.AtomHelper;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -177,82 +176,86 @@ public final class GuiTestExecutionController {
                     runTest = false;
                 }
                 if (runTest) {
-                    LauncherDiscoveryRequestBuilder suiteBuilder = LauncherDiscoveryRequestBuilder.request();
                     List<DiscoverySelector> discoverySelectors = new ArrayList<>();
                     List<TestStepModel> steps = testCase.getSteps();
                     for (TestStepModel currentStep : steps) {
                         atomCount++;
-                        Class<?> testClass = null;
-                        String className = currentStep.getTestClassName();
-                        String methodName = currentStep.getTestMethodName();
+                        String testStepClassName = currentStep.getTestClassName();
+                        String testStepMethodName = currentStep.getTestMethodName();
                         List<String> parameters = currentStep.getParameters();
-                        String fqmn = className;
+                        Class<?> testClass = null;
                         try {
-                            testClass = Class.forName(className);
-                            for (Method m : testClass.getDeclaredMethods()) {
-                                if (m.getName().contentEquals(methodName)) {
-                                    fqmn += "#" + m.getName() + "(";
-                                    Class<?>[] methodParameters = m.getParameterTypes();
-                                    int nMethodParameters = 0;
-                                    for (Class<?> mp : methodParameters) {
-                                        if (nMethodParameters >= 1) {
-                                            fqmn += ", ";
-                                        }
-                                        fqmn += mp.getName();
-                                        nMethodParameters++;
-                                    }
-                                    fqmn += ")";
-                                }
-
-                            }
-
-                            if (fqmn == className) {
-                                String errorMessage = "Test " + testCase.getIdentifier() + " specifies a test atom "
-                                        + className + "#" + methodName + "()"
-                                        + " but no such method could be found for the class " + className + "."
-                                        + " (Test atom: " + currentStep.getTestDescription() + ")"
-                                        + " Check that the database matches the included set of test atoms.";
-
-                                s_logger.error(errorMessage);
-
-                                if (passes % 2 == 1) { // TODO: Fixme
-                                    try {
-                                        SwingUtilities.invokeAndWait(() -> {
-                                            JOptionPane msgBox = new JOptionPane(errorMessage,
-                                                    JOptionPane.ERROR_MESSAGE);
-                                            JDialog dialog = msgBox.createDialog(
-                                                    GuiRunnerAppController.getInstance().getMainFrame(), "Error");
-                                            dialog.setAlwaysOnTop(true);
-                                            dialog.setVisible(true);
-                                        });
-                                    } catch (InvocationTargetException | InterruptedException e) {
-                                        s_logger.error("Unable to display error dialog.");
-                                    }
-                                }
-                                break;
-                            } // End skipped test
+                            testClass = Class.forName(testStepClassName);
                         } catch (ClassNotFoundException e) {
-                            s_logger.error(
-                                    "Method {} was configured in the database but the method could not be found in code.",
-                                    fqmn);
+                            s_logger.error("Class {} was configured in the database but the class could not be found.",
+                                    testStepClassName);
                             break;
                         }
 
-                        if (className != null && !className.isEmpty() && testClass != null) {
-                            s_logger.trace("Adding {} from config", fqmn);
-                            discoverySelectors.add(selectMethod(fqmn));
-                            ParameterProviderSingleton.getInstance().addNamedParameter(fqmn, parameters);
+                        var matchingMethods = Stream.of(testClass.getMethods())
+                                .filter(m -> m.getName().equals(testStepMethodName));
+
+                        if (matchingMethods.count() != 1) {
+                            s_logger.error(
+                                    "Method {} was configured in the database but the method could not be found in class {}.",
+                                    testStepClassName, testStepClassName);
+                            break;
+                        }
+
+                        // Since we know there's one, we can just get it.
+                        var testClassMethod = matchingMethods.collect(Collectors.toList()).get(0);
+
+                        // Get all of the parameter types separated by commas
+                        var testClassMethodParamsTypes = Stream.of(testClassMethod.getParameterTypes())
+                                .map(t -> t.getName()).collect(Collectors.joining(", "));
+
+                        // Create fullyQualifiedMethodName from components - formate ClassName#methodName(Param1,
+                        // Param2, ...)
+                        String fullyQualifiedMethodName = String.format("%s#%s(%s)",
+                                testClass.getName() + testClassMethod.getName(), testClassMethodParamsTypes);
+
+                        if (fullyQualifiedMethodName == testStepClassName) {
+                            String errorMessage = "Test " + testCase.getIdentifier() + " specifies a test atom "
+                                    + testStepClassName + "#" + testStepMethodName + "()"
+                                    + " but no such method could be found for the class " + testStepClassName + "."
+                                    + " (Test atom: " + currentStep.getTestDescription() + ")"
+                                    + " Check that the database matches the included set of test atoms.";
+
+                            s_logger.error(errorMessage);
+
+                            if (passes % 2 == 1) { // TODO: Fixme
+                                try {
+                                    SwingUtilities.invokeAndWait(() -> {
+                                        JOptionPane msgBox = new JOptionPane(errorMessage, JOptionPane.ERROR_MESSAGE);
+                                        JDialog dialog = msgBox.createDialog(
+                                                GuiRunnerAppController.getInstance().getMainFrame(), "Error");
+                                        dialog.setAlwaysOnTop(true);
+                                        dialog.setVisible(true);
+                                    });
+                                } catch (InvocationTargetException | InterruptedException e) {
+                                    s_logger.error("Unable to display error dialog.");
+                                }
+                            }
+                            break;
+                        } // End skipped test
+
+                        if (testStepClassName != null && !testStepClassName.isEmpty() && testClass != null) {
+                            s_logger.trace("Adding {} from config", fullyQualifiedMethodName);
+                            discoverySelectors.add(selectMethod(fullyQualifiedMethodName));
+                            ParameterProviderSingleton.getInstance().addNamedParameter(fullyQualifiedMethodName,
+                                    parameters);
                             String containerName = testCase.getContainer();
                             if (containerName != null && !containerName.isEmpty()) {
-                                ParameterProviderSingleton.getInstance().addContainer(fqmn, containerName);
+                                ParameterProviderSingleton.getInstance().addContainer(fullyQualifiedMethodName,
+                                        containerName);
                             }
-                            s_logger.trace("Added {} from config: {}", fqmn, parameters);
+                            s_logger.trace("Added {} from config: {}", fullyQualifiedMethodName, parameters);
                         }
 
                     }
-                    suiteBuilder.selectors(discoverySelectors);
-                    suiteBuilder.configurationParameter("TestCaseIdentifier", testCase.getIdentifier());
-                    LauncherDiscoveryRequest launcherDiscoveryRequest = suiteBuilder.build();
+                    LauncherDiscoveryRequest launcherDiscoveryRequest = LauncherDiscoveryRequestBuilder.request()
+                            .selectors(discoverySelectors)
+                            .configurationParameter("TestCaseIdentifier", testCase.getIdentifier()).build();
                     Launcher launcher = LauncherFactory.create();
                     guiListener.setTestCaseIdentifier(testCase.getIdentifier());
                     guiListener.setTestCaseDescription(testCase.getDescription());
@@ -267,7 +270,9 @@ public final class GuiTestExecutionController {
             }
         } while (++passes < 2); // End of CHUID priming workaround
 
-        try {
+        try
+
+        {
             SwingUtilities.invokeAndWait(() -> {
                 m_testExecutionPanel.getRunButton().setEnabled(true);
                 // TODO: Fix this or else
